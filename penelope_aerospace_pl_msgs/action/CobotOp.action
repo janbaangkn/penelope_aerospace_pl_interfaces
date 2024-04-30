@@ -30,7 +30,7 @@ AssemblyEeDockingPos[] docking_pos          # array of available docking positio
 
 AssemblyEe[] ee                             # array of available End Effectors
 
-string[] execute                            # array of action uid's to w=execute
+string[] execute                            # array of action uid's to execute
 
 ---
 

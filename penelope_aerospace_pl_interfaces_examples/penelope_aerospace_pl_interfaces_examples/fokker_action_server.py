@@ -180,7 +180,7 @@ class FokkerActionServer(Node):
 
         f_str = create_action_obj._find_substring(c_str, get_str_function.FASTENERS_TAG)
         if f_str is not None:
-            feedback_msg.drill_tasks = create_action_obj._create_fasteners_from_cobot_output(f_str)
+            feedback_msg.fasteners = create_action_obj._create_fasteners_from_cobot_output(f_str)
 
         ee_str = create_action_obj._find_substring(c_str, get_str_function.END_EFFECTORS_TAG)
         if ee_str is not None:
