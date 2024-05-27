@@ -16,49 +16,49 @@ c = rotation about rotated z-axis
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 # """STANDIN FUNCTIONS: DO NOT USE"""
  
-# DR_BASE = ""
-# DR_USER_NOM = ""
-# DR_USER_PROBE = ""
-# DR_TOOL = ""
-# DR_USER_NOM_OPP = ""
-# DR_AXIS_Z = ""
-# DR_SSTOP = ""
-# DR_MV_MOD_ABS = ""
+DR_BASE = ""
+DR_USER_NOM = ""
+DR_USER_PROBE = ""
+DR_TOOL = ""
+DR_USER_NOM_OPP = ""
+DR_AXIS_Z = ""
+DR_SSTOP = ""
+DR_MV_MOD_ABS = ""
  
-# DR_PM_WARNING = 1
-# s1 = ""
-# str1 = ""
+DR_PM_WARNING = 1
+s1 = ""
+str1 = ""
  
-# def get_current_posx(): pass
-# def get_tool_force(): pass
-# def get_distance(): pass
-# def transpose(): pass
-# def eul2rotm(): pass
-# def coord_transform(): pass
-# def posx(): pass
-# def change_operation_speed(): pass
-# def movel(): pass
-# def amovel(): pass
-# def amove_spiral(): pass
-# def amove_periodic(): pass
-# def wait(): pass
-# def set_ref_coord(): pass
-# def task_compliance_ctrl(): pass
-# def set_desired_force(): pass
-# def release_force(): pass
-# def release_compliance_ctrl(): pass
-# def get_digital_input(): pass
-# def set_digital_output(): pass
-# def tp_popup(): pass
-# def tp_log(): pass
-# def set_tcp(): pass
-# def overwrite_user_cart_coord(): pass
-# def check_motion(): pass
-# def stop(): pass
-# def rotm2eul(): pass
-# def set_user_cart_coord(): pass
-# def set_digital_outputs(): pass
-# def set_tool_digital_output(): pass
+def get_current_posx(): pass
+def get_tool_force(): pass
+def get_distance(): pass
+def transpose(): pass
+def eul2rotm(): pass
+def coord_transform(): pass
+def posx(): pass
+def change_operation_speed(): pass
+def movel(): pass
+def amovel(): pass
+def amove_spiral(): pass
+def amove_periodic(): pass
+def wait(): pass
+def set_ref_coord(): pass
+def task_compliance_ctrl(): pass
+def set_desired_force(): pass
+def release_force(): pass
+def release_compliance_ctrl(): pass
+def get_digital_input(): pass
+def set_digital_output(): pass
+def tp_popup(): pass
+def tp_log(): pass
+def set_tcp(): pass
+def overwrite_user_cart_coord(): pass
+def check_motion(): pass
+def stop(): pass
+def rotm2eul(): pass
+def set_user_cart_coord(): pass
+def set_digital_outputs(): pass
+def set_tool_digital_output(): pass
  
 # # tcpip functions
 # def client_socket_open(): pass # input: ip_in, port_in
@@ -73,7 +73,6 @@ c = rotation about rotated z-axis
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
  
 # Some global variables
-#from __future__ import annotations BBB
 from math import acos
 from math import sqrt
 from datetime import datetime
@@ -88,12 +87,6 @@ Pi = math.pi
 start_time = time.time()
  
 BYTES_MSG_LENGTH  = 4
- 
-#Global bolean to check if last fastener's Z-position is accurate
-Z_PREDICTION_LAST_FAST_OK = False
-# Global boolean to control if a socket is opened and used
-B_SOCKET = False
- 
  
 # Standard gaps used to prevent collision during movements
 SAFE_Z_GAP = 5
@@ -301,7 +294,7 @@ def products_str_to_server(product_in):
  
     :param product_in: cl_fl_container
     """ 
-    str = PRODUCT_TAG + _get_hole_location_container_to_server_str(product) + CLOSE_TAG
+    str = PRODUCT_TAG + _get_hole_location_container_to_server_str(product_in) + CLOSE_TAG
  
     return str
  
@@ -342,14 +335,15 @@ def drill_tasks_str_to_server(drill_tasks_in):
  
     :param drill_tasks_in: list of cl_action
     """
-    str = DRILL_TASKS_TAG
+    # str = DRILL_TASKS_TAG
  
-    for drill_task in drill_tasks_in:
-        str = str + _get_drill_task_to_server_str(drill_task)
+    # for drill_task in drill_tasks_in:
+    #     str = str + _get_drill_task_to_server_str(drill_task)
  
-    str = str + CLOSE_TAG
+    # str = str + CLOSE_TAG
  
-    return str
+    # return str
+    return ""
  
 def fasteners_str_to_server(fl_container_lst_in): 
     """
@@ -388,14 +382,15 @@ def docking_pos_str_to_server(docking_pos_in):
     TODO define docking positions for end effectors
     :param docking_pos_in: list of cl_TBD
     """
-    str = DOCKING_POSS_TAG
+    # str = DOCKING_POSS_TAG
  
-    for docking_pos in docking_pos_in:
-        str = str + _get_docking_pos_to_server_str(docking_pos)
+    # for docking_pos in docking_pos_in:
+    #     str = str + _get_docking_pos_to_server_str(docking_pos)
  
-    str = str + CLOSE_TAG
+    # str = str + CLOSE_TAG
  
-    return str
+    # return str
+    return ""
     
 def ee_str_to_server(ee_in):
     """
@@ -403,14 +398,15 @@ def ee_str_to_server(ee_in):
  
     :param ee_in: list of cl_temp_fast_ee
     """
-    str = END_EFFECTORS_TAG
+    # str = END_EFFECTORS_TAG
  
-    for ee in ee_in:
-        str = str + _get_end_effector_to_server_str(ee)
+    # for ee in ee_in:
+    #     str = str + _get_end_effector_to_server_str(ee)
  
-    str = str + CLOSE_TAG
+    # str = str + CLOSE_TAG
  
-    return str
+    # return str
+    return ""
  
 def _get_hole_location_container_to_server_str(cont_in):
     """
@@ -526,7 +522,8 @@ def _get_material_layer_to_server_str(layer_in):
     # str = str + MAX_TEMPF_CLAMP_FORCE_TAG + str(layer_in.max_clamp_force) + CLOSE_TAG
  
     # return str + CLOSE_TAG
-   return ""
+    return ""
+
  
 # get message string for AssemblyWaypoint
 def _get_waypoint_to_server_str(waypoint_in):
@@ -595,6 +592,7 @@ def _get_action_to_server_str(action_in):
     str = str + CLOSE_TAG
  
     return str + CLOSE_TAG
+
  
 # get message string for AssemblyDrillTask
 def _get_drill_task_to_server_str(drill_task_in):
@@ -625,75 +623,77 @@ def _get_drill_task_to_server_str(drill_task_in):
  
     # return str + CLOSE_TAG
     return ""
+
  
 # get message string for AssemblyFastener BBB
-# def _get_fastener_to_server_str(fastener_in: cl_fastener, loc_uid_in):
-    # """
-    # Function to send a fastener to the server
+def _get_fastener_to_server_str(fastener_in, loc_uid_in):
+    """
+    Function to send a fastener to the server
    
-    # :param fastener_in: cl_fastener
-    # :param loc_uid_in:  str, the uid of the location where the object is
-    # """
+    :param fastener_in: cl_fastener
+    :param loc_uid_in:  str, the uid of the location where the object is
+    """
    
-    # is_tempf = fastener_in.is_tempf()
+    is_tempf = fastener_in.is_tempf()
  
-    # if is_tempf:
-        # str = TEMPF_TAG
-    # else:
-        # str = FASTENER_TAG
+    if is_tempf:
+        str = TEMPF_TAG
+    else:
+        str = FASTENER_TAG
  
-    # #string uid                              # uid of the fastener
-    # str = str + UID_TAG + fastener_in.uid() + CLOSE_TAG
+    #string uid                              # uid of the fastener
+    str = str + UID_TAG + fastener_in.uid() + CLOSE_TAG
  
-    # #string loc_uid                          # uid of the location of the fastener in one of the containers
-    # if not loc_uid_in == "":
-        # str = str + LOC_UID_TAG + loc_uid_in + CLOSE_TAG
+    #string loc_uid                          # uid of the location of the fastener in one of the containers
+    if not loc_uid_in == "":
+        str = str + LOC_UID_TAG + loc_uid_in + CLOSE_TAG
  
-    # #string ee_uid                           # uid of the end effector needed to manipulate this (temporary) fastener
-    # if is_tempf:
-        # str = str + END_EFFECTOR_UID_TAG + TEMPF_END_EFFECTOR_UID + CLOSE_TAG
-    # else:
-        # str = str + END_EFFECTOR_UID_TAG + FAST_END_EFFECTOR_UID + CLOSE_TAG
+    #string ee_uid                           # uid of the end effector needed to manipulate this (temporary) fastener
+    if is_tempf:
+        str = str + END_EFFECTOR_UID_TAG + TEMPF_END_EFFECTOR_UID + CLOSE_TAG
+    else:
+        str = str + END_EFFECTOR_UID_TAG + FAST_END_EFFECTOR_UID + CLOSE_TAG
  
-    # #AssemblyFastState state                 # The state of the fastener
-    # # IN_STORAGE = 1
-    # # IN_EE = 2
-    # # IN_PRODUCT = 3
-    # # DISCARDED = 4
-    # if fastener_in.in_storage():
-        # str = str + FASTENER_STATE_TAG + "1" + CLOSE_TAG
-    # elif fastener_in.in_ee():
-        # str = str + FASTENER_STATE_TAG + "2" + CLOSE_TAG
-    # elif fastener_in.in_product():
-        # str = str + FASTENER_STATE_TAG + "3" + CLOSE_TAG
-    # elif fastener_in.in_bin():
-        # str = str + FASTENER_STATE_TAG + "4" + CLOSE_TAG
+    #AssemblyFastState state                 # The state of the fastener
+    # IN_STORAGE = 1
+    # IN_EE = 2
+    # IN_PRODUCT = 3
+    # DISCARDED = 4
+    if fastener_in.in_storage():
+        str = str + FASTENER_STATE_TAG + "1" + CLOSE_TAG
+    elif fastener_in.in_ee():
+        str = str + FASTENER_STATE_TAG + "2" + CLOSE_TAG
+    elif fastener_in.in_product():
+        str = str + FASTENER_STATE_TAG + "3" + CLOSE_TAG
+    elif fastener_in.in_bin():
+        str = str + FASTENER_STATE_TAG + "4" + CLOSE_TAG
  
-    # #geometry_msgs/Pose inst_pos             # Installed location of the fastener
-                                                # # Only available after installation
-    # str = str + _get_pose_str(fastener_in.inst_pos)
+    #geometry_msgs/Pose inst_pos             # Installed location of the fastener
+                                                # Only available after installation
+    str = str + _get_pose_str(fastener_in.inst_pos)
  
-    # #float32 diam                            # diameter of the fastener
-    # str = str + DIAM_TAG + str(fastener_in.diam()) + CLOSE_TAG
+    #float32 diam                            # diameter of the fastener
+    str = str + DIAM_TAG + str(fastener_in.diam()) + CLOSE_TAG
  
-    # #float32 shaft_height                    # the height of the shaft that is sticking out when in storage location
-    # str = str + SHAFT_HEIGHT_TAG + str(fastener_in.shaft_height()) + CLOSE_TAG
+    #float32 shaft_height                    # the height of the shaft that is sticking out when in storage location
+    str = str + SHAFT_HEIGHT_TAG + str(fastener_in.shaft_height()) + CLOSE_TAG
  
-    # #float32 min_stack                       # the minimum stack
-    # str = str + MIN_STACK_TAG + str(fastener_in.min_stack()) + CLOSE_TAG
+    #float32 min_stack                       # the minimum stack
+    str = str + MIN_STACK_TAG + str(fastener_in.min_stack()) + CLOSE_TAG
  
-    # #float32 max_stack                       # the maximum stack
-    # str = str + MAX_STACK_TAG + str(fastener_in.max_stack()) + CLOSE_TAG
+    #float32 max_stack                       # the maximum stack
+    str = str + MAX_STACK_TAG + str(fastener_in.max_stack()) + CLOSE_TAG
  
-    # #float32 tcp_tip_distance                 # distance between hole entry point and tip if inserted in a hole
-    # str = str + TCP_TIP_DIST_TAG + str(fastener_in.tcp_tip_distance()) + CLOSE_TAG
+    #float32 tcp_tip_distance                 # distance between hole entry point and tip if inserted in a hole
+    str = str + TCP_TIP_DIST_TAG + str(fastener_in.tcp_tip_distance()) + CLOSE_TAG
  
-    # #float32 tcp_top_distance                 # distance between hole entry point and top if inserted in a hole
-                                                # # the top is where the tcp is when engaging the tempf
-    # str = str + TCP_TOP_DIST_TAG + str(fastener_in.tcp_tip_distance()) + CLOSE_TAG
+    #float32 tcp_top_distance                 # distance between hole entry point and top if inserted in a hole
+                                                # the top is where the tcp is when engaging the tempf
+    str = str + TCP_TOP_DIST_TAG + str(fastener_in.tcp_tip_distance()) + CLOSE_TAG
  
-    # return str + CLOSE_TAG
+    return str + CLOSE_TAG
  
+
 # get message string for AssemblyEeDockingPos
 def _get_docking_pos_to_server_str(docking_pos_in):
     """
@@ -743,6 +743,7 @@ def _get_end_effector_to_server_str(ee_in):
     # return str + CLOSE_TAG
     return ""
  
+
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 # Functions to unpack a string
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -761,6 +762,7 @@ def _find_substring(original_string, search_string):
     else:
         return None
  
+
 # function to get the content of a leaf object between open_tag and close_tag
 # Example usage:
 #input_string = "tag1<tag2<content1>more<tag3<content3>>>tag4<content4>"
@@ -775,325 +777,309 @@ def extract_leaf_content(input_string, open_tag, close_tag):
         return None
    
     
-# def handle_ros_msg(msg_str: str, agent: cl_agent): BBB
-    # """
-    # Function that modifies a cl_agent instance using a message string.
+def handle_ros_msg(msg_str, agent):
+    """
+    Function that modifies a cl_agent instance using a message string.
    
-    # :param msg_str: str, the string from the ROS server to modify the agent instance.
-    # :param agent: cl_agent, the agent instance to be modified.
-    # """
-    # # tempf_storage: storage location container
-    # tempf_st_str = _find_substring(msg_str, TEMPF_STORAGE_LOC_TAG)
-    # if tempf_st_str is not None:
-        # handle_container_str(tempf_st_str, agent, TEMPF_STORAGE_LOC_TAG)
+    :param msg_str: str, the string from the ROS server to modify the agent instance.
+    :param agent: cl_agent, the agent instance to be modified.
+    """
+    # tempf_storage: storage location container
+    tempf_st_str = _find_substring(msg_str, TEMPF_STORAGE_LOC_TAG)
+    if tempf_st_str is not None:
+        handle_container_str(tempf_st_str, agent, TEMPF_STORAGE_LOC_TAG)
  
-    # # permf_storage: storage location container
-    # permf_st_str = _find_substring(msg_str, PERMF_STORAGE_LOC_TAG)
-    # if permf_st_str is not None:
-        # handle_container_str(permf_st_str, agent, PERMF_STORAGE_LOC_TAG)
+    # permf_storage: storage location container
+    permf_st_str = _find_substring(msg_str, PERMF_STORAGE_LOC_TAG)
+    if permf_st_str is not None:
+        handle_container_str(permf_st_str, agent, PERMF_STORAGE_LOC_TAG)
  
-    # # product: storage location container
-    # pr_str = _find_substring(msg_str, PRODUCT_TAG)
-    # if pr_str is not None:
-        # handle_container_str(pr_str, agent, PRODUCT_TAG)
+    # product: storage location container
+    pr_str = _find_substring(msg_str, PRODUCT_TAG)
+    if pr_str is not None:
+        handle_container_str(pr_str, agent, PRODUCT_TAG)
    
-    # # waypoints
-    # wps_str = _find_substring(msg_str, WAYPOINTS_TAG)
-    # if wps_str is not None:
-        # wp_str = _find_substring(wps_str, WAYPOINT_TAG)
-        # while wp_str is not None:
-            # handle_waypoint_str(wp_str, agent)
-            # wp_str = _find_substring(wp_str, WAYPOINT_TAG)
+    # waypoints
+    wps_str = _find_substring(msg_str, WAYPOINTS_TAG)
+    if wps_str is not None:
+        wp_str = _find_substring(wps_str, WAYPOINT_TAG)
+        while wp_str is not None:
+            handle_waypoint_str(wp_str, agent)
+            wp_str = _find_substring(wp_str, WAYPOINT_TAG)
    
-    # # actions
-    # actions_str = _find_substring(msg_str, ACTIONS_TAG)
-    # if actions_str is not None:
-        # action_str = _find_substring(actions_str, ACTION_TAG)
-        # while action_str is not None:
-            # handle_action_str(action_str, agent)
-            # action_str = _find_substring(action_str, ACTIONS_TAG)
+    # actions
+    actions_str = _find_substring(msg_str, ACTIONS_TAG)
+    if actions_str is not None:
+        action_str = _find_substring(actions_str, ACTION_TAG)
+        while action_str is not None:
+            handle_action_str(action_str, agent)
+            action_str = _find_substring(action_str, ACTIONS_TAG)
    
-    # # holes to be drilled
-    # # NOT IMPLEMENTED YET
+    # holes to be drilled
+    # NOT IMPLEMENTED YET
    
-    # # available fasteners
-    # pfs_str = _find_substring(msg_str, FASTENERS_TAG)
-    # pf_str = _find_substring(pfs_str, FASTENER_TAG)
-    # while pf_str is not None:
-        # handle_fastener_str(pf_str, agent, FASTENER_TAG)
-        # pf_str = _find_substring(pf_str, FASTENER_TAG)
+    # available fasteners
+    pfs_str = _find_substring(msg_str, FASTENERS_TAG)
+    pf_str = _find_substring(pfs_str, FASTENER_TAG)
+    while pf_str is not None:
+        handle_fastener_str(pf_str, agent, FASTENER_TAG)
+        pf_str = _find_substring(pf_str, FASTENER_TAG)
    
-    # # available fasteners
-    # tfs_str = _find_substring(msg_str, TEMPFS_TAG)
-    # tf_str = _find_substring(tfs_str, TEMPF_TAG)
-    # while tf_str is not None:
-        # handle_fastener_str(tf_str, agent, TEMPF_TAG)
-        # tf_str = _find_substring(tf_str, TEMPF_TAG)
+    # available fasteners
+    tfs_str = _find_substring(msg_str, TEMPFS_TAG)
+    tf_str = _find_substring(tfs_str, TEMPF_TAG)
+    while tf_str is not None:
+        handle_fastener_str(tf_str, agent, TEMPF_TAG)
+        tf_str = _find_substring(tf_str, TEMPF_TAG)
    
-    # # available docking positions for End Effectors
-    # # NOT IMPLEMENTED YET
+    # available docking positions for End Effectors
+    # NOT IMPLEMENTED YET
    
-    # # available End Effectors
-    # # NOT IMPLEMENTED YET
+    # available End Effectors
+    # NOT IMPLEMENTED YET
    
-    # # actions: uid's to execute
-    # # execution actions are always single actions
-    # ex_str = _find_substring(msg_str, EXECUTE_TAG)
-    # if ex_str is not None:
-        # handle_execution_str(ex_str, agent)
+    # actions: uid's to execute
+    # execution actions are always single actions
+    ex_str = _find_substring(msg_str, EXECUTE_TAG)
+    if ex_str is not None:
+        handle_execution_str(ex_str, agent)
  
  
-# def handle_container_str(msg_str: str, agent: cl_agent, type: str):
-    # """
-    # Function that modifies containers in an agent
-    # using a message string and adds a return to the queue_out
+def handle_container_str(msg_str, agent, type):
+    """
+    Function that modifies containers in an agent
+    using a message string and adds a return to the queue_out
    
-    # :param msg_str: str, the string from the ROS server to modify the agent instance.
-    # :param agent: cl_agent, the agent instance to be modified.
-    # :param type: str The container type
-                     # temporary fastener container if TEMPF_STORAGE_LOC_TAG
-                     # permanent fastener container if PERMF_STORAGE_LOC_TAG
-                     # product container if PRODUCT_TAG
-    # """
-    # # create the container object
-    # uid = extract_leaf_content(msg_str, UID_TAG, CLOSE_TAG)
-    # max_obstacle_heigth = float(extract_leaf_content(msg_str, MAX_OBST_HEIGHT_TAG, CLOSE_TAG))
-    # obj = cl_f_container(uid, max_obstacle_heigth)
+    :param msg_str: str, the string from the ROS server to modify the agent instance.
+    :param agent: cl_agent, the agent instance to be modified.
+    :param type: str The container type
+                     temporary fastener container if TEMPF_STORAGE_LOC_TAG
+                     permanent fastener container if PERMF_STORAGE_LOC_TAG
+                     product container if PRODUCT_TAG
+    """
+    # create the container object
+    uid = extract_leaf_content(msg_str, UID_TAG, CLOSE_TAG)
+    max_obstacle_heigth = float(extract_leaf_content(msg_str, MAX_OBST_HEIGHT_TAG, CLOSE_TAG))
+    obj = cl_f_container(uid, max_obstacle_heigth)
  
-    # if type == TEMPF_STORAGE_LOC_TAG:
-        # agent.tempf_storage = obj
-    # elif type == PERMF_STORAGE_LOC_TAG:
-        # agent.permf_storage = obj
-    # elif type == PRODUCT_TAG:
-        # agent.product = obj
-    # else:
-        # raise Exception("Unknown storage type encountered in handle_container_str in container with uid {}.".format(uid))
+    if type == TEMPF_STORAGE_LOC_TAG:
+        agent.tempf_storage = obj
+    elif type == PERMF_STORAGE_LOC_TAG:
+        agent.permf_storage = obj
+    elif type == PRODUCT_TAG:
+        agent.product = obj
+    else:
+        raise Exception("Unknown storage type encountered in handle_container_str in container with uid {}.".format(uid))
  
-    # # add the locations
-    # locs_str = _find_substring(msg_str, LOCATIONS_TAG)
-    # loc_str = _find_substring(locs_str, HOLE_LOCATION_TAG)
-    # while loc_str is not None:
-        # loc_uid = extract_leaf_content(loc_str, UID_TAG, CLOSE_TAG)
-        # diam = float(extract_leaf_content(loc_str, DIAM_TAG, CLOSE_TAG))         
-        # stack_thickness = float(extract_leaf_content(loc_str, STACK_T_TAG, CLOSE_TAG))
-        # nom_pos = _get_posx_from_str(_find_substring(loc_str, POSE_TAG))
+    # add the locations
+    locs_str = _find_substring(msg_str, LOCATIONS_TAG)
+    loc_str = _find_substring(locs_str, HOLE_LOCATION_TAG)
+    while loc_str is not None:
+        loc_uid = extract_leaf_content(loc_str, UID_TAG, CLOSE_TAG)
+        diam = float(extract_leaf_content(loc_str, DIAM_TAG, CLOSE_TAG))         
+        stack_thickness = float(extract_leaf_content(loc_str, STACK_T_TAG, CLOSE_TAG))
+        nom_pos = _get_posx_from_str(_find_substring(loc_str, POSE_TAG))
        
-        # obj.add_loc_to_holes_and_fast_lst(loc_uid, diam, stack_thickness, nom_pos)
+        obj.add_loc_to_holes_and_fast_lst(loc_uid, diam, stack_thickness, nom_pos)
  
-        # loc_str = _find_substring(loc_str, HOLE_LOCATION_TAG)
+        loc_str = _find_substring(loc_str, HOLE_LOCATION_TAG)
  
-    # return_str = "container {} received by cobot".format(uid)
+    return_str = "container {} received by cobot".format(uid)
  
-    # send_to_PC("", return_str)
+    send_to_PC("", return_str)
  
  
-# def handle_waypoint_str(msg_str, agent: cl_agent):
-    # """
-    # Function that modifies waypoints in an agent
-    # using a message string and adds a return to the queue_out
+def handle_waypoint_str(msg_str, agent):
+    """
+    Function that modifies waypoints in an agent
+    using a message string and adds a return to the queue_out
    
-    # :param msg_str: str, the string from the ROS server to modify the agent instance.
-    # :param agent: cl_agent, the agent instance to be modified.
-    # """
-    # # get the waypoint inputs from the string
-    # uid = extract_leaf_content(msg_str, UID_TAG, CLOSE_TAG)
-    # wp_pos = _get_posx_from_str(_find_substring(msg_str, POSE_TAG))
+    :param msg_str: str, the string from the ROS server to modify the agent instance.
+    :param agent: cl_agent, the agent instance to be modified.
+    """
+    # get the waypoint inputs from the string
+    uid = extract_leaf_content(msg_str, UID_TAG, CLOSE_TAG)
+    wp_pos = _get_posx_from_str(_find_substring(msg_str, POSE_TAG))
  
-    # # add the waypoint
-    # agent._add_waypoint(uid, wp_pos)
+    # add the waypoint
+    agent._add_waypoint(uid, wp_pos)
  
-    # send_to_PC("","waypoint {} received by cobot".format(uid))
+    send_to_PC("","waypoint {} received by cobot".format(uid))
    
  
-# def handle_action_str(msg_str, agent: cl_agent):
-    # """
-    # Function that modifies actions in an agent
-    # using a message string and adds a return to the queue_out
+def handle_action_str(msg_str, agent):
+    """
+    Function that modifies actions in an agent
+    using a message string and adds a return to the queue_out
    
-    # Supported types (a_type)
-    # if a_type == 1: ACTION_TYPE_MOVE_WAYPOINT = "move_to_waypoint"  
-    # if a_type == 2: ACTION_TYPE_INSTALL_PERMF = "install_permf" 
-    # if a_type == 3: ACTION_TYPE_INSTALL_TEMPF = "install_tempf" 
-    # if a_type == 4: ACTION_TYPE_REMOVE_TEMPF = "remove_fastener" 
+    Supported types (a_type)
+    if a_type == 1: ACTION_TYPE_MOVE_WAYPOINT = "move_to_waypoint"  
+    if a_type == 2: ACTION_TYPE_INSTALL_PERMF = "install_permf" 
+    if a_type == 3: ACTION_TYPE_INSTALL_TEMPF = "install_tempf" 
+    if a_type == 4: ACTION_TYPE_REMOVE_TEMPF = "remove_fastener" 
     
-    # :param msg_str: str, the string from the ROS server to modify the agent instance.
-    # :param agent: cl_agent, the agent instance to be modified.
-    # """
-    # a_type = int(extract_leaf_content(msg_str, A_TYPE_TAG, CLOSE_TAG))
-    # a_uid = extract_leaf_content(msg_str, UID_TAG, CLOSE_TAG)
-    # a_loc_uid = extract_leaf_content(msg_str, LOC_UID_TAG, CLOSE_TAG)
+    :param msg_str: str, the string from the ROS server to modify the agent instance.
+    :param agent: cl_agent, the agent instance to be modified.
+    """
+    a_type = int(extract_leaf_content(msg_str, A_TYPE_TAG, CLOSE_TAG))
+    a_uid = extract_leaf_content(msg_str, UID_TAG, CLOSE_TAG)
+    a_loc_uid = extract_leaf_content(msg_str, LOC_UID_TAG, CLOSE_TAG)
    
-    # # uint8 RECEIVED = 1
-    # # uint8 ACCEPTED = 2
-    # # uint8 IN_PROGRESS = 3
-    # # uint8 PAUSED_WAITING = 4
-    # # uint8 WAITING_FOR_OPERATOR_ACTION = 5
-    # # uint8 SUCCESS = 6
-    # # uint8 CANCELLED = 7
-    # a_state = int(extract_leaf_content(msg_str, ACTION_STATE_TAG, CLOSE_TAG))
+    # uint8 RECEIVED = 1
+    # uint8 ACCEPTED = 2
+    # uint8 IN_PROGRESS = 3
+    # uint8 PAUSED_WAITING = 4
+    # uint8 WAITING_FOR_OPERATOR_ACTION = 5
+    # uint8 SUCCESS = 6
+    # uint8 CANCELLED = 7
+    a_state = int(extract_leaf_content(msg_str, ACTION_STATE_TAG, CLOSE_TAG))
    
-    # a_is_cancelled = False
-    # a_is_waiting = False
+    a_is_cancelled = False
+    a_is_waiting = False
  
-    # if a_state < 6:
-        # a_is_done = False
-    # elif a_state == 6:
-        # a_is_done = True
-    # elif a_state == 4:
-        # a_is_waiting = True
-    # elif a_state == 7:
-        # a_is_cancelled = True
-    # else:
-        # raise Exception("Unknown state encountered in handle_action_str in action with uid {}.".format(a_uid))
+    if a_state < 6:
+        a_is_done = False
+    elif a_state == 6:
+        a_is_done = True
+    elif a_state == 4:
+        a_is_waiting = True
+    elif a_state == 7:
+        a_is_cancelled = True
+    else:
+        raise Exception("Unknown state encountered in handle_action_str in action with uid {}.".format(a_uid))
    
-    # a_speed = float(extract_leaf_content(msg_str, SPEED_TAG, CLOSE_TAG))
+    a_speed = float(extract_leaf_content(msg_str, SPEED_TAG, CLOSE_TAG))
  
-    # if a_type == 1:
-        # agent._add_move_to_waypoint_action(a_uid, a_loc_uid, a_is_done, a_speed)  
-    # if a_type == 2:
-        # agent._add_install_permf_action(a_uid, a_loc_uid, a_is_done, a_speed)
-    # if a_type == 3:
-        # agent._add_install_tempf_action(a_uid, a_loc_uid, a_is_done, a_speed)
-    # if a_type == 4:
-        # agent._add_remove_tempf_action(a_uid, a_loc_uid, a_is_done, a_speed)
+    if a_type == 1:
+        agent._add_move_to_waypoint_action(a_uid, a_loc_uid, a_is_done, a_speed)  
+    if a_type == 2:
+        agent._add_install_permf_action(a_uid, a_loc_uid, a_is_done, a_speed)
+    if a_type == 3:
+        agent._add_install_tempf_action(a_uid, a_loc_uid, a_is_done, a_speed)
+    if a_type == 4:
+        agent._add_remove_tempf_action(a_uid, a_loc_uid, a_is_done, a_speed)
  
-    # if a_is_cancelled:
-        # action = agent._get_from_lst_by_uid(agent.actions, a_uid, "", False)
-        # action.set_as_cancelled()
+    if a_is_cancelled:
+        action = agent._get_from_lst_by_uid(agent.actions, a_uid, "", False)
+        action.set_as_cancelled()
  
-    # if a_is_waiting:
-        # action = agent._get_from_lst_by_uid(agent.actions, a_uid, "", False)
-        # action.set_as_waiting()
+    if a_is_waiting:
+        action = agent._get_from_lst_by_uid(agent.actions, a_uid, "", False)
+        action.set_as_waiting()
  
-    # passing_lst: list[str] = []
-    # passing_str = _find_substring(msg_str, PASSING_UIDS_TAG)
-    # while passing_str is not None:
-        # passing_lst.append(extract_leaf_content(passing_str, PASSING_UID_TAG, CLOSE_TAG))
+    passing_lst: list[str] = []
+    passing_str = _find_substring(msg_str, PASSING_UIDS_TAG)
+    while passing_str is not None:
+        passing_lst.append(extract_leaf_content(passing_str, PASSING_UID_TAG, CLOSE_TAG))
        
-        # # check if there is another string after an ACTION_TAG
-        # passing_str = _find_substring(msg_str, PASSING_UIDS_TAG)
+        # check if there is another string after an ACTION_TAG
+        passing_str = _find_substring(msg_str, PASSING_UIDS_TAG)
  
-    # # set the passing waypoints
-    # action.passing_wps = passing_lst
+    # set the passing waypoints
+    action.passing_wps = passing_lst
  
-    # return_str = actions_str_to_server(agent.actions)
+    return_str = actions_str_to_server(agent.actions)
  
-    # send_to_PC("", return_str)
- 
-   
-# def handle_fastener_str(msg_str: str, agent: cl_agent, f_tag):
-    # """
-    # Function that modifies fastener information of an agent
-    # using a message string and adds a return to the queue_out
-   
-    # :param msg_str: str, the string from the ROS server to modify the agent instance.
-    # :param agent: cl_agent, the agent instance to be modified.
-    # :param f_tag: str, FASTENER_TAG or TEMPF_TAG
-    # """
-    # obj = cl_f_container()
- 
-    # f_uid = extract_leaf_content(msg_str, UID_TAG, CLOSE_TAG)
- 
-    # if f_tag == TEMPF_TAG:
-        # obj = agent.tempf_storage
-        # is_tempf = True
-    # elif f_tag == FASTENER_TAG:
-        # obj = agent.permf_storage
-        # is_tempf = False
-    # else:
-        # raise Exception("Unknown fastener type encountered in handle_fastener_str in container with uid {}.".format(f_uid))
-   
-    # f_loc_uid = extract_leaf_content(msg_str, LOC_UID_TAG, CLOSE_TAG)
-    # # f_ee_uid not implemeneted yet, but can be retreived with END_EFFECTOR_UID_TAG
-    # f_state = int(extract_leaf_content(msg_str, FASTENER_STATE_TAG, CLOSE_TAG))
- 
-    # f_in_storage = False
-    # f_in_ee = False
-    # f_in_product=False
-    # f_in_bin=False
- 
-    # if f_state == 1:
-        # f_in_storage = True
-    # elif f_state == 2:
-        # f_in_ee = True
-    # elif f_state == 3:
-        # f_in_product=True
-    # elif f_state == 4:
-        # f_in_bin=True
- 
-    # f_diam = float(extract_leaf_content(msg_str, DIAM_TAG, CLOSE_TAG))
-    # f_shaft_height = float(extract_leaf_content(msg_str, SHAFT_HEIGHT_TAG, CLOSE_TAG))
-    # f_min_stack = float(extract_leaf_content(msg_str, MIN_STACK_TAG, CLOSE_TAG))
-    # f_max_stack = float(extract_leaf_content(msg_str, MAX_STACK_TAG, CLOSE_TAG))
-    # f_tcp_tip_dist = float(extract_leaf_content(msg_str, TCP_TIP_DIST_TAG, CLOSE_TAG))
-    # f_tcp_top_dist = float(extract_leaf_content(msg_str, TCP_TOP_DIST_TAG, CLOSE_TAG))
- 
-    # pos_str = _find_substring(msg_str, POSE_TAG)
-    # if pos_str is not None:
-        # f_install_pos = _get_posx_from_str(pos_str)
-    # else:
-        # f_install_pos = None
- 
-    # obj.add_fast_to_loc_with_uid(f_uid, f_loc_uid, f_install_pos, f_diam, f_shaft_height,
-                                 # f_min_stack, f_max_stack, f_tcp_tip_dist, f_tcp_top_dist,
-                                 # f_in_storage, f_in_ee, f_in_product, f_in_bin, is_tempf)
-   
-    # send_to_PC("","fastener {} received by cobot".format(f_uid))
+    send_to_PC("", return_str)
  
    
-# def handle_execution_str(msg_str: str, agent: cl_agent):
-    # """
-    # Function that triggers execution of actions in an agent
-    # using a message string and adds a return to the queue_out
+def handle_fastener_str(msg_str, agent, f_tag):
+    """
+    Function that modifies fastener information of an agent
+    using a message string and adds a return to the queue_out
    
-    # :param msg_str: str, the string from the ROS server to modify the agent instance.
-    # :param agent: cl_agent, the agent instance to be modified.
-    # """
-    # a_uid = extract_leaf_content(msg_str, UID_TAG, CLOSE_TAG)
+    :param msg_str: str, the string from the ROS server to modify the agent instance.
+    :param agent: cl_agent, the agent instance to be modified.
+    :param f_tag: str, FASTENER_TAG or TEMPF_TAG
+    """
+    obj = cl_f_container()
  
-    # agent.execute_uid(a_uid)
+    f_uid = extract_leaf_content(msg_str, UID_TAG, CLOSE_TAG)
  
-    # send_to_PC("","action {} received and sent to be axecuted.".format(a_uid))
- 
- 
-# def _get_posx_from_str(str_in):
-    # """
-    # Function to get a posx object from a string
+    if f_tag == TEMPF_TAG:
+        obj = agent.tempf_storage
+        is_tempf = True
+    elif f_tag == FASTENER_TAG:
+        obj = agent.permf_storage
+        is_tempf = False
+    else:
+        raise Exception("Unknown fastener type encountered in handle_fastener_str in container with uid {}.".format(f_uid))
    
-    # :param str_in: str, the string with the position definition.
-    # """
-    # # get the position
-    # x = float(extract_leaf_content(str_in, POSE_PX_TAG, CLOSE_TAG))
-    # y = float(extract_leaf_content(str_in, POSE_PY_TAG, CLOSE_TAG))
-    # z = float(extract_leaf_content(str_in, POSE_PZ_TAG, CLOSE_TAG))
+    f_loc_uid = extract_leaf_content(msg_str, LOC_UID_TAG, CLOSE_TAG)
+    # f_ee_uid not implemeneted yet, but can be retreived with END_EFFECTOR_UID_TAG
+    f_state = int(extract_leaf_content(msg_str, FASTENER_STATE_TAG, CLOSE_TAG))
  
-    # # Get orientation
-    # a = float(extract_leaf_content(str_in, POSE_OX_TAG, CLOSE_TAG))
-    # b = float(extract_leaf_content(str_in, POSE_OY_TAG, CLOSE_TAG))
-    # c = float(extract_leaf_content(str_in, POSE_OZ_TAG, CLOSE_TAG))
+    f_in_storage = False
+    f_in_ee = False
+    f_in_product=False
+    f_in_bin=False
  
-    # return posx(x, y, z, a, b, c)
+    if f_state == 1:
+        f_in_storage = True
+    elif f_state == 2:
+        f_in_ee = True
+    elif f_state == 3:
+        f_in_product=True
+    elif f_state == 4:
+        f_in_bin=True
+ 
+    f_diam = float(extract_leaf_content(msg_str, DIAM_TAG, CLOSE_TAG))
+    f_shaft_height = float(extract_leaf_content(msg_str, SHAFT_HEIGHT_TAG, CLOSE_TAG))
+    f_min_stack = float(extract_leaf_content(msg_str, MIN_STACK_TAG, CLOSE_TAG))
+    f_max_stack = float(extract_leaf_content(msg_str, MAX_STACK_TAG, CLOSE_TAG))
+    f_tcp_tip_dist = float(extract_leaf_content(msg_str, TCP_TIP_DIST_TAG, CLOSE_TAG))
+    f_tcp_top_dist = float(extract_leaf_content(msg_str, TCP_TOP_DIST_TAG, CLOSE_TAG))
+ 
+    pos_str = _find_substring(msg_str, POSE_TAG)
+    if pos_str is not None:
+        f_install_pos = _get_posx_from_str(pos_str)
+    else:
+        f_install_pos = None
+ 
+    obj.add_fast_to_loc_with_uid(f_uid, f_loc_uid, f_install_pos, f_diam, f_shaft_height,
+                                 f_min_stack, f_max_stack, f_tcp_tip_dist, f_tcp_top_dist,
+                                 f_in_storage, f_in_ee, f_in_product, f_in_bin, is_tempf)
+   
+    send_to_PC("","fastener {} received by cobot".format(f_uid))
+ 
+   
+def handle_execution_str(msg_str, agent):
+    """
+    Function that triggers execution of actions in an agent
+    using a message string and adds a return to the queue_out
+   
+    :param msg_str: str, the string from the ROS server to modify the agent instance.
+    :param agent: cl_agent, the agent instance to be modified.
+    """
+    a_uid = extract_leaf_content(msg_str, UID_TAG, CLOSE_TAG)
+ 
+    agent.execute_uid(a_uid)
+ 
+    send_to_PC("","action {} received and sent to be axecuted.".format(a_uid))
+ 
+ 
+def _get_posx_from_str(str_in):
+    """
+    Function to get a posx object from a string
+   
+    :param str_in: str, the string with the position definition.
+    """
+    # get the position
+    x = float(extract_leaf_content(str_in, POSE_PX_TAG, CLOSE_TAG))
+    y = float(extract_leaf_content(str_in, POSE_PY_TAG, CLOSE_TAG))
+    z = float(extract_leaf_content(str_in, POSE_PZ_TAG, CLOSE_TAG))
+ 
+    # Get orientation
+    a = float(extract_leaf_content(str_in, POSE_OX_TAG, CLOSE_TAG))
+    b = float(extract_leaf_content(str_in, POSE_OY_TAG, CLOSE_TAG))
+    c = float(extract_leaf_content(str_in, POSE_OZ_TAG, CLOSE_TAG))
+ 
+    return posx(x, y, z, a, b, c)
  
  
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 # Cobot functions
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
- 
-def get_forces():
-    """
-    Function to record forces and positioning with respect to time in TextFile.
-    This information can later be used for plots
- 
-    The function is only called when B_SOCKET is TRUE
-    """
-    current_time = time.time()
-    elapsed_time = current_time - start_time
-    position = get_current_posx(ref=DR_BASE)
-    forces = get_tool_force()
-    str1 = 'time' + str(elapsed_time) + 'position' + str(position) + 'forces' + str(forces) + '\n'
-    server_socket_write(s1, str1.encode())
- 
- 
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
  
  
@@ -1170,16 +1156,14 @@ def move_into_hole(fast):
     Function to move inside the CSK and hole
  
     Assumptions:
-        DR_USER_NOM is at the nominal position of the fastener
+        DR_USER_NOM will be set to the fastener corrected position
+        This is at the nominal position of the fastener if no correction can be made.
  
     :param fast: cl_fastener,
    
- 
     :return: bool, whether the insertion is succesful
     """
-    z_stop = fast.tcp_tip_distance() * 0.95 #Stond op 0.95 nij 1ste insertion testen
-    CSK_stop = fast.tcp_tip_distance()*0.05
-   
+  
     #set the DR_USER_NOM on the corrected position
     overwrite_user_cart_coord(DR_USER_NOM, fast.corrected_pos(), ref=DR_BASE)
  
@@ -1188,64 +1172,61 @@ def move_into_hole(fast):
  
     #move above the hole
     movel(posx(0, 0, -SAFE_Z_GAP, 0, 0, 0), ref=DR_USER_NOM)
- 
-    #Check if z is well predicted. Othwise use trick to determine Z-coordinate
-    if Z_PREDICTION_LAST_FAST_OK == False:
        
-        #Need to fix the corrected hole calculation first
-        # Def weighted_f_position() BBB
-        # Def Reevaluate_deviations() BBB
-        # Def get_weighted_pos_dev() BBB
-        # Def calc_and_set_corrected_pos() BBB
-   
-        #move to the side of the hole
-        movel(posx(5, 0, -SAFE_Z_GAP, 0, 0, 0), ref=DR_USER_NOM)
-       
-        #Compliance mode and force control
-        task_compliance_ctrl(PROBE_COMPLIANCE)
-        set_desired_force(PROBE_COMPLIANCE_FORCE, [0, 0, 1, 0, 0, 0])
- 
-        reached_force = False
-       
-        #Loop waiting for fastener tip to touch product
-        while not reached_force:
-            f_z = get_tool_forces_in_tool()[2]
-            reached_force = f_z > 0.9 * PROBE_COMPLIANCE_FORCE
- 
-        z0, sol = get_current_posx(ref=DR_USER_NOM)
-       
-        release_force()
-       
-        movel(posx(5, 0, -SAFE_Z_GAP, 0, 0, 0), ref=DR_USER_NOM)
-        movel(posx(0, 0, -SAFE_Z_GAP, 0, 0, 0), ref=DR_USER_NOM)
-       
-        z_stop = fast.tcp_tip_distance() * 0.95 + z0[2]
-        CSK_stop = fast.tcp_tip_distance()*0.05 + z0[2]
- 
+    # Need to fix the corrected hole calculation first
+    # This has been switched off for now
+    # Def weighted_f_position()
+    # Def Reevaluate_deviations()
+    # Def get_weighted_pos_dev()
+    # Def calc_and_set_corrected_pos()
+
+    #move to the side of the hole
+    movel(posx(5, 0, -SAFE_Z_GAP, 0, 0, 0), ref=DR_USER_NOM)
+    
+    #Compliance mode and force control
+    task_compliance_ctrl(PROBE_COMPLIANCE)
+    set_desired_force(PROBE_COMPLIANCE_FORCE, [0, 0, 1, 0, 0, 0])
+
+    reached_force = False
+    
+    #Loop waiting for fastener tip to touch product
+    while not reached_force:
+        f_z = get_tool_forces_in_tool()[2]
+        reached_force = f_z > 0.9 * PROBE_COMPLIANCE_FORCE
+
+    z0, sol = get_current_posx(ref=DR_USER_NOM)
+    
+    release_force()
+    
+    movel(posx(5, 0, -SAFE_Z_GAP, 0, 0, 0), ref=DR_USER_NOM)
+    movel(posx(0, 0, -SAFE_Z_GAP, 0, 0, 0), ref=DR_USER_NOM)
+    
+    z_stop = fast.tcp_tip_distance() * 0.95 + z0[2]
+    CSK_stop = fast.tcp_tip_distance() * 0.05 + z0[2]
  
     #wait a bit to get a good force reading
     wait(0.15)
     f_x0, f_y0, f_z0 = get_tool_forces_in_nom()
  
-# set the values to allow the while loop to start
+    # set the values to allow the while loop to start
     in_hole = False
     t0 = time.time()
     p0, sol = get_current_posx(ref=DR_USER_NOM)
     reached_force = False
     in_CSK = False
  
-# Speed for moving tip of fastener in countersink
+    # Speed for moving tip of fastener in countersink
     change_operation_speed(INSERTION_IN_CSK_SPEED)
  
-# Compliance stiffness to move tip of fastener in countersink
-# High to low stiffness to counter weight of hose and capsule system         
+    # Compliance stiffness to move tip of fastener in countersink
+    # High to low stiffness to counter weight of hose and capsule system         
     task_compliance_ctrl(INSERTION_COMPLIANCE)
    
-# Movement command to go in to countersink   
+    # Movement command to go in to countersink   
     amovel(posx(0, 0, (fast.tcp_tip_distance()*0.10), 0, 0, 0), ref=DR_USER_NOM)
  
-# Loop to prevent safety stop / damage to part.
-# A force detection (can) indicate a misalignment 
+    # Loop to prevent safety stop / damage to part.
+    # A force detection (can) indicate a misalignment 
     
     while not in_CSK and (time.time() - t0) < 2.5:
         p0, sol = get_current_posx(ref=DR_USER_NOM)
@@ -1304,7 +1285,6 @@ def move_into_hole(fast):
         tp_log("Fastener did not go into countersink\nz_location = {}mm (z_stop = {}mm)".format(round(p0[2], 3), round(z_stop, 3)))
        
         return False
-  
          
     #Set values for force control to get in to hole
     reached_force = False
@@ -1600,12 +1580,9 @@ def probe_hole_axis_syst(fast):
  
    :return: Axis System, Change DR_USER_PROBE to a coordinate system at the probed entry of the hole
     """
-   
-    
+
     probe_dist = fast.z_pos_prediction_accuray() + SAFE_Z_GAP + SAFE_Z_GAP
  
-    
-    
     # set the DR_USER_PROBE axis system above the hole location
     overwrite_user_cart_coord(DR_USER_PROBE, translate_pos(fast.installed_pos(), 0, 0, -probe_dist), ref=DR_BASE)
  
@@ -1615,12 +1592,8 @@ def probe_hole_axis_syst(fast):
     # Exit the hole (not too fast) to the origin of the DR_USER_PROBE axis system
     change_operation_speed(PROBE_HOLE_AXIS_SYSTEM_HOLE_EXIT_SPEED)
  
-    
- 
     movel(posx(0, 0, 0, 0, 0, 0), ref=DR_USER_PROBE)
     change_operation_speed(MOVE_SPEED)
- 
-    
  
     # Calculate the possible probe variation,
     # assuming the probe orientation is maximum 10 degrees misaligned with the hole
@@ -1628,7 +1601,6 @@ def probe_hole_axis_syst(fast):
  
     send_to_PC("probe_hole_axis_syst___", "Probing aroud the hole.")
    
-    
     # Move in +x direction and probe the surface
     P_p = posx(probe_dist, 0, 0, 0, 0, 0)
     ppx_x, ppx_y, ppx_z, ppx_xu, ppx_yu, ppx_zu = probe(P_p)
@@ -1673,22 +1645,17 @@ def probe_hole_axis_syst(fast):
    
     P_new_in_DR_USER_PROBE = posx(P_install_in_DR_USER_PROBE[0], P_install_in_DR_USER_PROBE[1], z_av, 0, 0, 0)
    
-    
-    
     # Get the average probing point coordiates in the DR_BASE axis system
     P_pos = coord_transform(P_new_in_DR_USER_PROBE, DR_USER_PROBE, DR_BASE)
    
     P_out = posx(P_pos[0], P_pos[1], P_pos[2], a_angle, b_angle, c_angle)
    
-    
-    
     send_to_PC("probe_hole_axis_syst___", "Hole location probed at position:\n" + pos_string(P_out))
    
     wait(0.5)
     #  Overwrite DR_USER_PROBE towards the hole entry point
     overwrite_user_cart_coord(DR_USER_PROBE, P_out, ref=DR_BASE)
    
-    
     # store the information in the fastener instance
     fast.set_installed_pos(P_out)
    
@@ -2145,8 +2112,6 @@ def weighted_f_position(f1, f2):
                    average positional z deviation,
                    direction deviation)
     """
-  
-    return True
    
     d1 = f1.distance_to_fastener()
     d2 = f2.distance_to_fastener()
@@ -2211,10 +2176,7 @@ def reevaluate_deviations(latest_fastener, f_list):
                                 The f_list must be in the order of instalation.
  
     :return: None, xy_pos_deviation, z_pos_deviation and/or dir_deviation re-evaluated
-    """
-   
-    return True
-   
+    """  
     
     # find the closest installed fastener
     dist = 1000000
@@ -2272,7 +2234,7 @@ def get_weighted_pos_dev(dev_lst):
         Average z position deviation: float, in mm
         Average direction deviation: float, in degrees
     """
-    return True
+
     # invert the distances because the bigger the distance the smaller its influence must be
     # NOTICE this defines the weighing factors
     # alternatively the square of the distance can be used.
@@ -2324,119 +2286,7 @@ def pos_string(p, d = 3):
     except:
         return "Invalid Position."
  
- 
-# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
- 
-class ClientSocket:
- 
-    bytes_msg_length = BYTES_MSG_LENGTH
- 
-    def __init__(self, host_list, port):
-        self.is_connected = False
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        #self.sock.setblocking(0) # TODO make socket non-blocking, this should eliminate wait time after stopping the cobot program (during a socket call)
-        self.connect_to_first_server_in_list( host_list, port)
- 
-    def connect_to_first_server_in_list(self, host_list, port):
-        """
-        Try to connect to any PC in the list of hosts, from the first one to the last one in the list.
-        Returns host address as soon as connection to a PC is established
-        Throws a Connection Error when it could not connect to any host
-        """
-        for i in range(0, len(host_list)):
-            HOST = host_list[i]
-            try:
-                self._CONNECT(HOST, port)
-            except Exception:
-                if i == len(host_list)-1:
-                    raise Exception("Client socket could not connect to any server socket")
-            else:
-                return HOST
- 
-    def send_message(self, payload):
-        # add prefix with message length
-        msg_length = self.bytes_msg_length + len(payload)
-        message = "0"*(self.bytes_msg_length-len(str(msg_length))) + str(msg_length) + payload
-        # handle communication
-        self._SEND(message)
-       
-    def receive_message(self):
-        """
-        Method to receive a message from the TCP/IP server
-        Returns None if no message is available.
-        """
-        msg = self._RECEIVE()
-       
-        return msg
- 
-    def _CONNECT(self, host, port):
-        """
-        Method to connect to a TCP/IP server
-        Errors must be caught by the caller
-        """
-        self.sock.connect((host, port))
-        self.is_connected = True
-        return True
-       
-    def _CLOSE(self):
-        """
-        Method to close a connection to a TCP/IP server
-        Change attribute 'is_connected' to False
-        Errors must be caught by the caller
-        """
-        self.sock.close()
-        self.is_connected = False
- 
-    def _SEND(self, msg):
-        """
-        Method to send a message through the socket connection
-        Returns None if send was successfull
-        Raises Error if send was not successfull
-        Errors must be caught by the caller
-        """
-        totalsent = 0
-        MSGLEN = len(msg)
-        while totalsent < MSGLEN:
-            sent = self.sock.send(msg[totalsent:].encode())
-            if sent == 0:
-                raise IOError("Did not send complete message. Sent message: " + msg[:totalsent])
-            totalsent = totalsent + sent
- 
-    def _recv_n_bytes(self,n):
-        """
-        Convenience method for receiving exactly n bytes from self.socket
-        Errors must be caught by the caller
-        """
-        data = b''
-        while len(data) < n:
-            bufsize = n - len(data)
-            chunk = self.sock.recv(bufsize)
-            if chunk == b'':
-                raise IOError("Did not receive first %d bytes of the message. Data received:" + data + "\end" % (n))
-            data += chunk
-        return data
- 
-    def _RECEIVE(self):
-        """.
-        Method to receive messages from the socket connection
-        Returns message string if message was received
-        Return None otherwise
-        Error must be caught by the caller
-        """
-        msg = ""
-        bytes_recd = 0
-        msg = self._recv_n_bytes(self.sock, self.bytes_msg_length) # receive first part of the message, that contains the message length
-        bytes_recd = len(msg)
-        MSGLEN = int( msg [ 0 : self.bytes_msg_length ] )
-        while bytes_recd < MSGLEN:
-            chunk = self.sock.recv(MSGLEN - bytes_recd)
-            if chunk == b'':
-                raise IOError ("Did not receive complete message from socket. Received message: " + msg)
-            bytes_recd += len(chunk)
-            msg += chunk.decode()
-        return msg
-           
+         
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
  
@@ -2541,23 +2391,23 @@ class cl_temp_fast_ee:
         """
         Output pin number on Cobot connected to EE Pin 2 START
         Clockwise cycle start"""
-        self.I2_START = 1
+        self.I2_START = 3
         """
         Output pin number on Cobot connected to EE Pin 3 REVERSE
         Counterclockwise cycle start"""
-        self.I3_REVERSE = 2
+        self.I3_REVERSE = 4
         """
         Output pin number on Cobot connected to EE Pin 4 NEW CYCLE
         Start new cycle"""
-        self.I4_NEW_CYCLE = 6
+        self.I4_NEW_CYCLE = 5
         """
         Output pin number on Cobot connected to EE Pin 5 STOP MOTOR
         stops the motor in any situation"""
-        self.I5_STOP_MOTOR = 5
+        self.I5_STOP_MOTOR = 6
         """
         Output pin number on Cobot connected to EE Pin 6 RESET CYCLE
         resets any partial values of the cycle you are working in"""
-        self.I6_RESET_CYCLE = 0
+        self.I6_RESET_CYCLE = 7
         """
         Output pin number on Cobot connected to EE Pin 7 PRINT LABEL
         prints on request a 50 letters label
@@ -2566,17 +2416,17 @@ class cl_temp_fast_ee:
         """
         Output pin number on Cobot connected to EE Pin 8-15 for PR1-PR8
         to choose the desired programs 1-8; only if EXT program is active"""
-        self.I_PR = (3,4,0,0,0,0,0,0)
+        self.I_PR = (8,0,0,0,0,0,0,0)
         """
         Maximum time in seconds of the installation per program.
         Note PR2 is slower, so takes more time
         ATTENTION: maximum time allowed in the end effector controller is 10sec"""
-        self.INST_TIME = (5,10,5,5,5,5,5,5)
+        self.INST_TIME = (5,5,5,5,5,5,5,5)
         """
         Maximum time in seconds of the removal per program.
         Note PR2 is slower, so takes more time
         ATTENTION: maximum time allowed in the end effector controller is 10sec"""
-        self.REM_TIME = (5,10,5,5,5,5,5,5)
+        self.REM_TIME = (5,5,5,5,5,5,5,5)
        
         
         """
@@ -2586,11 +2436,11 @@ class cl_temp_fast_ee:
         """
         Cobot output pin that switches the solenoid
         valve to clamp the fastener"""
-        self.AIR_CLAMP = 7
+        self.AIR_CLAMP = 1
         """
         Cobot output pin that switches the solenoid
         valve to eject the fastener"""
-        self.AIR_EJECT = 8
+        self.AIR_EJECT = 2
  
         # class instances that store the current solenoid valve setting
         self.clamp = cl_digital_output(self.AIR_CLAMP)
@@ -4116,8 +3966,7 @@ class cl_fastener(cl_fastener_location):
  
         ATTENTION: Will set DR_USER_NOM on the nominal hole position of this fastener.
         """
-        return True
-       
+
         # to make sure this object is not included in the corr_lst
         # and this is the case if no fasteners are found to correct with
         self.__xy_pos_pred_acc = TEMPF_DEFAULT_POSITIONAL_DEVIATION
@@ -5391,16 +5240,16 @@ class cl_agent():
  
             # calculate the corrected position of the fastener
             # based on all inserted fasteners in the product
-            #TODO perform calculation earlier in a seperate stream if this takes a while
-            permf.calc_and_set_corrected_pos(self._get_all_permfs_in_product())
+            # TODO perform calculation earlier in a seperate stream if this takes a while
+            # permf.calc_and_set_corrected_pos(self._get_all_permfs_in_product())
            
             # insert the fastener into the product
             if self._insert_fast(permf, False):
                 # add the fastener to the product
                 if self.product.add_fast_to_location(permf, prod_lst_id):
-                    reevaluate_deviations(permf, self._get_all_permfs_in_product())
+                    # Not used for now
+                    # reevaluate_deviations(permf, self._get_all_permfs_in_product())
                    
-                    Z_PREDICTION_LAST_FAST_OK = permf.is_z_pos_well_predicted
                     return True
            
             return False
@@ -5474,15 +5323,15 @@ class cl_agent():
  
             # calculate the corrected position of the fastener
             # based on all inserted fasteners in the product
-            tempf.calc_and_set_corrected_pos(self._get_all_tempfs_in_product())
+            # tempf.calc_and_set_corrected_pos(self._get_all_tempfs_in_product())
            
             # insert the fastener into the product
             if self._insert_fast(tempf, True):
                 # add the fastener to the product
                 if self.product.add_fast_to_location(tempf, prod_lst_id):
-                    reevaluate_deviations(tempf, self._get_all_tempfs_in_product())
-                   
-                    Z_PREDICTION_LAST_FAST_OK = tempf.is_z_pos_well_predicted
+                    # Nor used for now
+                    # reevaluate_deviations(tempf, self._get_all_tempfs_in_product())
+
                     return True
            
             return False
@@ -5834,7 +5683,7 @@ class cl_agent():
         return in_ee
  
     
-    def _insert_fast(self, fast: cl_fastener, is_tempf: bool):
+    def _insert_fast(self, fast, is_tempf):
         """
         Function that inserts and tightens a fastener.
         The function assumes that the target location is in the fast object
@@ -5851,8 +5700,8 @@ class cl_agent():
        
         if not move_into_hole(fast):
             movel(posx(0, 0, -(fast.shaft_height() + fast.tcp_tip_distance() + SAFE_Z_GAP + SAFE_Z_GAP), 0, 0, 0), ref=DR_TOOL)
-           
-            self.tf_ee.stop_clamping()
+            if is_tempf:
+                self.tf_ee.stop_clamping()
            
             return False
        
@@ -6699,15 +6548,15 @@ tf_ee = cl_temp_fast_ee()
 # create a class that contains all actions
 agent = cl_agent(None, None, None, pf_ee, tf_ee)
  
-if sync_data_with_PC:
-    socket_to_PC = ClientSocket(PC_host_list, PC_send_port)
-    socket_from_PC = ClientSocket(PC_host_list, PC_receive_port)
+# if sync_data_with_PC:
+    # socket_to_PC = ClientSocket(PC_host_list, PC_send_port)
+    # socket_from_PC = ClientSocket(PC_host_list, PC_receive_port)
    
-    # queue of messages to PC
-    queue_out = queue.Queue()
+    # # queue of messages to PC
+    # queue_out = queue.Queue()
    
-    th_in = thread_run(th_get_msg_in(agent, queue_out), loop=True)
-    th_out = thread_run(th_sync_queue_out, loop=True)
+    # th_in = thread_run(th_get_msg_in(agent, queue_out), loop=True)
+    # th_out = thread_run(th_sync_queue_out, loop=True)
     
 send_to_PC("start program")
  
