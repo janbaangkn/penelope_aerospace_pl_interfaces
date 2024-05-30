@@ -29,6 +29,8 @@ DR_PM_WARNING = 1
 s1 = ""
 str1 = ""
  
+def set_velx(): pass
+def set_accx(): pass
 def get_current_posx(): pass
 def get_tool_force(): pass
 def get_distance(): pass
@@ -59,6 +61,7 @@ def rotm2eul(): pass
 def set_user_cart_coord(): pass
 def set_digital_outputs(): pass
 def set_tool_digital_output(): pass
+def set_tool_digital_outputs() : pass
  
 # # tcpip functions
 # def client_socket_open(): pass # input: ip_in, port_in
@@ -625,7 +628,7 @@ def _get_drill_task_to_server_str(drill_task_in):
     return ""
 
  
-# get message string for AssemblyFastener BBB
+# get message string for AssemblyFastener
 def _get_fastener_to_server_str(fastener_in, loc_uid_in):
     """
     Function to send a fastener to the server
@@ -1485,7 +1488,8 @@ def send_to_PC(label = "", value = ""):
         str = add_timestamp(label) + "\n" + value
    
     if sync_data_with_PC:
-        queue_out.put(str)
+        #queue_out.put(str)
+        pass
     
     # always log
     tp_log(str)
@@ -5083,7 +5087,7 @@ class cl_agent():
  
     """
  
-# nog eens naar kijken     
+    # TODO check this sometime     
     def __init__(self, tempf_storage: cl_f_container, permf_storage: cl_f_container, product: cl_f_container, pf_ee: cl_perm_fast_ee, tf_ee: cl_temp_fast_ee):
         """
         Function that initializes the cl_agent class.
@@ -6462,58 +6466,6 @@ class cl_action(cl_uid):
         """
         self.__speed = s
        
-        
-#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   handle_incoming_string()  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-"""
-This function is running in the cobot controller and catches any messages
-from the pc that have been put in the socket_from_PC and handles them
- 
-:param agent: cl_agent, the agent instance to be modified.
-"""
-def th_get_msg_in(agent):
- 
-    try:
-        while True:
- 
-            msg = socket_from_PC.receive_message()    
-                
-            if msg is not None:
-                # handle the message
-                handle_ros_msg(msg, agent)
- 
-    except Exception as e:
-        send_to_PC(("There is an error in thread 'th_sync_queue_in':", str(e)))
- 
-        if str(e) != 'Interrupted system call':
-            tp_popup("There is an error in thread 'th_sync_queue_in': " + str(e))
- 
-    wait(0.01)
-   
-#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   handle_incoming_string()  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-"""
-This function is running in the cobot controller and sends any messages
-to the pc that have been put in the queue_out
-"""
-def th_sync_queue_out():
- 
-    try:
-        while True:              
-                
-            try:
-                msg_to_PC = queue_out.get(block = False)
-            except queue.Empty:
-                break
- 
-            socket_to_PC.send_message( msg_to_PC )
- 
-    except Exception as e:
-        send_to_PC(("There is an error in thread 'th_sync_queue_out':", str(e)))
- 
-        if str(e) != 'Interrupted system call':
-            tp_popup("There is an error in thread 'th_sync_queue_out': " + str(e))
- 
-    wait(0.01)
-       
     
 ###########################################             START             ###################################################
  
@@ -6522,7 +6474,7 @@ DR_USER_NOM = create_axis_syst_on_current_position()
 DR_USER_PROBE = create_axis_syst_on_current_position()
 DR_USER_NOM_OPP = create_axis_syst_on_current_position()
  
- 
+#TODO open a connection and a thread with the pc 
  
 pos1=posx(0,0,0,0,0,0)
 set_user_cart_coord(pos1, ref=DR_BASE)
@@ -6547,16 +6499,6 @@ tf_ee = cl_temp_fast_ee()
  
 # create a class that contains all actions
 agent = cl_agent(None, None, None, pf_ee, tf_ee)
- 
-# if sync_data_with_PC:
-    # socket_to_PC = ClientSocket(PC_host_list, PC_send_port)
-    # socket_from_PC = ClientSocket(PC_host_list, PC_receive_port)
-   
-    # # queue of messages to PC
-    # queue_out = queue.Queue()
-   
-    # th_in = thread_run(th_get_msg_in(agent, queue_out), loop=True)
-    # th_out = thread_run(th_sync_queue_out, loop=True)
     
 send_to_PC("start program")
  
@@ -6719,8 +6661,3 @@ agent.execute_all()
 send_to_PC("end program")
  
 # close sockets and stop threads
-if sync_data_with_PC:
-    thread_stop(th_in)
-    thread_stop(th_out)
-    socket_to_PC.close()
-    socket_from_PC.close()
