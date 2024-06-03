@@ -16,61 +16,52 @@ c = rotation about rotated z-axis
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 # """STANDIN FUNCTIONS: DO NOT USE"""
  
-DR_BASE = ""
-DR_USER_NOM = ""
-DR_USER_PROBE = ""
-DR_TOOL = ""
-DR_USER_NOM_OPP = ""
-DR_AXIS_Z = ""
-DR_SSTOP = ""
-DR_MV_MOD_ABS = ""
+# DR_BASE = ""
+# DR_USER_NOM = ""
+# DR_USER_PROBE = ""
+# DR_TOOL = ""
+# DR_USER_NOM_OPP = ""
+# DR_AXIS_Z = ""
+# DR_SSTOP = ""
+# DR_MV_MOD_ABS = ""
  
-DR_PM_WARNING = 1
-s1 = ""
-str1 = ""
+# DR_PM_WARNING = 1
+# s1 = ""
+# str1 = ""
  
-def set_velx(): pass
-def set_accx(): pass
-def get_current_posx(): pass
-def get_tool_force(): pass
-def get_distance(): pass
-def transpose(): pass
-def eul2rotm(): pass
-def coord_transform(): pass
-def posx(): pass
-def change_operation_speed(): pass
-def movel(): pass
-def amovel(): pass
-def amove_spiral(): pass
-def amove_periodic(): pass
-def wait(): pass
-def set_ref_coord(): pass
-def task_compliance_ctrl(): pass
-def set_desired_force(): pass
-def release_force(): pass
-def release_compliance_ctrl(): pass
-def get_digital_input(): pass
-def set_digital_output(): pass
-def tp_popup(): pass
-def tp_log(): pass
-def set_tcp(): pass
-def overwrite_user_cart_coord(): pass
-def check_motion(): pass
-def stop(): pass
-def rotm2eul(): pass
-def set_user_cart_coord(): pass
-def set_digital_outputs(): pass
-def set_tool_digital_output(): pass
-def set_tool_digital_outputs() : pass
- 
-# # tcpip functions
-# def client_socket_open(): pass # input: ip_in, port_in
-# def server_socket_open(): pass # input: port_in = 20002
-# def server_socket_write(): pass # input: socket_in, str_in.encode()
- 
-# # thread functions
-# def thread_run(): pass # inputs: function_in, loop = True
-# def thread_stop(): pass # inputs: thread_in
+# def set_velx(): pass
+# def set_accx(): pass
+# def get_current_posx(): pass
+# def get_tool_force(): pass
+# def get_distance(): pass
+# def transpose(): pass
+# def eul2rotm(): pass
+# def coord_transform(): pass
+# def posx(): pass
+# def change_operation_speed(): pass
+# def movel(): pass
+# def amovel(): pass
+# def amove_spiral(): pass
+# def amove_periodic(): pass
+# def wait(): pass
+# def set_ref_coord(): pass
+# def task_compliance_ctrl(): pass
+# def set_desired_force(): pass
+# def release_force(): pass
+# def release_compliance_ctrl(): pass
+# def get_digital_input(): pass
+# def set_digital_output(): pass
+# def tp_popup(): pass
+# def tp_log(): pass
+# def set_tcp(): pass
+# def overwrite_user_cart_coord(): pass
+# def check_motion(): pass
+# def stop(): pass
+# def rotm2eul(): pass
+# def set_user_cart_coord(): pass
+# def set_digital_outputs(): pass
+# def set_tool_digital_output(): pass
+# def set_tool_digital_outputs() : pass
  
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -266,7 +257,607 @@ END_EFFECTOR_UID_TAG = "end_effector_uid" + OPEN_TAG
 FAST_END_EFFECTOR_UID = "fast_end_effector"
 TEMPF_END_EFFECTOR_UID = "tempf_end_effector"
 EXECUTE_TAG = "execute" + OPEN_TAG
- 
+
+
+# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+# error classes and enumerators for the TCP-IP connection
+# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+class MessageTypeError(Exception):
+    """Raised if the message is not of type TCPMessage or TCPResponse."""
+
+    def __init__(self):
+        message = ("The message is not of type TCPMessage or TCPResponse!")
+        super().__init__(message)
+
+
+class TargetPoseSizeError(Exception):
+    """Raised if the size of the new target pose is not equal to 6."""
+
+    def __init__(self):
+        message = ("The new target pose is not of the correct size!")
+        super().__init__(message)
+
+class TargetSizeError(Exception):
+    """Raised if the size of the new target is not equal to 6."""
+
+    def __init__(self):
+        message = ("The new target is not of the correct size!")
+        super().__init__(message)
+
+
+class WorkflowParameterInputError(Exception):
+    """Raised if the workflow parameter is set to an unknown value."""
+
+    def __init__(self):
+        message = ("The new workflow parameter is not recognized!")
+        super().__init__(message)
+
+
+class StatusInputError(Exception):
+    """Raised if the status is set to an unknown value."""
+
+    def __init__(self):
+        message = ("The new status is not recognized!")
+        super().__init__(message)
+
+
+class MessageNames:
+    RESPOND = "respond"
+    STOP = "stop"
+    PAUSE = "pause"
+    RESPONSE = "response"
+    PROCESSED = "processed"
+
+
+class StatusOptions:
+    IDLE = "idle"
+    MOVING = "moving"
+    EVADING = "evading"
+    STOPPED = "stopped"
+    COMPLETED = "completed"
+
+
+class WorkflowParameterOptions:
+    STATIONARY = "stationary"
+    MOVE = "move"
+    REMOVE_TEMPORARY_FASTENER = "remove_temporary_fastener"
+
+# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+# classes for the TCP-IP connection
+# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+class MessageUID:
+    """Class to construct uids for messages.
+
+	The class needs to be accessible in multiple parts of the code, hence the
+	use of class variables.
+	"""
+    value = 0
+
+    def __repr__(self):
+        return "{0}".format(self.__class__.__name__)
+
+    @classmethod
+    def get_new_uid(cls):
+        cls.value += 1
+        return cls.value
+
+    @classmethod
+    def reset(cls):
+        cls.value = 0
+
+
+class TCPOutbox:
+    messages = []
+
+    def __repr__(self):
+        return "{0}".format(self.__class__.__name__)
+
+    @classmethod
+    def reset(cls):
+        cls.messages = []
+
+    @classmethod
+    def add_message(cls, message):
+        if not isinstance(message, (TCPMessage, TCPResponse)):
+            raise MessageTypeError
+        # tp_popup("Message: {0} added to Outbox <{1}>".format(message.uid, message.message), DR_PM_MESSAGE)
+        tp_log("Message: {0} added to Outbox <{1}>".format(message.uid, message.message))
+        cls.messages.append(message)
+
+    @classmethod
+    def _get_first_message(cls):
+        if cls.messages:
+            return cls.messages[0]
+        return None
+
+    @classmethod
+    def remove_message(cls, uid):
+        cls.messages = [msg for msg in cls.messages if msg.uid != uid]
+
+    @classmethod
+    def get_message(cls):
+        message = cls._get_first_message()
+        if message:
+            tp_log("Message: {0} collected from Outbox <{1}>".format(message.uid, message.message))
+            cls.remove_message(message.uid)
+        return message
+
+
+class TCPInbox:
+    priority_messages = []
+    messages = []
+    responses = []
+
+    def __repr__(self):
+        return "{0}".format(self.__class__.__name__)
+
+    @classmethod
+    def reset(cls):
+        cls.priority_messages = []
+        cls.messages = []
+        cls.responses = []
+
+    @classmethod
+    def add_message(cls, message):
+        if not isinstance(message, (TCPMessage, TCPResponse)):
+            raise MessageTypeError
+        tp_log("Message: {0} added to Inbox <{1}>".format(message.uid, message.message))
+        priority_tags = ["pause", "stop"]
+        if message.message_type in priority_tags:
+            cls.priority_messages.append(message)
+        elif message.message_type == "response":
+            cls.responses.append(message)
+        else:
+            cls.messages.append(message)
+
+    @classmethod
+    def remove_message(cls, uid):
+        cls.priority_messages = [msg for msg in cls.priority_messages if msg.uid != uid]
+        cls.messages = [msg for msg in cls.messages if msg.uid != uid]
+        cls.responses = [msg for msg in cls.responses if msg.uid != uid]
+        tp_log("Message with uid: {0} is removed from Inbox".format(uid))
+
+    @classmethod
+    def get_response(cls, uid):
+        tp_log("Getting response to message with uid: {0}".format(uid))
+        response = next((msg for msg in cls.responses if msg.response_uid == uid), None)
+        if response:
+            cls.responses = [msg for msg in cls.responses if msg.uid != response.uid]
+            tp_log("Response to message {0} found: {1}".format(uid, response.message))
+        else:
+            tp_log("No response found for message {0}".format(uid))
+        return response
+
+    @classmethod
+    def _get_first_message(cls):
+        if cls.priority_messages:
+            return cls.priority_messages[0]
+        if cls.messages:
+            return cls.messages[0]
+        return None
+
+    @classmethod
+    def get_message(cls):
+        message = cls._get_first_message()
+        if message:
+            tp_log("Message: {0} collected from Inbox <{1}>".format(message.uid, message.message))
+            cls.remove_message(message.uid)
+        return message
+
+
+class TCPMessage:
+    def __repr__(self):
+        return "{0} (uid: {1}, message: {2})".format(
+            self.__class__.__name__,
+            self.uid,
+            self.message,
+        )
+
+    def __init__(self, message, uid, input_data=None, encoder=DEFAULT_ENCODER, response_required=False):
+        self.uid = uid
+        self.message = message
+        self.input_data = input_data
+        self.encoder = encoder
+        self.response_required = response_required
+        self.message_type = self.determine_message_type()
+        self.encoded = self.construct_encoded_tcp_message()
+
+    def determine_message_type(self):
+        if self.message[:len(MessageNames.STOP)] == MessageNames.STOP:
+            return MessageNames.STOP
+        if self.message[:len(MessageNames.PAUSE)] == MessageNames.PAUSE:
+            return MessageNames.PAUSE
+        if self.message[:len("get")] == "get":
+            return "getter"
+        if self.message[:len("set")] == "set":
+            return "setter"
+        if self.message[:len(MessageNames.RESPONSE)] == MessageNames.RESPONSE:
+            return MessageNames.RESPONSE
+
+    def construct_encoded_tcp_message(self):
+        if self.input_data:
+            expanded_message = "/{0}/{1}<{2}><{3}:{4}>".format(
+                self.uid, self.message, self.input_data, MessageNames.RESPOND, self.response_required)
+        else:
+            expanded_message = "/{0}/{1}<{2}:{3}>".format(
+                self.uid, self.message, MessageNames.RESPOND, self.response_required)
+        expanded_message = "{0:0>4d}{1}".format(len(expanded_message) + 4, expanded_message)
+        return expanded_message.encode(self.encoder)
+
+
+class TCPResponse(TCPMessage):
+    def __init__(self, uid, response_uid, response="processed", encoder=DEFAULT_ENCODER, response_required=False):
+        self.response_uid = response_uid
+        message = "{0}_{1}".format(MessageNames.RESPONSE, self.response_uid)
+        super().__init__(uid=uid, message=message, input_data=response, encoder=encoder,
+                         response_required=response_required)
+
+
+class TCPInputProcessor:
+    def __repr__(self):
+        return "{0}".format(self.__class__.__name__)
+
+    def __init__(self, encoder=DEFAULT_ENCODER):
+        self.encoder = encoder
+        self.raw_input = "".encode(self.encoder)
+
+    def set_raw_input(self, raw_input):
+        self.raw_input = raw_input
+
+    def update_raw_input(self, reading_input):
+        # print("The raw input is updated using: {0}".format(reading_input))
+        self.raw_input += reading_input
+
+    # print("The current raw input is: {0}".format(self.raw_input))
+
+    def process_raw_input(self):
+        tp_log("processing the raw input: {0}".format(self.raw_input))
+        byte_size_length = 4
+        if len(self.raw_input) > byte_size_length:
+            byte_size = int(self.raw_input[:byte_size_length].decode(self.encoder))
+            if len(self.raw_input) >= byte_size:
+                isolated_message = self.raw_input[:byte_size].decode(self.encoder)
+                tcp_message = self.reconstruct_tcp_message(isolated_message)
+                TCPInbox.add_message(tcp_message)
+                self.set_raw_input(self.raw_input[byte_size:])
+                self.process_raw_input()
+
+    def reconstruct_tcp_message(self, raw_tcp_message):
+        tp_log("reconstructing the raw tcp input: {0}".format(raw_tcp_message))
+        # determine size of preamble
+        byte_size, uid = raw_tcp_message.split("/")[:2]
+        preamble_size = len(byte_size) + len(uid) + 2
+        raw_message = raw_tcp_message[preamble_size:]
+
+        # remove the <respond: > section from the raw message
+        raw_respond = raw_message.split("<{0}:".format(MessageNames.RESPOND))[-1].split(">")[0].lower()
+        respond = raw_respond == "true"
+        message_end = len(raw_message) - (len(MessageNames.RESPOND) + 3 + len(raw_respond))
+        message = raw_message[:message_end]
+
+        # check if message contains <data>
+        input_data = None
+        if "<" in message:
+            message = message.split("<")[0]
+            input_data = raw_message[len(message) + 1: message_end - 1]
+
+        tp_log("processing mess")
+
+        # determine if the message is a response
+        if message.split("_")[0] == MessageNames.RESPONSE:
+            response_uid = int(message.split("_")[-1])
+            return TCPResponse(
+                response=input_data,
+                uid=uid,
+                response_uid=response_uid,
+                encoder=self.encoder,
+                response_required=respond,
+            )
+        else:
+            return TCPMessage(
+                message=message,
+                uid=uid,
+                input_data=input_data,
+                encoder=self.encoder,
+                response_required=respond,
+            )
+
+class DoosanTCPServer:
+    def __init__(self, port, encoder=DEFAULT_ENCODER):
+        self.port = port
+        self.encoder = encoder
+        self.socket = server_socket_open(self.port)
+        self.input_processor = TCPInputProcessor(self.encoder)
+
+    def _send_message(self, message):
+        try:
+            self.socket.sendall(message.encoded)
+            tp_log("Message {0} send <{1}>".format(message.uid, message.message))
+            #tp_popup(" Message: {0} has been send - message: {1}".format(message.uid, message.message), DR_PM_MESSAGE)
+            return 0
+        except ConnectionResetError:
+            self._reconnect()
+            self._send_message(message)
+
+    def _send_messages(self):
+        #tp_log("sending messages")
+        continue_sending = True
+        while continue_sending:
+            message = TCPOutbox().get_message()
+            if message:
+                self._send_message(message)
+            else:
+                continue_sending = False
+
+    def _reconnect(self):
+        tp_popup("Reconnecting", DR_PM_MESSAGE)
+        try:
+            server_socket_close(self.socket)
+        except:
+            pass
+        self.socket = server_socket_open(self.port)
+        wait(0.005)
+
+    def _listen(self):
+        #tp_log("started listening")
+        response, raw_input = server_socket_read(self.socket, timeout=0.1)
+        if response in [-1, -2]:
+            self._reconnect()
+            self._listen()
+        elif response > 0:
+            #tp_popup("Listening - raw input is being updated: {0}".format(raw_input), DR_PM_MESSAGE)
+            self.input_processor.update_raw_input(raw_input)
+            self.input_processor.process_raw_input()
+        elif response == -3:
+            return 0
+        else:
+            return 0
+        return 0
+
+    def run(self):
+        global STOP_SERVER
+
+        tp_log("Server running")
+        while not STOP_SERVER:
+            self._listen()
+            self._send_messages()
+        tp_popup("Stopped running server", DR_PM_MESSAGE)
+        return 0
+
+
+# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+# functions for TCP-IP communication
+# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+def construct_tcp_message(message, input_data=None, encoder=DEFAULT_ENCODER, response_required=False):
+	return TCPMessage(
+		message=message,
+		uid=MessageUID.get_new_uid(),
+		input_data=input_data,
+		encoder=encoder,
+		response_required=response_required,
+		)
+
+
+def construct_tcp_response(response_uid, response="processed", encoder=DEFAULT_ENCODER, response_required=False):
+	return TCPResponse(
+		uid=MessageUID.get_new_uid(),
+		response_uid=response_uid,
+		response=response,
+		encoder=encoder,
+		response_required=response_required,
+		)
+
+
+
+def send_message(message, input_data=None, feedback=True):
+	tcp_message = construct_tcp_message(message=message, input_data=input_data, response_required=feedback)
+	TCPOutbox().add_message(tcp_message)
+	if feedback:
+		response = False
+		while not response:
+			# check inbox response for uid
+			response = TCPInbox.get_response(tcp_message.uid)
+		return response
+	return True
+
+
+def send_response(original_message, response="processed", feedback=False):
+	tcp_response = construct_tcp_response(
+		response_uid=original_message.uid,
+		response=response,
+		response_required=feedback,
+	)
+	TCPOutbox().add_message(tcp_response)
+	if feedback:
+		response = None
+		while not response:
+			# check inbox response for uid
+			response = TCPInbox.get_response(tcp_response.uid)
+		return response
+	return True
+
+
+# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+# thread functions for TCP-IP communication
+# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+def th_run_server():
+    tcp_server = DoosanTCPServer(port=20002, encoder=DEFAULT_ENCODER)
+    tcp_server.run()
+
+
+def th_process_inbox():
+    global STOP_SERVER
+
+    # TODO clean up this thread (e.g. Robot )
+    # TODO STOP_SERVER must become True if stop thread is received
+
+    while not STOP_SERVER:
+        wait(0.1)
+        message = TCPInbox.get_message()
+        if message:
+            tp_log("Message with uid: {0} is being processed".format(message.uid))
+            # tp_popup(" Message:{0} is being processed <{1}>".format(message.uid, message.message), DR_PM_MESSAGE)
+            if message.message == "get_joint_rotations":
+                # tp_popup("Processing the 'get_joint_'rotations' request", DR_PM_MESSAGE)
+                send_response(
+                    original_message=message,
+                    response=get_current_posj(),
+                )
+            elif message.message == "indicate_safe":
+                set_digital_output(2, 0)
+                set_digital_output(3, 0)
+                set_digital_output(1, 1)
+                if message.response_required:
+                    send_response(
+                        original_message=message,
+                        response="processed",
+                    )
+
+            elif message.message == "indicate_caution":
+                set_digital_output(1, 0)
+                set_digital_output(3, 0)
+                set_digital_output(2, 1)
+                if message.response_required:
+                    send_response(
+                        original_message=message,
+                        response="processed",
+                    )
+
+            elif message.message == "indicate_danger":
+                set_digital_output(1, 0)
+                set_digital_output(2, 0)
+                set_digital_output(3, 1)
+                if message.response_required:
+                    send_response(
+                        original_message=message,
+                        response="processed",
+                    )
+
+            # elif message.message == "set_approach_position":
+            #     tp_popup("Set approach position to: {0}".format(message.input_data), DR_PM_MESSAGE)
+            #     # convert message into list of float
+            #     position = [float(val) for val in message.input_data[1:-1].split(",")]
+            #     MoveOperator().set_approach_position(position)
+            #     if message.response_required:
+            #         send_response(
+            #             original_message=message,
+            #             response=MessageNames.PROCESSED,
+            #         )
+            # elif message.message == "set_target_position":
+            #     tp_popup("Set target position to: {0}".format(message.input_data), DR_PM_MESSAGE)
+            #     # convert message into list of float
+            #     position = [float(val) for val in message.input_data[1:-1].split(",")]
+            #     MoveOperator().set_target_position(position)
+            #     if message.response_required:
+            #         send_response(
+            #             original_message=message,
+            #             response=MessageNames.PROCESSED,
+            #         )
+            # elif message.message == "set_move_workflow_parameter":
+            #     tp_popup("Set move workflow parameter to: {0}".format(message.input_data), DR_PM_MESSAGE)
+            #     parameter = int(message.input_data)
+            #     MoveOperator().set_move_workflow_parameter(parameter)
+            #     if message.response_required:
+            #         send_response(
+            #             original_message=message,
+            #             response=MessageNames.PROCESSED,
+            #         )
+            # elif message.message == "stop_move":
+            #     tp_popup("Stop the current movement", DR_PM_MESSAGE)
+            #     MoveOperator().set_move_workflow_parameter(5)
+            #     if message.response_required:
+            #         send_response(
+            #             original_message=message,
+            #             response="processed",
+            #         )
+            elif message.message == "process_action_file":
+                tp_popup("Processing action file: {0}".format(message.input_data), DR_PM_MESSAGE)
+                if message.response_required:
+                    send_response(
+                        original_message=message,
+                        response="processed",
+                    )
+
+            elif message.message == "get_status":
+                if message.response_required:
+                    send_response(
+                        original_message=message,
+                        response=robot.get_status(),
+                    )
+
+            elif message.message == "get_ik_solutions":
+                pose = [float(val) for val in message.input_data[1:-1].split(",")]
+                if message.response_required:
+                    send_response(
+                        original_message=message,
+                        response=collect_ik_solutions(pose),
+                    )
+
+            elif message.message == "set_target_pose":
+                pose = [float(val) for val in message.input_data[1:-1].split(",")]
+                robot.set_target_pose(pose)
+                # tp_popup("Set target pose to: {0}".format(pose), DR_PM_MESSAGE)
+                if message.response_required:
+                    send_response(
+                        original_message=message,
+                        response="processed",
+                    )
+
+            elif message.message == "get_target_pose":
+                if message.response_required:
+                    send_response(
+                        original_message=message,
+                        response=robot.get_target_pose(),
+                    )
+
+            elif message.message == "set_temporary_target":
+                joint_rotations = [float(val) for val in message.input_data[1:-1].split(",")]
+                robot.set_temporary_target(joint_rotations)
+                # tp_popup("Set target rotations to: {0}".format(joint_rotations), DR_PM_MESSAGE)
+                if message.response_required:
+                    send_response(
+                        original_message=message,
+                        response="processed",
+                    )
+
+            elif message.message == "set_workflow_parameter":
+                robot.set_workflow_parameter(message.input_data)
+                tp_popup("Set workflow parameter to: {0}".format(message.input_data), DR_PM_MESSAGE)
+                if message.response_required:
+                    send_response(
+                        original_message=message,
+                        response="processed",
+                    )
+
+            elif message.message == "set_move_workflow_parameter":
+                robot.set_move_workflow_parameter(message.input_data)
+
+            elif message.message == "evade":
+                tp_popup("Evade to {0}".format(message.input_data), DR_PM_MESSAGE)
+                robot.set_temporary_target(message.input_data)
+                robot.set_move_workflow_parameter(2)
+
+            elif message.message == "stop_operations":
+                robot.stop_operations()
+                if message.response_required:
+                    send_response(
+                        original_message=message,
+                        response="processed",
+                    )
+
+            else:
+                tp_log("Message: {0} could not be processed. It is not recognized!".format(message.message))
+                #tp_popup("Message: {0} is not processed <{1}>".format(message.uid, message.message), DR_PM_MESSAGE)
+
+
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 # functions to build string messages to be sent to the server
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -1079,12 +1670,38 @@ def _get_posx_from_str(str_in):
  
     return posx(x, y, z, a, b, c)
  
- 
+# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+# generic functions mainly used for inverse kinematic stuff
+# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ 
+
+def compare_lists(list_1, list_2, atol=1.0):
+    error = 0.0
+    for val_1, val_2 in zip(list_1, list_2):
+        error += (val_1 - val_2) ** 2
+    return error ** 0.5 < atol
+
+
+def collect_ik_solutions(target_pose):
+    solutions = []
+    for i in range(8):
+        result = ikin(target_pose, i)
+        solutions.append(list(result))
+    return solutions
+
+
+def convert_rotations(rotations):
+    converted_rotations = []
+    for rotation in rotations:
+        abs_rotation = abs(rotation)
+        if abs_rotation > 180:
+            converted_rotations.append((-360 + abs_rotation)*(abs_rotation/rotation))
+        else:
+            converted_rotations.append(rotation)
+    return converted_rotations
+
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 # Cobot functions
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
- 
  
 def adjust_xy_location(movement_per_newton = 0.06):
     """
@@ -2420,17 +3037,17 @@ class cl_temp_fast_ee:
         """
         Output pin number on Cobot connected to EE Pin 8-15 for PR1-PR8
         to choose the desired programs 1-8; only if EXT program is active"""
-        self.I_PR = (8,0,0,0,0,0,0,0)
+        self.I_PR = (8,9,0,0,0,0,0,0)
         """
         Maximum time in seconds of the installation per program.
         Note PR2 is slower, so takes more time
         ATTENTION: maximum time allowed in the end effector controller is 10sec"""
-        self.INST_TIME = (5,5,5,5,5,5,5,5)
+        self.INST_TIME = (5,10,5,5,5,5,5,5)
         """
         Maximum time in seconds of the removal per program.
         Note PR2 is slower, so takes more time
         ATTENTION: maximum time allowed in the end effector controller is 10sec"""
-        self.REM_TIME = (5,5,5,5,5,5,5,5)
+        self.REM_TIME = (5,10,5,5,5,5,5,5)
        
         
         """
@@ -6474,7 +7091,11 @@ DR_USER_NOM = create_axis_syst_on_current_position()
 DR_USER_PROBE = create_axis_syst_on_current_position()
 DR_USER_NOM_OPP = create_axis_syst_on_current_position()
  
-#TODO open a connection and a thread with the pc 
+STOP_SERVER = False
+
+# open a connection and a thread with the pc 
+server_thread = thread_run(th_run_server, loop=False)
+handler_thread = thread_run(th_process_inbox, loop=False)
  
 pos1=posx(0,0,0,0,0,0)
 set_user_cart_coord(pos1, ref=DR_BASE)
@@ -6661,3 +7282,6 @@ agent.execute_all()
 send_to_PC("end program")
  
 # close sockets and stop threads
+STOP_SERVER = True
+# thread_stop(server_thread)
+# thread_stop(handler_thread)
