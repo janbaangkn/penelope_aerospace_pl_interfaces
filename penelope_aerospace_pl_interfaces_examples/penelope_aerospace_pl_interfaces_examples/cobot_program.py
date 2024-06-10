@@ -6037,7 +6037,6 @@ class cl_agent():
         is_in = False
         i_where = 0
         j_where = 0
-       
         
         for a in self.actions:
             if a.is_install_permf():
@@ -6049,24 +6048,24 @@ class cl_agent():
                 else:
                     send_to_PC("enough_fast___", "No permf location with uid {} could be found for action {}".format(a.loc_uid(), a.uid()))
                     grip_needed = 0
+                
+                is_in = False
             
-            is_in = False
-           
-            for i, known_diam in enumerate(fastener_diam_inst_lst):
-                if abs(known_diam - d_needed) < 0.01:
-                    i_where = i
-               
-                    for j, known_grip in enumerate(fastener_grip_inst_lst):   
-                        if abs(known_grip - grip_needed) < 0.01 and j == i_where:
-                            is_in = True
-                            j_where = j      
-                         
-            if not is_in:
-                fastener_grip_inst_lst.append(grip_needed)
-                fastener_diam_inst_lst.append(d_needed)
-                number_fastener_needed_per_diam_and_grip.append(1)
-            else:
-                number_fastener_needed_per_diam_and_grip[j_where] += 1
+                for i, known_diam in enumerate(fastener_diam_inst_lst):
+                    if abs(known_diam - d_needed) < 0.01:
+                        i_where = i
+                
+                        for j, known_grip in enumerate(fastener_grip_inst_lst):   
+                            if abs(known_grip - grip_needed) < 0.01 and j == i_where:
+                                is_in = True
+                                j_where = j      
+                            
+                if not is_in:
+                    fastener_grip_inst_lst.append(grip_needed)
+                    fastener_diam_inst_lst.append(d_needed)
+                    number_fastener_needed_per_diam_and_grip.append(1)
+                else:
+                    number_fastener_needed_per_diam_and_grip[j_where] += 1
                 
           
         if len(fastener_diam_inst_lst) > 0:      
