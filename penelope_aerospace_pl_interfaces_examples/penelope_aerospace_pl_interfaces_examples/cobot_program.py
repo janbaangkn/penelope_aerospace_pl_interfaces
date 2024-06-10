@@ -7020,8 +7020,8 @@ agent.tempf_storage.add_fast_to_loc_with_uid("tempf_01", "tfst_01", None, 5 , DI
 agent.product = cl_f_container("product")
  
 # add hole locations, stack thickness and diameter in the product list 
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_01", 4.8, 9, posx(-571.67,572.57,895.07,88.52,69.29,-98.94))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_02", 4.8, 9, posx(-536.72,571.64,894.70,88.52,69.29,-98.94))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_01", 5, 9, posx(-571.67,572.57,895.07,88.52,69.29,-98.94))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_02", 5, 9, posx(-536.72,571.64,894.70,88.52,69.29,-98.94))
 
 ###########################################
 # product.log_holes_and_fast_lst()
