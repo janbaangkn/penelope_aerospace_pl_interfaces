@@ -5990,16 +5990,19 @@ class cl_agent():
         tempf_succes = True
         is_in = False
         i_where = 0
-   
+
         for a in self.actions:
             if a.is_install_tempf():
                 loc = self._get_location_by_uid(a.loc_uid())
+
                 if loc is not None:
                     d_needed = loc.diam()
                 else:
-                    send_to_PC("enough_tempf___", "No location with uid {} could be found in action {}".format(a.loc_uid(), a.uid()))
+                    send_to_PC("enough_fast___", "No tempf location with uid {} could be found for action {}".format(a.loc_uid(), a.uid()))
                     d_needed = 0
+                
                 is_in = False
+                
                 for i, known_diam in enumerate(tempf_diam_inst_lst):
                     if abs(known_diam - d_needed) < 0.01:
                         is_in = True
@@ -6020,7 +6023,7 @@ class cl_agent():
             # check if there is a shortage anywhere
             for available, needed, diam in zip(tempf_in_storage, number_tempf_needed_per_diam, tempf_diam_inst_lst):
                 if available < needed:
-                    send_to_PC("enough_tempf___", "{} fasteners of diameter {} in storage; {} needed.".format(available, diam, needed))
+                    send_to_PC("enough_fast___", "{} fasteners of diameter {} in storage; {} needed.".format(available, diam, needed))
                     tempf_succes = False
                    
         
@@ -6043,9 +6046,9 @@ class cl_agent():
                     grip_needed = loc.grip_length()
                     d_needed = loc.diam()
                    
-            else:
-                send_to_PC("enough_fast___", "No location with uid {} could be found in action {}".format(a.loc_uid(), a.uid()))
-                grip_needed = 0
+                else:
+                    send_to_PC("enough_fast___", "No permf location with uid {} could be found for action {}".format(a.loc_uid(), a.uid()))
+                    grip_needed = 0
             
             is_in = False
            
