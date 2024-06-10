@@ -26,7 +26,6 @@ c = rotation about rotated z-axis
 # DR_MV_MOD_ABS = ""
  
 # DR_PM_WARNING = 1
-# DEFAULT_ENCODER = 1
 # DR_PM_MESSAGE =1
 
 # s1 = ""
@@ -89,6 +88,8 @@ Pi = math.pi
 start_time = time.time()
  
 BYTES_MSG_LENGTH  = 4
+
+DEFAULT_ENCODER = 1
  
 # Standard gaps used to prevent collision during movements
 SAFE_Z_GAP = 5
