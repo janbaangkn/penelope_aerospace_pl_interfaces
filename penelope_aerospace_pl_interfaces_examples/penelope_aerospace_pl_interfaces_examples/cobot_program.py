@@ -6290,7 +6290,7 @@ class cl_agent():
         set_ref_coord(DR_BASE)
        
         change_operation_speed(MOVE_SPEED)
-       
+          
         movel(fast.tcp_approach_pos(), ref=DR_BASE)
        
     
@@ -7031,7 +7031,7 @@ agent.product.add_loc_to_holes_and_fast_lst("pr_01_02", 5, 9, posx(-536.72,571.6
 # add waypoints
 agent._add_waypoint("storage approach", posx(119,474,227,180,-180,105))
 agent._add_waypoint("product_approach", posx(-558,487,865,88.52,69.29,-98.94))
-agent._add_waypoint("HOME", posx(0,550,550,90,128,0))
+agent._add_waypoint("HOME", posx(-34.5,493.4,690.69,90,119,0))
  
  
 # insert and install a permf from storage to product
