@@ -16,52 +16,60 @@ c = rotation about rotated z-axis
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 # """STANDIN FUNCTIONS: DO NOT USE"""
  
-# DR_BASE = ""
-# DR_USER_NOM = ""
-# DR_USER_PROBE = ""
-# DR_TOOL = ""
-# DR_USER_NOM_OPP = ""
-# DR_AXIS_Z = ""
-# DR_SSTOP = ""
-# DR_MV_MOD_ABS = ""
+DR_BASE = ""
+DR_USER_NOM = ""
+DR_USER_PROBE = ""
+DR_TOOL = ""
+DR_USER_NOM_OPP = ""
+DR_AXIS_Z = ""
+DR_SSTOP = ""
+DR_MV_MOD_ABS = ""
  
-# DR_PM_WARNING = 1
-# s1 = ""
-# str1 = ""
+DR_PM_WARNING = 1
+DEFAULT_ENCODER = 1
+DR_PM_MESSAGE =1
+
+s1 = ""
+str1 = ""
  
-# def set_velx(): pass
-# def set_accx(): pass
-# def get_current_posx(): pass
-# def get_tool_force(): pass
-# def get_distance(): pass
-# def transpose(): pass
-# def eul2rotm(): pass
-# def coord_transform(): pass
-# def posx(): pass
-# def change_operation_speed(): pass
-# def movel(): pass
-# def amovel(): pass
-# def amove_spiral(): pass
-# def amove_periodic(): pass
-# def wait(): pass
-# def set_ref_coord(): pass
-# def task_compliance_ctrl(): pass
-# def set_desired_force(): pass
-# def release_force(): pass
-# def release_compliance_ctrl(): pass
-# def get_digital_input(): pass
-# def set_digital_output(): pass
-# def tp_popup(): pass
-# def tp_log(): pass
-# def set_tcp(): pass
-# def overwrite_user_cart_coord(): pass
-# def check_motion(): pass
-# def stop(): pass
-# def rotm2eul(): pass
-# def set_user_cart_coord(): pass
-# def set_digital_outputs(): pass
-# def set_tool_digital_output(): pass
-# def set_tool_digital_outputs() : pass
+def set_velx(): pass
+def set_accx(): pass
+def get_current_posx(): pass
+def get_tool_force(): pass
+def get_distance(): pass
+def transpose(): pass
+def eul2rotm(): pass
+def coord_transform(): pass
+def posx(): pass
+def change_operation_speed(): pass
+def movel(): pass
+def amovel(): pass
+def amove_spiral(): pass
+def amove_periodic(): pass
+def wait(): pass
+def set_ref_coord(): pass
+def task_compliance_ctrl(): pass
+def set_desired_force(): pass
+def release_force(): pass
+def release_compliance_ctrl(): pass
+def get_digital_input(): pass
+def set_digital_output(): pass
+def tp_popup(): pass
+def tp_log(): pass
+def set_tcp(): pass
+def overwrite_user_cart_coord(): pass
+def check_motion(): pass
+def stop(): pass
+def rotm2eul(): pass
+def set_user_cart_coord(): pass
+def set_digital_outputs(): pass
+def set_tool_digital_output(): pass
+def set_tool_digital_outputs() : pass
+def server_socket_open() : pass
+def server_socket_close() : pass
+def server_socket_read(): pass
+def thread_run(): pass
+def get_current_posj(): pass
  
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -696,21 +704,21 @@ def th_run_server():
 def th_process_inbox():
     global STOP_SERVER
 
-    # TODO clean up this thread (e.g. Robot )
-    # TODO STOP_SERVER must become True if stop thread is received
-
     while not STOP_SERVER:
         wait(0.1)
         message = TCPInbox.get_message()
         if message:
             tp_log("Message with uid: {0} is being processed".format(message.uid))
-            # tp_popup(" Message:{0} is being processed <{1}>".format(message.uid, message.message), DR_PM_MESSAGE)
-            if message.message == "get_joint_rotations":
-                # tp_popup("Processing the 'get_joint_'rotations' request", DR_PM_MESSAGE)
-                send_response(
-                    original_message=message,
-                    response=get_current_posj(),
-                )
+            
+            # STOP_SERVER must become True if stop thread is received
+            if message.message == "stop_thread":
+                STOP_SERVER = True
+                if message.response_required:
+                    send_response(
+                        original_message=message,
+                        response="processed",
+                    )
+            
             elif message.message == "indicate_safe":
                 set_digital_output(2, 0)
                 set_digital_output(3, 0)
@@ -741,112 +749,8 @@ def th_process_inbox():
                         response="processed",
                     )
 
-            # elif message.message == "set_approach_position":
-            #     tp_popup("Set approach position to: {0}".format(message.input_data), DR_PM_MESSAGE)
-            #     # convert message into list of float
-            #     position = [float(val) for val in message.input_data[1:-1].split(",")]
-            #     MoveOperator().set_approach_position(position)
-            #     if message.response_required:
-            #         send_response(
-            #             original_message=message,
-            #             response=MessageNames.PROCESSED,
-            #         )
-            # elif message.message == "set_target_position":
-            #     tp_popup("Set target position to: {0}".format(message.input_data), DR_PM_MESSAGE)
-            #     # convert message into list of float
-            #     position = [float(val) for val in message.input_data[1:-1].split(",")]
-            #     MoveOperator().set_target_position(position)
-            #     if message.response_required:
-            #         send_response(
-            #             original_message=message,
-            #             response=MessageNames.PROCESSED,
-            #         )
-            # elif message.message == "set_move_workflow_parameter":
-            #     tp_popup("Set move workflow parameter to: {0}".format(message.input_data), DR_PM_MESSAGE)
-            #     parameter = int(message.input_data)
-            #     MoveOperator().set_move_workflow_parameter(parameter)
-            #     if message.response_required:
-            #         send_response(
-            #             original_message=message,
-            #             response=MessageNames.PROCESSED,
-            #         )
-            # elif message.message == "stop_move":
-            #     tp_popup("Stop the current movement", DR_PM_MESSAGE)
-            #     MoveOperator().set_move_workflow_parameter(5)
-            #     if message.response_required:
-            #         send_response(
-            #             original_message=message,
-            #             response="processed",
-            #         )
             elif message.message == "process_action_file":
-                tp_popup("Processing action file: {0}".format(message.input_data), DR_PM_MESSAGE)
-                if message.response_required:
-                    send_response(
-                        original_message=message,
-                        response="processed",
-                    )
-
-            elif message.message == "get_status":
-                if message.response_required:
-                    send_response(
-                        original_message=message,
-                        response=robot.get_status(),
-                    )
-
-            elif message.message == "get_ik_solutions":
-                pose = [float(val) for val in message.input_data[1:-1].split(",")]
-                if message.response_required:
-                    send_response(
-                        original_message=message,
-                        response=collect_ik_solutions(pose),
-                    )
-
-            elif message.message == "set_target_pose":
-                pose = [float(val) for val in message.input_data[1:-1].split(",")]
-                robot.set_target_pose(pose)
-                # tp_popup("Set target pose to: {0}".format(pose), DR_PM_MESSAGE)
-                if message.response_required:
-                    send_response(
-                        original_message=message,
-                        response="processed",
-                    )
-
-            elif message.message == "get_target_pose":
-                if message.response_required:
-                    send_response(
-                        original_message=message,
-                        response=robot.get_target_pose(),
-                    )
-
-            elif message.message == "set_temporary_target":
-                joint_rotations = [float(val) for val in message.input_data[1:-1].split(",")]
-                robot.set_temporary_target(joint_rotations)
-                # tp_popup("Set target rotations to: {0}".format(joint_rotations), DR_PM_MESSAGE)
-                if message.response_required:
-                    send_response(
-                        original_message=message,
-                        response="processed",
-                    )
-
-            elif message.message == "set_workflow_parameter":
-                robot.set_workflow_parameter(message.input_data)
-                tp_popup("Set workflow parameter to: {0}".format(message.input_data), DR_PM_MESSAGE)
-                if message.response_required:
-                    send_response(
-                        original_message=message,
-                        response="processed",
-                    )
-
-            elif message.message == "set_move_workflow_parameter":
-                robot.set_move_workflow_parameter(message.input_data)
-
-            elif message.message == "evade":
-                tp_popup("Evade to {0}".format(message.input_data), DR_PM_MESSAGE)
-                robot.set_temporary_target(message.input_data)
-                robot.set_move_workflow_parameter(2)
-
-            elif message.message == "stop_operations":
-                robot.stop_operations()
+                tp_log("Processing action file: {0}".format(message.input_data), DR_PM_MESSAGE)
                 if message.response_required:
                     send_response(
                         original_message=message,
@@ -855,7 +759,6 @@ def th_process_inbox():
 
             else:
                 tp_log("Message: {0} could not be processed. It is not recognized!".format(message.message))
-                #tp_popup("Message: {0} is not processed <{1}>".format(message.uid, message.message), DR_PM_MESSAGE)
 
 
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -1670,34 +1573,6 @@ def _get_posx_from_str(str_in):
  
     return posx(x, y, z, a, b, c)
  
-# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-# generic functions mainly used for inverse kinematic stuff
-# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ 
-
-def compare_lists(list_1, list_2, atol=1.0):
-    error = 0.0
-    for val_1, val_2 in zip(list_1, list_2):
-        error += (val_1 - val_2) ** 2
-    return error ** 0.5 < atol
-
-
-def collect_ik_solutions(target_pose):
-    solutions = []
-    for i in range(8):
-        result = ikin(target_pose, i)
-        solutions.append(list(result))
-    return solutions
-
-
-def convert_rotations(rotations):
-    converted_rotations = []
-    for rotation in rotations:
-        abs_rotation = abs(rotation)
-        if abs_rotation > 180:
-            converted_rotations.append((-360 + abs_rotation)*(abs_rotation/rotation))
-        else:
-            converted_rotations.append(rotation)
-    return converted_rotations
 
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 # Cobot functions
@@ -3139,9 +3014,9 @@ class cl_temp_fast_ee:
         the end effector controller.
         No reset of pins to the solenoid valves.
         """
-        # switch pins 1, 2, 3 off
+        # switch pins 3 to 10 off
         #TODO: add when more pins are connected
-        set_digital_outputs([-1, -2, -3, -4, -5, -6])
+        set_digital_outputs([-3, -4, -5, -6, -7, -8, -9, -10])
        
  
     def reset_cobot_output_pins_incl_air(self):
@@ -7124,159 +6999,36 @@ agent = cl_agent(None, None, None, pf_ee, tf_ee)
 send_to_PC("start program")
  
 # create a class that contains all available storage locations
-agent.tempf_storage = cl_f_container("storage")
-agent.permf_storage = cl_f_container("storage")
- 
+agent.tempf_storage = cl_f_container("tempf_storage")
+agent.permf_storage = cl_f_container("permf_storage")
  
 # add hole locations, stack thickness and diameter in the permanent fastener storage list 
 # uid, diam, stack thickness, nom_pos 
-#1
-agent.permf_storage.add_loc_to_holes_and_fast_lst("st_01_01", 4.8, 9, posx(658.590,531.260,941.300,89.95,66.07,-93.14))
-# #2
-# agent.permf_storage.add_loc_to_holes_and_fast_lst("st_01_02", 4.8, 9, posx(-710.820,573.620,666.380,90.7,70.24,-90.62))
-# #3
-# agent.permf_storage.add_loc_to_holes_and_fast_lst("st_01_03", 4.8, 9, posx(-663.620,574.360,664.990,90.7,70.24,-90.62))
-# #4
-# agent.permf_storage.add_loc_to_holes_and_fast_lst("st_01_04", 4.8, 9, posx(-628.870,575.560,665.230,90.7,70.24,-90.62))
-# #5
-# agent.permf_storage.add_loc_to_holes_and_fast_lst("st_01_05", 4.8, 9, posx(-593.620,575.610,665.310,90.7,70.24,-90.62))
-# #6
-# agent.permf_storage.add_loc_to_holes_and_fast_lst("st_01_06", 4.8, 9, posx(-559.250,575.320,665.010,90,68.82,-90))
-# #7
-# agent.permf_storage.add_loc_to_holes_and_fast_lst("st_01_07", 4.8, 9, posx(-558.960,588.730,632.490,89.44,70.14,-90.74))
-# #8
-# agent.permf_storage.add_loc_to_holes_and_fast_lst("st_01_08", 4.8, 9, posx(-594.270,586.88,632.540,90,68.82,-90))
-# #9
-# agent.permf_storage.add_loc_to_holes_and_fast_lst("st_01_09", 4.8, 9, posx(-629.170,586.620,632.360,90,68.82,-90))
-# #10
-# agent.permf_storage.add_loc_to_holes_and_fast_lst("st_01_10", 4.8, 9, posx(-663.930,586.270,632.370,90,68.82,-90))
-# #11
-# agent.permf_storage.add_loc_to_holes_and_fast_lst("st_01_11", 4.8, 9, posx(-711.280,584.840,633.390,90,68.82,-90))
-# #12
-# agent.permf_storage.add_loc_to_holes_and_fast_lst("st_01_12", 4.8, 9, posx(-746.280,583.710,633.090,90,68.82,-90))
-# #13
-# agent.permf_storage.add_loc_to_holes_and_fast_lst("st_01_13", 4.8, 9, posx(-780.970,583.530,632.830,90,68.82,-90))
-# #14
-# agent.permf_storage.add_loc_to_holes_and_fast_lst("st_01_14", 4.8, 9, posx(-781.1,595.870,600.450,90,68.82,-90))
-# #15
-# agent.permf_storage.add_loc_to_holes_and_fast_lst("st_01_15", 4.8, 9, posx(-746.480,596.740,600.660,90,68.82,-90))
-# #16
-# agent.permf_storage.add_loc_to_holes_and_fast_lst("st_01_16", 4.8, 9, posx(-711.440,596.650,600.610,90,68.82,-90))
-# #17
-# agent.permf_storage.add_loc_to_holes_and_fast_lst("st_01_17", 4.8, 9, posx(-664.140,597.940,599.570,90,68.82,-90))
-# #18
-# agent.permf_storage.add_loc_to_holes_and_fast_lst("st_01_18", 4.8, 9, posx(-629.360,598.540,599.280,90,68.82,-90))
-# #19
-# agent.permf_storage.add_loc_to_holes_and_fast_lst("st_01_19", 4.8, 9, posx(-594.260,599.580,599.150,90,68.82,-90))
-# #20
-# agent.permf_storage.add_loc_to_holes_and_fast_lst("st_01_20", 4.8, 9, posx(-559.370,600.280,599.18,90,68.82,-90))
- 
+agent.tempf_storage.add_loc_to_holes_and_fast_lst("tfst_01", 5, 10, posx(123,477,59,55,180,-20))
  
 # add permanent fastener in storage
 # uid, loc uid, fast_install_pos, diam, shaft height, min stack, max stack, tcp_tip_dist, tcp_top_dist, in_storage, in_ee, in_product, in_bin, is_tempf
-agent.permf_storage.add_fast_to_loc_with_uid("Permf_01", "st_01_01", None, None , DIAM_6_AND_GRIP_9_SHAFT_HEIGHT,DIAM_6_AND_GRIP_9_MIN_STACK, DIAM_6_AND_GRIP_9_MAX_STACK,DIAM_6_AND_GRIP_9_TCP_TIP_DIST, DIAM_6_AND_GRIP_9_TCP_TOP_DIST,True, False, False, False, False)
-# agent.permf_storage.add_fast_to_loc_with_uid("Permf_02", "st_01_02")
-# agent.permf_storage.add_fast_to_loc_with_uid("Permf_03", "st_01_03")
-# agent.permf_storage.add_fast_to_loc_with_uid("Permf_04", "st_01_04")
-# agent.permf_storage.add_fast_to_loc_with_uid("Permf_05", "st_01_05")
-# agent.permf_storage.add_fast_to_loc_with_uid("Permf_06", "st_01_06")
-# agent.permf_storage.add_fast_to_loc_with_uid("Permf_07", "st_01_07")
-# agent.permf_storage.add_fast_to_loc_with_uid("Permf_08", "st_01_08")
-# agent.permf_storage.add_fast_to_loc_with_uid("Permf_09", "st_01_09")
-# agent.permf_storage.add_fast_to_loc_with_uid("Permf_10", "st_01_10")
-# agent.permf_storage.add_fast_to_loc_with_uid("Permf_11", "st_01_11")
-# agent.permf_storage.add_fast_to_loc_with_uid("Permf_12", "st_01_12")
-# agent.permf_storage.add_fast_to_loc_with_uid("Permf_13", "st_01_13")
-# agent.permf_storage.add_fast_to_loc_with_uid("Permf_14", "st_01_14")
-# agent.permf_storage.add_fast_to_loc_with_uid("Permf_15", "st_01_15")
-# agent.permf_storage.add_fast_to_loc_with_uid("Permf_16", "st_01_16")
-# agent.permf_storage.add_fast_to_loc_with_uid("Permf_17", "st_01_17")
-# agent.permf_storage.add_fast_to_loc_with_uid("Permf_18", "st_01_18")
-# agent.permf_storage.add_fast_to_loc_with_uid("Permf_19", "st_01_19")
-# agent.permf_storage.add_fast_to_loc_with_uid("Permf_20", "st_01_20")
- 
- 
+agent.tempf_storage.add_fast_to_loc_with_uid("tempf_01", "tfst_01", None, 5 , DIAM_5_SHAFT_HEIGHT,DIAM_5_MIN_STACK, DIAM_5_MAX_STACK,DIAM_5_TCP_TIP_DIST, DIAM_5_TCP_TOP_DIST,True, False, False, False, True)
+
 # create a class that contains all available hole positions in the product
 agent.product = cl_f_container("product")
  
- 
 # add hole locations, stack thickness and diameter in the product list 
-#1
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_01", 4.8, 9, posx(658.590,531.260,941.300,89.95,66.07,-93.14))
-#2
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_02", 4.8, 9, posx(674.480,531.050,943.900,88.83,66.71,89.94))
-#3
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_03", 4.8, 9, posx(640.98,544.600,910.93,88.83,66.71,89.94))
-#4
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_04", 4.8, 9, posx(659.840,544.210,911.230,88.83,66.71,89.94))
-#5
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_05", 4.8, 9, posx(675.820,543.890,911.530,88.83,66.71,89.94))
-#6
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_06", 4.8, 9, posx(676.130,557.250,879.230,88.83,66.71,89.94))
-#7
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_07", 4.8, 9, posx(661.260,557.380,879.140,88.83,66.71,89.94))
-#8
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_08", 4.8, 9, posx(641.850,557.530,877.920,88.83,66.71,89.94))
-#9
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_09", 4.8, 9, posx(677.740,570.230,846.750,88.83,66.71,89.94))
-#10
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_10", 4.8, 9, posx(662.110,570.120,846.550,88.83,66.71,89.94))
-#11
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_11", 4.8, 9, posx(678.620,583.810,814.420,88.83,66.71,89.94))
-#12
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_12", 4.8, 9, posx(663.200,583.410,814.110,88.83,66.71,89.94))
-#13
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_13", 4.8, 9, posx(643.830,584.490,813.400,88.83,66.71,89.94))
-#14
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_14", 4.8, 9, posx(679.760,597.060,781.900,88.83,66.71,89.94))
-#15
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_15", 4.8, 9, posx(664.110,597.530,781.510,88.83,66.71,89.94))
-#16
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_16", 4.8, 9, posx(645.040,597.530,781.330,88.83,66.71,89.94))
-#17
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_17", 4.8, 9, posx(680.900,609.940,749.850,88.83,66.71,89.94))
-#18
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_18", 4.8, 9, posx(665.300,610.190,749.040,88.83,66.71,89.94))
-#19
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_19", 4.8, 9, posx(645.720,610.590,748.360,88.83,66.71,89.94))
-#20
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_20", 4.8, 9, posx(666.34,624.170,716.360,88.83,66.71,89.94))
- 
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_01", 4.8, 9, posx(-571.67,572.57,895.07,88.52,69.29,-98.94))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_02", 4.8, 9, posx(-536.72,571.64,894.70,88.52,69.29,-98.94))
+
 ###########################################
 # product.log_holes_and_fast_lst()
  
- 
 # add waypoints
-agent._add_waypoint("storage approach", posx(652,227,700,88.83,66.71,-89.94))
-agent._add_waypoint("product_approach", posx(550,150,669,88.83,66.71,-89.94))
-agent._add_waypoint("HOME", posx(450,-0,622,98,66,-90))
- 
- 
-# agent.log_waypoints_lst()
+agent._add_waypoint("storage approach", posx(119,474,227,180,-180,105))
+agent._add_waypoint("product_approach", posx(-558,487,865,88.52,69.29,-98.94))
+agent._add_waypoint("HOME", posx(0,550,550,90,128,0))
  
  
 # insert and install a permf from storage to product
-agent._add_install_permf_action("A01", "pr_01_01")
-# agent._add_install_permf_action("A02", "pr_01_02")
-# agent._add_install_permf_action("A03", "pr_01_03")
-# agent._add_install_permf_action("A04", "pr_01_04")
-# agent._add_install_permf_action("A05", "pr_01_05")
-# agent._add_install_permf_action("A06", "pr_01_06")
-# agent._add_install_permf_action("A07", "pr_01_07")
-# agent._add_install_permf_action("A08", "pr_01_08")
-# agent._add_install_permf_action("A09", "pr_01_09")
-# agent._add_install_permf_action("A10", "pr_01_10")
-# agent._add_install_permf_action("A11", "pr_01_11")
-# agent._add_install_permf_action("A12", "pr_01_12")
-# agent._add_install_permf_action("A13", "pr_01_13")
-# agent._add_install_permf_action("A14", "pr_01_14")
-# agent._add_install_permf_action("A15", "pr_01_15")
-# agent._add_install_permf_action("A16", "pr_01_16")
-# agent._add_install_permf_action("A17", "pr_01_17")
-# agent._add_install_permf_action("A18", "pr_01_18")
-# agent._add_install_permf_action("A19", "pr_01_19")
-# agent._add_install_permf_action("A20", "pr_01_20")
- 
+agent._add_install_tempf_action("A01", "pr_01_01")
+
 agent.execute_all()
  
 send_to_PC("end program")
