@@ -6118,9 +6118,15 @@ class cl_agent():
             if is_tempf:
                 self.tf_ee.tempf_in_end_effector = True
  
-                # clamp and tighten the fastener
-                is_untightened = self.tf_ee.untighten_temp(UNTIGHTEN_PROGRAM)
-                # only move away from the pickup position if properly untightened
+                if fast.in_product():
+                    # clamp and tighten the fastener
+                    is_untightened = self.tf_ee.untighten_temp(UNTIGHTEN_PROGRAM)
+                else:
+                    # no need to untighten in the storage location
+                    # start clamping the fastener
+                    is_untightened = True
+
+                    self.tf_ee.start_clamping()
             else:
                 self.pf_ee.permf_in_end_effector = True
                 is_untightened = True # permf never is fixed
@@ -6156,16 +6162,18 @@ class cl_agent():
            
         # check if the fast is really in the ee
         if is_tempf:
-            if is_untightened:           
-                in_ee = retract_and_check_tempf_in_ee(fast, self.tf_ee)
-                if not in_ee:
-                    if was_in_product:
-                        fast.set_as_in_product()
-                    else:
-                        fast.set_as_in_storage()
+            if is_untightened:   
+                if was_in_product:        
+                    in_ee = retract_and_check_tempf_in_ee(fast, self.tf_ee)
+                    if not in_ee:
+                        if was_in_product:
+                            fast.set_as_in_product()
+                        else:
+                            fast.set_as_in_storage()
+                else:
+                    in_ee = True
         else:
             #TODO check whether the fastener is in
-            #Denk even iets aantikken?
             in_ee = True 
         
         
