@@ -16,60 +16,60 @@ c = rotation about rotated z-axis
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 # """STANDIN FUNCTIONS: DO NOT USE"""
  
-DR_BASE = ""
-DR_USER_NOM = ""
-DR_USER_PROBE = ""
-DR_TOOL = ""
-DR_USER_NOM_OPP = ""
-DR_AXIS_Z = ""
-DR_SSTOP = ""
-DR_MV_MOD_ABS = ""
+# DR_BASE = ""
+# DR_USER_NOM = ""
+# DR_USER_PROBE = ""
+# DR_TOOL = ""
+# DR_USER_NOM_OPP = ""
+# DR_AXIS_Z = ""
+# DR_SSTOP = ""
+# DR_MV_MOD_ABS = ""
  
-DR_PM_WARNING = 1
-DEFAULT_ENCODER = 1
-DR_PM_MESSAGE =1
+# DR_PM_WARNING = 1
+# DEFAULT_ENCODER = 1
+# DR_PM_MESSAGE =1
 
-s1 = ""
-str1 = ""
+# s1 = ""
+# str1 = ""
  
-def set_velx(): pass
-def set_accx(): pass
-def get_current_posx(): pass
-def get_tool_force(): pass
-def get_distance(): pass
-def transpose(): pass
-def eul2rotm(): pass
-def coord_transform(): pass
-def posx(): pass
-def change_operation_speed(): pass
-def movel(): pass
-def amovel(): pass
-def amove_spiral(): pass
-def amove_periodic(): pass
-def wait(): pass
-def set_ref_coord(): pass
-def task_compliance_ctrl(): pass
-def set_desired_force(): pass
-def release_force(): pass
-def release_compliance_ctrl(): pass
-def get_digital_input(): pass
-def set_digital_output(): pass
-def tp_popup(): pass
-def tp_log(): pass
-def set_tcp(): pass
-def overwrite_user_cart_coord(): pass
-def check_motion(): pass
-def stop(): pass
-def rotm2eul(): pass
-def set_user_cart_coord(): pass
-def set_digital_outputs(): pass
-def set_tool_digital_output(): pass
-def set_tool_digital_outputs() : pass
-def server_socket_open() : pass
-def server_socket_close() : pass
-def server_socket_read(): pass
-def thread_run(): pass
-def get_current_posj(): pass
+# def set_velx(): pass
+# def set_accx(): pass
+# def get_current_posx(): pass
+# def get_tool_force(): pass
+# def get_distance(): pass
+# def transpose(): pass
+# def eul2rotm(): pass
+# def coord_transform(): pass
+# def posx(): pass
+# def change_operation_speed(): pass
+# def movel(): pass
+# def amovel(): pass
+# def amove_spiral(): pass
+# def amove_periodic(): pass
+# def wait(): pass
+# def set_ref_coord(): pass
+# def task_compliance_ctrl(): pass
+# def set_desired_force(): pass
+# def release_force(): pass
+# def release_compliance_ctrl(): pass
+# def get_digital_input(): pass
+# def set_digital_output(): pass
+# def tp_popup(): pass
+# def tp_log(): pass
+# def set_tcp(): pass
+# def overwrite_user_cart_coord(): pass
+# def check_motion(): pass
+# def stop(): pass
+# def rotm2eul(): pass
+# def set_user_cart_coord(): pass
+# def set_digital_outputs(): pass
+# def set_tool_digital_output(): pass
+# def set_tool_digital_outputs() : pass
+# def server_socket_open() : pass
+# def server_socket_close() : pass
+# def server_socket_read(): pass
+# def thread_run(): pass
+# def get_current_posj(): pass
  
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -1464,7 +1464,7 @@ def handle_action_str(msg_str, agent):
         action = agent._get_from_lst_by_uid(agent.actions, a_uid, "", False)
         action.set_as_waiting()
  
-    passing_lst: list[str] = []
+    passing_lst = []
     passing_str = _find_substring(msg_str, PASSING_UIDS_TAG)
     while passing_str is not None:
         passing_lst.append(extract_leaf_content(passing_str, PASSING_UID_TAG, CLOSE_TAG))
@@ -6988,9 +6988,6 @@ set_user_cart_coord(pos1, ref=DR_BASE)
 set_velx(80,80)
 set_accx(50,50)
  
-PC_host_list = ['10.237.20.15', '10.237.20.2','10.237.20.3','10.237.20.4', '10.237.20.5'] # PCs that it will try to connect to
-PC_send_port = 65432
-PC_receive_port = 20002  # TODO find out correct port numbers
 sync_data_with_PC = False
  
 ###########################################
