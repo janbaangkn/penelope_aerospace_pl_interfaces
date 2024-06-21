@@ -4217,11 +4217,12 @@ class cl_fastener(cl_fastener_location):
  
  
     def report_to_system(self):
-        """let the connected systen know the fastener status."""
+        """let the connected systen know the fastener status.
+        The location uid is not known in this class."""
         if self.__is_tempf:
-            str_out = TEMPFS_TAG + _get_fastener_to_server_str(self) + CLOSE_TAG
+            str_out = TEMPFS_TAG + _get_fastener_to_server_str(self, "") + CLOSE_TAG
         else:
-            str_out = FASTENERS_TAG + _get_fastener_to_server_str(self) + CLOSE_TAG
+            str_out = FASTENERS_TAG + _get_fastener_to_server_str(self, "") + CLOSE_TAG
  
         send_to_PC(str_out)
  
