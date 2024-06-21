@@ -775,9 +775,9 @@ def tempf_storage_str_to_server(storage_in):
  
     :param storage_in: cl_fl_container with loc: cl_fastener_location and tempf: cl_fastener,
     """ 
-    str = TEMPF_STORAGE_LOC_TAG + _get_hole_location_container_to_server_str(storage_in) + CLOSE_TAG
+    str_out = TEMPF_STORAGE_LOC_TAG + _get_hole_location_container_to_server_str(storage_in) + CLOSE_TAG
  
-    return str
+    return str_out
  
 def permf_storage_str_to_server(storage_in):
     """
@@ -785,9 +785,9 @@ def permf_storage_str_to_server(storage_in):
  
     :param storage_in: cl_fl_container with loc: cl_fastener_location and permf: cl_fastener,
     """ 
-    str = PERMF_STORAGE_LOC_TAG + _get_hole_location_container_to_server_str(storage_in) + CLOSE_TAG
+    str_out = PERMF_STORAGE_LOC_TAG + _get_hole_location_container_to_server_str(storage_in) + CLOSE_TAG
  
-    return str
+    return str_out
  
 def products_str_to_server(product_in):
     """
@@ -795,9 +795,9 @@ def products_str_to_server(product_in):
  
     :param product_in: cl_fl_container
     """ 
-    str = PRODUCT_TAG + _get_hole_location_container_to_server_str(product_in) + CLOSE_TAG
+    str_out = PRODUCT_TAG + _get_hole_location_container_to_server_str(product_in) + CLOSE_TAG
  
-    return str
+    return str_out
  
  
 def waypoints_str_to_server(waypoints_in):
@@ -806,14 +806,14 @@ def waypoints_str_to_server(waypoints_in):
  
     :param waypoints_in: list of cl_waypoint
     """
-    str = WAYPOINTS_TAG
+    str_out = WAYPOINTS_TAG
  
     for waypoint in waypoints_in:
-        str = str + _get_waypoint_to_server_str(waypoint)
+        str_out = str_out + _get_waypoint_to_server_str(waypoint)
  
-    str = str + CLOSE_TAG
+    str_out = str_out + CLOSE_TAG
  
-    return str
+    return str_out
  
 def actions_str_to_server(actions_in):
     """
@@ -821,14 +821,14 @@ def actions_str_to_server(actions_in):
  
     :param actions_in: list of cl_action
     """
-    str = ACTIONS_TAG
+    str_out = ACTIONS_TAG
  
     for action in actions_in:
-        str = str + _get_action_to_server_str(action)
+        str_out = str_out + _get_action_to_server_str(action)
  
-    str = str + CLOSE_TAG
+    str_out = str_out + CLOSE_TAG
  
-    return str
+    return str_out
  
 def drill_tasks_str_to_server(drill_tasks_in):
     """
@@ -836,14 +836,14 @@ def drill_tasks_str_to_server(drill_tasks_in):
  
     :param drill_tasks_in: list of cl_action
     """
-    # str = DRILL_TASKS_TAG
+    # str_out = DRILL_TASKS_TAG
  
     # for drill_task in drill_tasks_in:
-    #     str = str + _get_drill_task_to_server_str(drill_task)
+    #     str_out = str_out + _get_drill_task_to_server_str(drill_task)
  
-    # str = str + CLOSE_TAG
+    # str_out = str_out + CLOSE_TAG
  
-    # return str
+    # return str_out
     return ""
  
 def fasteners_str_to_server(fl_container_lst_in): 
@@ -852,14 +852,14 @@ def fasteners_str_to_server(fl_container_lst_in):
  
     :param fasteners_in: list of cl_fl_container
     """
-    str = FASTENERS_TAG
+    str_out = FASTENERS_TAG
  
     for fl_container in fl_container_lst_in:
-        str = str + _get_fastener_to_server_str(fl_container.fast, fl_container.loc.uid)
+        str_out = str_out + _get_fastener_to_server_str(fl_container.fast, fl_container.loc.uid)
  
-    str = str + CLOSE_TAG
+    str_out = str_out + CLOSE_TAG
  
-    return str
+    return str_out
  
 def tempfs_str_to_server(fl_container_lst_in):
     """
@@ -867,14 +867,14 @@ def tempfs_str_to_server(fl_container_lst_in):
  
     :param tempfs_in: list of cl_fl_container
     """
-    str = TEMPFS_TAG
+    str_out = TEMPFS_TAG
  
     for fl_container in fl_container_lst_in:
-        str = str + _get_fastener_to_server_str(fl_container.fast, fl_container.loc.uid)
+        str_out = str_out + _get_fastener_to_server_str(fl_container.fast, fl_container.loc.uid)
  
-    str = str + CLOSE_TAG
+    str_out = str_out + CLOSE_TAG
  
-    return str
+    return str_out
  
 def docking_pos_str_to_server(docking_pos_in):
     """
@@ -883,14 +883,14 @@ def docking_pos_str_to_server(docking_pos_in):
     TODO define docking positions for end effectors
     :param docking_pos_in: list of cl_TBD
     """
-    # str = DOCKING_POSS_TAG
+    # str_out = DOCKING_POSS_TAG
  
     # for docking_pos in docking_pos_in:
-    #     str = str + _get_docking_pos_to_server_str(docking_pos)
+    #     str_out = str_out + _get_docking_pos_to_server_str(docking_pos)
  
-    # str = str + CLOSE_TAG
+    # str_out = str_out + CLOSE_TAG
  
-    # return str
+    # return str_out
     return ""
     
 def ee_str_to_server(ee_in):
@@ -899,14 +899,14 @@ def ee_str_to_server(ee_in):
  
     :param ee_in: list of cl_temp_fast_ee
     """
-    # str = END_EFFECTORS_TAG
+    # str_out = END_EFFECTORS_TAG
  
     # for ee in ee_in:
-    #     str = str + _get_end_effector_to_server_str(ee)
+    #     str_out = str_out + _get_end_effector_to_server_str(ee)
  
-    # str = str + CLOSE_TAG
+    # str_out = str_out + CLOSE_TAG
  
-    # return str
+    # return str_out
     return ""
  
 def _get_hole_location_container_to_server_str(cont_in):
@@ -916,18 +916,18 @@ def _get_hole_location_container_to_server_str(cont_in):
     :param cont_in: cl_f_container
     """
     # uid of the container
-    str = str + UID_TAG + cont_in.uid() + CLOSE_TAG
+    str_out = UID_TAG + cont_in.uid() + CLOSE_TAG
  
     # list of hole locations
-    str = str + LOCATIONS_TAG
+    str_out = str_out + LOCATIONS_TAG
     for tl_container in cont_in.holes_and_fast_lst:
-        str = str + _get_hole_location_to_server_str(tl_container.loc)
-    str = str + CLOSE_TAG
+        str_out = str_out + _get_hole_location_to_server_str(tl_container.loc)
+    str_out = str_out + CLOSE_TAG
  
     # max_obstacle_height
-    str = str + MAX_OBST_HEIGHT_TAG + str(cont_in.max_obstacle_height) + CLOSE_TAG
+    str_out = str_out + MAX_OBST_HEIGHT_TAG + str(cont_in.max_obstacle_height) + CLOSE_TAG
  
-    return str
+    return str_out
  
  
 def _get_hole_location_to_server_str(loc_in):
@@ -936,34 +936,34 @@ def _get_hole_location_to_server_str(loc_in):
  
     :param loc_in: cl_fastener_location
     """
-    str = HOLE_LOCATION_TAG
+    str_out = HOLE_LOCATION_TAG
     # uid of the hole position: string uid
-    str = str + UID_TAG + loc_in.uid() + CLOSE_TAG                         
+    str_out = str_out + UID_TAG + loc_in.uid() + CLOSE_TAG                         
  
     # Nominal location of the hole: geometry_msgs/Pose nom_pos
-    str = str + _get_pose_str(loc_in.nom_pos())            
+    str_out = str_out + _get_pose_str(loc_in.nom_pos())            
  
     # Diameter of the hole: float32 diam
-    str = str + DIAM_TAG + str(loc_in.diam()) + CLOSE_TAG                
+    str_out = str_out + DIAM_TAG + str(loc_in.diam()) + CLOSE_TAG                
  
     # Total thickness at the hole
     # Must be equal to the sum of layer thicknesses: float32 stack_t
-    str = str + STACK_T_TAG + str(loc_in.stack_thickness()) + CLOSE_TAG       
+    str_out = str_out + STACK_T_TAG + str(loc_in.stack_thickness()) + CLOSE_TAG       
  
     # distance of the drill jig hole entry above the surface: float32 drill_jig_dist                 
-    str = str + DRILL_JIG_DIST_TAG + str(loc_in.drill_jig_dist()) + CLOSE_TAG
+    str_out = str_out + DRILL_JIG_DIST_TAG + str(loc_in.drill_jig_dist()) + CLOSE_TAG
  
     # Whether or not the hole has been drilled: bool drilled
-    str = str + DRILLED_TAG + str(loc_in.is_drilled()) + CLOSE_TAG            
+    str_out = str_out + DRILLED_TAG + str(loc_in.is_drilled()) + CLOSE_TAG            
  
     # Material definition for each layer: AssemblyMaterialLayer[] layers
     #TODO add layers to the hole location
-    #str = str + LAYERS_TAG
+    #str_out = str_out + LAYERS_TAG
     #for layer in loc_in.layers:
-    #    str = str + _get_material_layer_to_server_str(layer)
-    #str = str + CLOSE_TAG
+    #    str_out = str_out + _get_material_layer_to_server_str(layer)
+    #str_out = str_out + CLOSE_TAG
  
-    return str + CLOSE_TAG
+    return str_out + CLOSE_TAG
  
  
 def _get_pose_str(pose_in):
@@ -972,23 +972,22 @@ def _get_pose_str(pose_in):
  
     :param pose_in: posx (pose_in is in Doosan format)
     """
-    str = ""
     if pose_in is not None:
-        str = str + POSE_TAG
+        str_out = POSE_TAG
     
         # Get position
-        str = str + POSE_PX_TAG + str(pose_in[0]) + CLOSE_TAG
-        str = str + POSE_PY_TAG + str(pose_in[1]) + CLOSE_TAG
-        str = str + POSE_PZ_TAG + str(pose_in[2]) + CLOSE_TAG
+        str_out = str_out + POSE_PX_TAG + str(pose_in[0]) + CLOSE_TAG
+        str_out = str_out + POSE_PY_TAG + str(pose_in[1]) + CLOSE_TAG
+        str_out = str_out + POSE_PZ_TAG + str(pose_in[2]) + CLOSE_TAG
     
         # Get orientation
-        str = str + POSE_OX_TAG + str(pose_in[3]) + CLOSE_TAG
-        str = str + POSE_OY_TAG + str(pose_in[4]) + CLOSE_TAG
-        str = str + POSE_OZ_TAG + str(pose_in[5]) + CLOSE_TAG
+        str_out = str_out + POSE_OX_TAG + str(pose_in[3]) + CLOSE_TAG
+        str_out = str_out + POSE_OY_TAG + str(pose_in[4]) + CLOSE_TAG
+        str_out = str_out + POSE_OZ_TAG + str(pose_in[5]) + CLOSE_TAG
     
-        str = str + CLOSE_TAG
+        return str_out + CLOSE_TAG
 
-    return str
+    return ""
     
  
  
@@ -999,35 +998,35 @@ def _get_material_layer_to_server_str(layer_in):
  
     :param pose_in: posx (pose_in is in Doosan format)
     """
-    # str = MAT_LAYER_TAG
+    # str_out = MAT_LAYER_TAG
  
     # # uid of the layer: string uid  
-    # str = str + UID_TAG + layer_in.uid() + CLOSE_TAG
+    # str_out = str_out + UID_TAG + layer_in.uid() + CLOSE_TAG
  
     # # Thickness of the layer:float32 thickness
-    # str = str + LAYER_THICKNESS_TAG + str(layer_in.thickness) + CLOSE_TAG
+    # str_out = str_out + LAYER_THICKNESS_TAG + str(layer_in.thickness) + CLOSE_TAG
  
     # # Drill specifications during the drilling in this layer
     # # Speed of the drill:float32 speed    
-    # str = str + DRILL_SPEED_TAG + str(layer_in.speed) + CLOSE_TAG 
+    # str_out = str_out + DRILL_SPEED_TAG + str(layer_in.speed) + CLOSE_TAG 
  
     # # Feed rate of the drill:float32 feed 
-    # str = str + DRILL_FEED_TAG + str(layer_in.feed) + CLOSE_TAG
+    # str_out = str_out + DRILL_FEED_TAG + str(layer_in.feed) + CLOSE_TAG
  
     # # Lower limit(s) of the torque bandwidth(s):float32 lower_torque_limits 
-    # str = str + LOWER_TORQUE_LIMIT_TAG + str(layer_in.lower_torque_limits) + CLOSE_TAG
+    # str_out = str_out + LOWER_TORQUE_LIMIT_TAG + str(layer_in.lower_torque_limits) + CLOSE_TAG
  
     # # Upper limit(s) of the torque bandwidth(s):float32 upper_torque_limits 
-    # str = str + UPPER_TORQUE_LIMIT_TAG + str(layer_in.upper_torque_limits) + CLOSE_TAG 
+    # str_out = str_out + UPPER_TORQUE_LIMIT_TAG + str(layer_in.upper_torque_limits) + CLOSE_TAG 
  
     # # Torque level/threshold to switch to the next layer in the stack: float32 threshold
-    # str = str + TORQUE_THRESHOLD_TAG + str(layer_in.threshold) + CLOSE_TAG
+    # str_out = str_out + TORQUE_THRESHOLD_TAG + str(layer_in.threshold) + CLOSE_TAG
  
     # # Temporary fastening specifications for this layer
     # # Maximum fastener clamp force:float32 max_clamp_force                
-    # str = str + MAX_TEMPF_CLAMP_FORCE_TAG + str(layer_in.max_clamp_force) + CLOSE_TAG
+    # str_out = str_out + MAX_TEMPF_CLAMP_FORCE_TAG + str(layer_in.max_clamp_force) + CLOSE_TAG
  
-    # return str + CLOSE_TAG
+    # return str_out + CLOSE_TAG
     return ""
 
  
@@ -1038,15 +1037,15 @@ def _get_waypoint_to_server_str(waypoint_in):
  
     :param waypoint_in: cl_waypoint
     """
-    str = WAYPOINT_TAG
+    str_out = WAYPOINT_TAG
  
     # uid: uid of the hole Waypoint
-    str = str + UID_TAG + waypoint_in.uid() + CLOSE_TAG
+    str_out = str_out + UID_TAG + waypoint_in.uid() + CLOSE_TAG
  
     # pos: location of the waypoint
-    str = str + _get_pose_str(waypoint_in.pos())
+    str_out = str_out + _get_pose_str(waypoint_in.pos())
  
-    return str + CLOSE_TAG
+    return str_out + CLOSE_TAG
    
  
 def _get_action_to_server_str(action_in):
@@ -1056,20 +1055,20 @@ def _get_action_to_server_str(action_in):
     :param action_in: cl_action
     """
     
-    str = ACTIONS_TAG
+    str_out = ACTIONS_TAG
  
     # string uid: uid of the hole Action
-    str = str + UID_TAG + action_in.uid() + CLOSE_TAG
+    str_out = str_out + UID_TAG + action_in.uid() + CLOSE_TAG
  
     # string a_type: type of the action object to create
     # ACTION_TYPE_MOVE_WAYPOINT = "move_to_waypoint"  
     # ACTION_TYPE_INSTALL_PERMF = "install_permf" 
     # ACTION_TYPE_INSTALL_TEMPF = "install_tempf" 
     # ACTION_TYPE_REMOVE_TEMPF = "remove_fastener" 
-    str = str + A_TYPE_TAG + action_in.a_type() + CLOSE_TAG
+    str_out = str_out + A_TYPE_TAG + action_in.a_type() + CLOSE_TAG
  
     # string loc_uid: uid of the target location of the object
-    str = str + LOC_UID_TAG + action_in.loc_uid() + CLOSE_TAG
+    str_out = str_out + LOC_UID_TAG + action_in.loc_uid() + CLOSE_TAG
                                    
     # AssemblyActionState state: Status of the action (uint8)
     # ACCEPTED = 2
@@ -1079,25 +1078,25 @@ def _get_action_to_server_str(action_in):
     # SUCCESS = 6
     # CANCELLED = 7
     if action_in.is_done():
-        str = str + ACTION_STATE_TAG + "6" + CLOSE_TAG
+        str_out = str_out + ACTION_STATE_TAG + "6" + CLOSE_TAG
     elif action_in.is_cancelled():
-        str = str + ACTION_STATE_TAG + "7" + CLOSE_TAG
+        str_out = str_out + ACTION_STATE_TAG + "7" + CLOSE_TAG
     elif action_in.is_waiting():
-        str = str + ACTION_STATE_TAG + "4" + CLOSE_TAG
+        str_out = str_out + ACTION_STATE_TAG + "4" + CLOSE_TAG
     else:
-        str = str + ACTION_STATE_TAG + "2" + CLOSE_TAG
+        str_out = str_out + ACTION_STATE_TAG + "2" + CLOSE_TAG
  
     # uint8 speed: the speed as percentage of the maximum speed
-    str = str + SPEED_TAG + str(action_in.speed()) + CLOSE_TAG
+    str_out = str_out + SPEED_TAG + str(action_in.speed()) + CLOSE_TAG
  
     # add the uids that are passed before and after the action
-    str = str + PASSING_UIDS_TAG
+    str_out = str_out + PASSING_UIDS_TAG
     for passing_wp in action_in.passing_wps:
-        str = str + PASSING_UID_TAG + passing_wp + CLOSE_TAG
+        str_out = str_out + PASSING_UID_TAG + passing_wp + CLOSE_TAG
    
-    str = str + CLOSE_TAG
+    str_out = str_out + CLOSE_TAG
  
-    return str + CLOSE_TAG
+    return str_out + CLOSE_TAG
 
  
 # get message string for AssemblyDrillTask
@@ -1107,27 +1106,27 @@ def _get_drill_task_to_server_str(drill_task_in):
     Drill tasks not implemented yet
  
     """
-    # str = DRILL_TASK_TAG
+    # str_out = DRILL_TASK_TAG
  
     # #string ee_uid                           # uid of the end effector needed drill this hole
-    # str = str + UID_TAG + drill_task_in.uid + CLOSE_TAG
+    # str_out = str_out + UID_TAG + drill_task_in.uid + CLOSE_TAG
  
     # #float32 diam                            # diameter of the drill
     #                                             # for reference only because real diameter defined by ee_uid
-    # str = str + DIAM_TAG + str(drill_task_in.diam) + CLOSE_TAG
+    # str_out = str_out + DIAM_TAG + str(drill_task_in.diam) + CLOSE_TAG
  
     # #geometry_msgs/Pose jig_pos              # Location of the drill jig drill guiding hole
     #                                             # Only available after drilling
-    # str = str + _get_pose_str(drill_task_in.jig_pos)
+    # str_out = str_out + _get_pose_str(drill_task_in.jig_pos)
  
     # #AssemblyMaterialLayer[] layers          # Material layers as encountered during drilling
     #                                             # Data filled during and_or after drilling
-    # str = str + LAYERS_TAG
+    # str_out = str_out + LAYERS_TAG
     # for layer in drill_task_in.layers:
-    #     str = str + _get_material_layer_to_server_str(layer)
-    # str = str + CLOSE_TAG
+    #     str_out = str_out + _get_material_layer_to_server_str(layer)
+    # str_out = str_out + CLOSE_TAG
  
-    # return str + CLOSE_TAG
+    # return str_out + CLOSE_TAG
     return ""
 
  
@@ -1143,22 +1142,22 @@ def _get_fastener_to_server_str(fastener_in, loc_uid_in):
     is_tempf = fastener_in.is_tempf()
  
     if is_tempf:
-        str = TEMPF_TAG
+        str_out = TEMPF_TAG
     else:
-        str = FASTENER_TAG
+        str_out = FASTENER_TAG
  
     #string uid                              # uid of the fastener
-    str = str + UID_TAG + fastener_in.uid() + CLOSE_TAG
+    str_out = str_out + UID_TAG + fastener_in.uid() + CLOSE_TAG
  
     #string loc_uid                          # uid of the location of the fastener in one of the containers
     if not loc_uid_in == "":
-        str = str + LOC_UID_TAG + loc_uid_in + CLOSE_TAG
+        str_out = str_out + LOC_UID_TAG + loc_uid_in + CLOSE_TAG
  
     #string ee_uid                           # uid of the end effector needed to manipulate this (temporary) fastener
     if is_tempf:
-        str = str + END_EFFECTOR_UID_TAG + TEMPF_END_EFFECTOR_UID + CLOSE_TAG
+        str_out = str_out + END_EFFECTOR_UID_TAG + TEMPF_END_EFFECTOR_UID + CLOSE_TAG
     else:
-        str = str + END_EFFECTOR_UID_TAG + FAST_END_EFFECTOR_UID + CLOSE_TAG
+        str_out = str_out + END_EFFECTOR_UID_TAG + FAST_END_EFFECTOR_UID + CLOSE_TAG
  
     #AssemblyFastState state                 # The state of the fastener
     # IN_STORAGE = 1
@@ -1166,38 +1165,38 @@ def _get_fastener_to_server_str(fastener_in, loc_uid_in):
     # IN_PRODUCT = 3
     # DISCARDED = 4
     if fastener_in.in_storage():
-        str = str + FASTENER_STATE_TAG + "1" + CLOSE_TAG
+        str_out = str_out + FASTENER_STATE_TAG + "1" + CLOSE_TAG
     elif fastener_in.in_ee():
-        str = str + FASTENER_STATE_TAG + "2" + CLOSE_TAG
+        str_out = str_out + FASTENER_STATE_TAG + "2" + CLOSE_TAG
     elif fastener_in.in_product():
-        str = str + FASTENER_STATE_TAG + "3" + CLOSE_TAG
+        str_out = str_out + FASTENER_STATE_TAG + "3" + CLOSE_TAG
     elif fastener_in.in_bin():
-        str = str + FASTENER_STATE_TAG + "4" + CLOSE_TAG
+        str_out = str_out + FASTENER_STATE_TAG + "4" + CLOSE_TAG
  
     #geometry_msgs/Pose inst_pos             # Installed location of the fastener
     # Only available after installation
-    str = str + _get_pose_str(fastener_in.installed_pos())
+    str_out = str_out + _get_pose_str(fastener_in.installed_pos())
  
     #float32 diam                            # diameter of the fastener
-    str = str + DIAM_TAG + str(fastener_in.diam()) + CLOSE_TAG
+    str_out = str_out + DIAM_TAG + str(fastener_in.diam()) + CLOSE_TAG
  
     #float32 shaft_height                    # the height of the shaft that is sticking out when in storage location
-    str = str + SHAFT_HEIGHT_TAG + str(fastener_in.shaft_height()) + CLOSE_TAG
+    str_out = str_out + SHAFT_HEIGHT_TAG + str(fastener_in.shaft_height()) + CLOSE_TAG
  
     #float32 min_stack                       # the minimum stack
-    str = str + MIN_STACK_TAG + str(fastener_in.min_stack()) + CLOSE_TAG
+    str_out = str_out + MIN_STACK_TAG + str(fastener_in.min_stack()) + CLOSE_TAG
  
     #float32 max_stack                       # the maximum stack
-    str = str + MAX_STACK_TAG + str(fastener_in.max_stack()) + CLOSE_TAG
+    str_out = str_out + MAX_STACK_TAG + str(fastener_in.max_stack()) + CLOSE_TAG
  
     #float32 tcp_tip_distance                 # distance between hole entry point and tip if inserted in a hole
-    str = str + TCP_TIP_DIST_TAG + str(fastener_in.tcp_tip_distance()) + CLOSE_TAG
+    str_out = str_out + TCP_TIP_DIST_TAG + str(fastener_in.tcp_tip_distance()) + CLOSE_TAG
  
     #float32 tcp_top_distance                 # distance between hole entry point and top if inserted in a hole
                                                 # the top is where the tcp is when engaging the tempf
-    str = str + TCP_TOP_DIST_TAG + str(fastener_in.tcp_tip_distance()) + CLOSE_TAG
+    str_out = str_out + TCP_TOP_DIST_TAG + str(fastener_in.tcp_tip_distance()) + CLOSE_TAG
  
-    return str + CLOSE_TAG
+    return str_out + CLOSE_TAG
  
 
 # get message string for AssemblyEeDockingPos
@@ -1208,15 +1207,15 @@ def _get_docking_pos_to_server_str(docking_pos_in):
    
     :param docking_pos_in:
     """
-    # str = DOCKING_POS_TAG
+    # str_out = DOCKING_POS_TAG
  
     # #string uid                  # uid of the Docking Position
-    # str = str + UID_TAG + docking_pos_in.uid + CLOSE_TAG
+    # str_out = str_out + UID_TAG + docking_pos_in.uid + CLOSE_TAG
  
     # #geometry_msgs/Pose pos      # location of the Docking Position
-    # str = str + _get_pose_str(docking_pos_in.pos)
+    # str_out = str_out + _get_pose_str(docking_pos_in.pos)
  
-    # return str + CLOSE_TAG
+    # return str_out + CLOSE_TAG
     return ""
    
  
@@ -1227,26 +1226,26 @@ def _get_end_effector_to_server_str(ee_in):
    
     :param ee_in: cl_temp_fast_ee or cl_perm_fast_ee
     """
-    # str = END_EFFECTOR_TAG
+    # str_out = END_EFFECTOR_TAG
  
     # #string uid                      # uid of the End Effector
-    # str = str + UID_TAG + ee_in.uid + CLOSE_TAG
+    # str_out = str_out + UID_TAG + ee_in.uid + CLOSE_TAG
  
     # #string loc_uid                  # uid of the location of the End Effector in one of
     #                                  # possible docking positions
-    # str = str + LOC_UID_TAG + ee_in.loc_uid + CLOSE_TAG
+    # str_out = str_out + LOC_UID_TAG + ee_in.loc_uid + CLOSE_TAG
  
-    # str = str + DOCKING_POSS_TAG
+    # str_out = str_out + DOCKING_POSS_TAG
     # #string[] poss_dock_pos_uids     # list of possible docking position uid's
     # for poss_docking_pos_uid in ee_in.poss_dock_pos_uids:
-    #     str = str + DOCKING_POS_TAG + poss_docking_pos_uid + CLOSE_TAG
-    # str = str + CLOSE_TAG
+    #     str_out = str_out + DOCKING_POS_TAG + poss_docking_pos_uid + CLOSE_TAG
+    # str_out = str_out + CLOSE_TAG
  
     # #AssemblyEeState state           # The state of the End Effector
     # #uint8 STORED = 1, uint8 ON_COBOT = 2, uint8 STORED_NEED_SERVICE = 3
-    # str = str + END_EFFECTOR_STATE_TAG + str(ee_in.state) + CLOSE_TAG
+    # str_out = str_out + END_EFFECTOR_STATE_TAG + str(ee_in.state) + CLOSE_TAG
  
-    # return str + CLOSE_TAG
+    # return str_out + CLOSE_TAG
     return ""
  
 
@@ -1984,16 +1983,16 @@ def send_to_PC(label = "", value = ""):
     :param value: str, the content of the message
     """
     if label == "":
-        str = value
+        str_out = value
     else:
-        str = add_timestamp(label) + "\n" + value
+        str_out = add_timestamp(label) + "\n" + value
    
     if sync_data_with_PC:
         #queue_out.put(str)
         pass
     
     # always log
-    tp_log(str)
+    tp_log(str_out)
        
  
  
