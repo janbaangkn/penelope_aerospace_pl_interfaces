@@ -86,6 +86,9 @@ import socket
  
 Pi = math.pi
 start_time = time.time()
+
+set_velx(80,80)
+set_accx(50,50)
  
 BYTES_MSG_LENGTH  = 4
 
@@ -125,9 +128,9 @@ MOVE_COMPLIANCE = [3000, 3000, 3000, 400, 400, 400]
  
  
 #Pick up
-PICK_UP_ENGAGEMENT_SPEED = 60
+PICK_UP_ENGAGEMENT_SPEED = 40
 PICK_UP_ENGAGEMENT_COMPLIANCE = [250,250,250,300,300,300] #was 500,500,500,400,400,400
-PICK_UP_FORCE = 50 # was 40
+PICK_UP_FORCE = 40 # was 40
  
  
 #Insertion
@@ -4217,8 +4220,10 @@ class cl_fastener(cl_fastener_location):
  
  
     def report_to_system(self):
-        """let the connected systen know the fastener status.
-        The location uid is not known in this class."""
+        """
+        Let the connected systen know the fastener status.
+        The uid of the location is not known in this class.
+        """
         if self.__is_tempf:
             str_out = TEMPFS_TAG + _get_fastener_to_server_str(self, "") + CLOSE_TAG
         else:
@@ -6109,8 +6114,15 @@ class cl_agent():
         """
         self._approach_fast(fast)
         is_untightened = False
-                       
-        if self._engage_fast(fast, PICK_UP_FORCE, PICK_UP_ENGAGEMENT_COMPLIANCE, PICK_UP_ENGAGEMENT_SPEED, True, is_tempf):
+
+        is_engaged = False
+        if is_tempf:
+            is_engaged = self._engage_tempf(fast, PICK_UP_FORCE, PICK_UP_ENGAGEMENT_COMPLIANCE, PICK_UP_ENGAGEMENT_SPEED, True)
+        else:
+            is_engaged = self._engage_permf(fast, PICK_UP_FORCE, PICK_UP_ENGAGEMENT_COMPLIANCE, PICK_UP_ENGAGEMENT_SPEED, True)
+
+       
+        if is_engaged:
            
             # wait to properly settle
             wait(0.1)
@@ -6295,7 +6307,7 @@ class cl_agent():
         movel(fast.tcp_approach_pos(), ref=DR_BASE)
        
     
-    def _engage_fast(self, fast: cl_fastener, force, comp, speed, burst, is_tempf: bool):
+    def _engage_permf(self, fast: cl_fastener, force, comp, speed, burst):
         """
         Function that engages an installed fastener or hole.
         The function uses the location in the fast object.
@@ -6306,8 +6318,6 @@ class cl_agent():
         :param comp: list[float, float, float, float, float, float], the definition of the compliance
         :param speed: float, the speed as percentage
         :param burst: bool, whether an engagement burst must be done
-        :param is_tempf: bool, Whteher we are dealing with a temporary fastener
-                               or a permanent fastener
        
         :return: bool, returns True if successful
         """
@@ -6322,6 +6332,7 @@ class cl_agent():
         f_z0 = get_tool_forces_in_tool()[2]
        
         release_compliance_ctrl()
+
         # Set DR_TOOL as ref coordinate to ensure that the desired forces are in the too axis system
         set_ref_coord(DR_TOOL)
           
@@ -6375,7 +6386,7 @@ class cl_agent():
             reached_pos = r_i < reqd_ratio
            
         if reached_force and not reached_pos:
-            send_to_PC("_engage_fast___", "starting periodic move to get from {} to {}".format(r_i, reqd_ratio))
+            send_to_PC("engage_permf___", "starting periodic move to get from {} to {}".format(r_i, reqd_ratio))
             #start a spiral move to see if it will slide over the temp
             #   Periodic move to wiggle the fastener in
             amove_periodic(amp = [5,5,0,0.35,0.35,0], period = [5,5,0,1.0,0.5,0], atime = 0.1, repeat = 3, ref = DR_TOOL)
@@ -6397,7 +6408,7 @@ class cl_agent():
             stop(DR_SSTOP)
        
         if not reached_force and reached_pos:
-            send_to_PC("_engage_fast___", "waiting for force to increase from {}N to {}N".format(f_z, force))
+            send_to_PC("engage_permf___", "waiting for force to increase from {}N to {}N".format(f_z, force))
             t0 = time.time()
  
             while not reached_max_time:
@@ -6410,11 +6421,11 @@ class cl_agent():
         #tp_popup("reached_force={0},reached_pos={1}".format(reached_force,reached_pos))
         if reached_pos:
             if reached_force:
-                send_to_PC("engage_fast___", "did reach force and position when engaging fastener {}\n".format(fast.uid()) +
+                send_to_PC("engage_permf___", "did reach force and position when engaging fastener {}\n".format(fast.uid()) +
                            "force in tool z-direction is {} and {} at the start.\n".format(f_z, f_z0) +
                            "install ratio is {}; time is {}.".format(r_i, (time.time() - t0)))
             else:
-                send_to_PC("engage_fast___", "did not reach force but reached position when engaging fastener {}\n".format(fast.uid()) +
+                send_to_PC("engage_permf___", "did not reach force but reached position when engaging fastener {}\n".format(fast.uid()) +
                            "force in tool z-direction is {} and {} at the start.\n".format(f_z, f_z0) +
                            "install ratio is {}; time is {}.".format(r_i, (time.time() - t0)))
            
@@ -6424,11 +6435,11 @@ class cl_agent():
         
         else:
             if reached_force:
-                send_to_PC("engage_fast___", "reached force but not reached position when engaging fastener {}\n".format(fast.uid()) +
+                send_to_PC("engage_permf___", "reached force but not reached position when engaging fastener {}\n".format(fast.uid()) +
                         "force in tool z-direction is {} and {} at the start.\n".format(f_z, f_z0) +
                         "install ratio is {}; time is {}.".format(r_i, (time.time() - t0)))
             else:
-                send_to_PC("engage_fast___", "did not reach force or position when engaging fastener {}\n".format(fast.uid()) +
+                send_to_PC("engage_permf___", "did not reach force or position when engaging fastener {}\n".format(fast.uid()) +
                         "force in tool z-direction is {} and {} at the start.\n".format(f_z, f_z0) +
                         "install ratio is {}; time is {}.".format(r_i, (time.time() - t0)))
        
@@ -6437,6 +6448,145 @@ class cl_agent():
  
         return False     
  
+    def _engage_tempf(self, fast: cl_fastener, force, comp, speed, burst):
+        """
+        Function that engages an installed fastener or hole.
+        The function uses the location in the fast object.
+
+        :param fast: cl_fastener, the fastener object with
+                            information on where to engage it
+        :param force: float, the force applied to the fastener
+        :param comp: list[float, float, float, float, float, float], the definition of the compliance
+        :param speed: float, the speed as percentage
+        :param burst: bool, whether an engagement burst must be done
+
+        :return: bool, returns True if successful
+        """
+        reqd_ratio = 0.1 #Was 0.2
+                
+        task_compliance_ctrl(comp)
+        change_operation_speed(speed)
+
+        # Get a reference force because a force can already be present (example: hanging cables)
+        f_z0 = get_tool_forces_in_tool()[2]
+
+        release_compliance_ctrl()
+
+        # Set DR_TOOL as ref coordinate to ensure that the desired forces are in the too axis system
+        set_ref_coord(DR_TOOL)
+            
+        # The following prevents drifting of the Cobot position
+        task_compliance_ctrl([20000,20000,20000,400,400,400])
+        set_desired_force([0, 0, 11, 0, 0, 0], [0, 0, 1, 0, 0, 0])
+        wait(0.1)
+
+        # set the correct complance and speed
+        task_compliance_ctrl(comp)
+
+        send_to_PC("setting desired force")
+
+        set_desired_force([0, 0, force + f_z0, 0, 0, 0], [0, 0, 1, 0, 0, 0])
+
+        t0 = time.time()
+
+        reached_force, reached_pos, reached_max_time = False, False, False
+
+        # Wait until the force reaches a value or max time is passed
+        while not reached_max_time and not reached_pos:
+            
+            f_z = get_tool_forces_in_tool()[2]
+            reached_force = abs(f_z - f_z0) > 0.9 * force
+            
+            if reached_force:
+                # this could be the impuls from a collision
+                # wait to see if the force is maintained
+                wait(0.5)
+                
+                # check if the force is still there
+                f_z = get_tool_forces_in_tool()[2]
+                reached_force = abs(f_z - f_z0) > 0.9 * force
+                if reached_force:
+                    break
+            r_i = fast.get_install_ratio()
+            reached_pos = r_i < reqd_ratio
+            
+            reached_max_time = (time.time() - t0) > 8
+
+        # do a short burst of the motor to help engagement if it did not reach pos yet
+        if burst and not reached_pos:
+            # burst usually when temp must be picked up,
+            # so the burst must be in untightening direction
+            self.tf_ee.engagement_burst()
+            
+            # wait to see if it reached position now
+            wait(1)
+
+            # get the position progress
+            r_i = fast.get_install_ratio()
+            reached_pos = r_i < reqd_ratio
+            
+        if reached_force and not reached_pos:
+            send_to_PC("engage_tempf___", "starting periodic move to get from {} to {}".format(r_i, reqd_ratio))
+            #start a spiral move to see if it will slide over the temp
+            #   Periodic move to wiggle the fastener in
+            amove_periodic(amp = [5,5,0,0.35,0.35,0], period = [5,5,0,1.0,0.5,0], atime = 0.1, repeat = 3, ref = DR_TOOL)
+            
+            # also do a second burst in the meantime
+            if burst and not reached_pos:
+                # burst usually when temp must be picked up,
+                # so the burst must be in untightening direction
+                self.tf_ee.engagement_burst()
+            
+            # The while loop below senses whether the end effector slips onto the fastener
+            while check_motion() != 0 and not reached_pos:
+                
+                r_i = fast.get_install_ratio()
+                reached_pos = r_i < reqd_ratio
+            
+            # stop the spiral motion
+            stop(DR_SSTOP)
+
+        if not reached_force and reached_pos:
+            send_to_PC("engage_tempf___", "waiting for force to increase from {}N to {}N".format(f_z, force))
+            t0 = time.time()
+
+            while not reached_max_time:
+                f_z = get_tool_forces_in_tool()[2]
+                reached_force = abs(f_z - f_z0) > 0.9 * force
+                
+                reached_max_time = (time.time() - t0) > 5
+                if reached_force and reached_pos:
+                    break
+        #tp_popup("reached_force={0},reached_pos={1}".format(reached_force,reached_pos))
+        if reached_pos:
+            if reached_force:
+                send_to_PC("engage_tempf___", "did reach force and position when engaging fastener {}\n".format(fast.uid()) +
+                            "force in tool z-direction is {} and {} at the start.\n".format(f_z, f_z0) +
+                            "install ratio is {}; time is {}.".format(r_i, (time.time() - t0)))
+            else:
+                send_to_PC("engage_tempf___", "did not reach force but reached position when engaging fastener {}\n".format(fast.uid()) +
+                            "force in tool z-direction is {} and {} at the start.\n".format(f_z, f_z0) +
+                            "install ratio is {}; time is {}.".format(r_i, (time.time() - t0)))
+            
+            # let the system know the fastener is in the ee
+            fast.set_as_in_ee()
+            return True   
+
+        else:
+            if reached_force:
+                send_to_PC("engage_tempf___", "reached force but not reached position when engaging fastener {}\n".format(fast.uid()) +
+                        "force in tool z-direction is {} and {} at the start.\n".format(f_z, f_z0) +
+                        "install ratio is {}; time is {}.".format(r_i, (time.time() - t0)))
+            else:
+                send_to_PC("engage_tempf___", "did not reach force or position when engaging fastener {}\n".format(fast.uid()) +
+                        "force in tool z-direction is {} and {} at the start.\n".format(f_z, f_z0) +
+                        "install ratio is {}; time is {}.".format(r_i, (time.time() - t0)))
+
+            # discard the fastener and let the system know the fastener is in the ee
+            fast.set_as_in_bin()
+
+        return False     
+
     
     def _get_all_locs(self):
         """
@@ -6972,7 +7122,10 @@ class cl_action(cl_uid):
        
     
 ###########################################             START             ###################################################
- 
+  
+set_velx(80,80)
+set_accx(50,50)
+
 # create the axis systems used throughout the program
 DR_USER_NOM = create_axis_syst_on_current_position()
 DR_USER_PROBE = create_axis_syst_on_current_position()
@@ -6988,9 +7141,6 @@ pos1=posx(0,0,0,0,0,0)
 set_user_cart_coord(pos1, ref=DR_BASE)
 set_user_cart_coord(pos1, ref=DR_BASE)
 set_user_cart_coord(pos1, ref=DR_BASE)
- 
-set_velx(80,80)
-set_accx(50,50)
  
 sync_data_with_PC = False
  
