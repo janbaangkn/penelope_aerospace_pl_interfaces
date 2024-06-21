@@ -972,19 +972,24 @@ def _get_pose_str(pose_in):
  
     :param pose_in: posx (pose_in is in Doosan format)
     """
-    str = POSE_TAG
- 
-    # Get position
-    str = str + POSE_PX_TAG + str(pose_in[0]) + CLOSE_TAG
-    str = str + POSE_PY_TAG + str(pose_in[1]) + CLOSE_TAG
-    str = str + POSE_PZ_TAG + str(pose_in[2]) + CLOSE_TAG
- 
-    # Get orientation
-    str = str + POSE_OX_TAG + str(pose_in[3]) + CLOSE_TAG
-    str = str + POSE_OY_TAG + str(pose_in[4]) + CLOSE_TAG
-    str = str + POSE_OZ_TAG + str(pose_in[5]) + CLOSE_TAG
- 
-    return str + CLOSE_TAG
+    str = ""
+    if pose_in is not None:
+        str = str + POSE_TAG
+    
+        # Get position
+        str = str + POSE_PX_TAG + str(pose_in[0]) + CLOSE_TAG
+        str = str + POSE_PY_TAG + str(pose_in[1]) + CLOSE_TAG
+        str = str + POSE_PZ_TAG + str(pose_in[2]) + CLOSE_TAG
+    
+        # Get orientation
+        str = str + POSE_OX_TAG + str(pose_in[3]) + CLOSE_TAG
+        str = str + POSE_OY_TAG + str(pose_in[4]) + CLOSE_TAG
+        str = str + POSE_OZ_TAG + str(pose_in[5]) + CLOSE_TAG
+    
+        str = str + CLOSE_TAG
+
+    return str
+    
  
  
 def _get_material_layer_to_server_str(layer_in):
@@ -1170,7 +1175,7 @@ def _get_fastener_to_server_str(fastener_in, loc_uid_in):
         str = str + FASTENER_STATE_TAG + "4" + CLOSE_TAG
  
     #geometry_msgs/Pose inst_pos             # Installed location of the fastener
-                                                # Only available after installation
+    # Only available after installation
     str = str + _get_pose_str(fastener_in.installed_pos())
  
     #float32 diam                            # diameter of the fastener
