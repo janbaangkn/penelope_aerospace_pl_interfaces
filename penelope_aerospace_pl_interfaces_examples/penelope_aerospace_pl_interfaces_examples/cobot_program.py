@@ -1171,7 +1171,7 @@ def _get_fastener_to_server_str(fastener_in, loc_uid_in):
  
     #geometry_msgs/Pose inst_pos             # Installed location of the fastener
                                                 # Only available after installation
-    str = str + _get_pose_str(fastener_in.inst_pos)
+    str = str + _get_pose_str(fastener_in.installed_pos())
  
     #float32 diam                            # diameter of the fastener
     str = str + DIAM_TAG + str(fastener_in.diam()) + CLOSE_TAG
