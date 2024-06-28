@@ -2940,11 +2940,11 @@ class cl_temp_fast_ee:
         """
         Cobot output pin that switches the solenoid
         valve to clamp the fastener"""
-        self.AIR_CLAMP = 1
+        self.AIR_CLAMP = 2
         """
         Cobot output pin that switches the solenoid
         valve to eject the fastener"""
-        self.AIR_EJECT = 2
+        self.AIR_EJECT = 1
  
         # class instances that store the current solenoid valve setting
         self.clamp = cl_digital_output(self.AIR_CLAMP)
