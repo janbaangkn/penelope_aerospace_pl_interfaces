@@ -1672,9 +1672,6 @@ def move_into_hole(fast):
  
     # make sure the coordinate frame is DR_USER_NOM
     set_ref_coord(DR_USER_NOM)
- 
-    #move above the hole
-    movel(posx(0, 0, -SAFE_Z_GAP, 0, 0, 0), ref=DR_USER_NOM)
        
     # Need to fix the corrected hole calculation first
     # This has been switched off for now
@@ -1691,16 +1688,16 @@ def move_into_hole(fast):
     set_desired_force([0, 0, PROBE_COMPLIANCE_FORCE, 0, 0, 0], [0, 0, 1, 0, 0, 0])
 
     reached_force = False
-    
+
     #Loop waiting for fastener tip to touch product
     while not reached_force:
         f_z = get_tool_forces_in_tool()[2]
-        reached_force = f_z > 0.9 * PROBE_COMPLIANCE_FORCE
+        reached_force = abs(f_z) > 0.9 * PROBE_COMPLIANCE_FORCE
 
     z0, sol = get_current_posx(ref=DR_USER_NOM)
     
     release_force()
-    
+
     movel(posx(5, 0, -SAFE_Z_GAP, 0, 0, 0), ref=DR_USER_NOM)
     movel(posx(0, 0, -SAFE_Z_GAP, 0, 0, 0), ref=DR_USER_NOM)
     
@@ -1724,7 +1721,7 @@ def move_into_hole(fast):
     # Compliance stiffness to move tip of fastener in countersink
     # High to low stiffness to counter weight of hose and capsule system         
     task_compliance_ctrl(INSERTION_COMPLIANCE)
-   
+
     # Movement command to go in to countersink   
     amovel(posx(0, 0, (fast.tcp_tip_distance()*0.10), 0, 0, 0), ref=DR_USER_NOM)
  
