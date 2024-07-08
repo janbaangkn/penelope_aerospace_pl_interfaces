@@ -86,9 +86,6 @@ import socket
  
 Pi = math.pi
 start_time = time.time()
-
-set_velx(80,80)
-set_accx(50,50)
  
 BYTES_MSG_LENGTH  = 4
 
@@ -1747,7 +1744,7 @@ def move_into_hole(fast):
                 stop(DR_SSTOP)
                 break
    
-    #tp_popup("in_CSK={0}, reached_force={1},z_pos = {2}, z_stop={3}".format(in_CSK,reached_force,p0[2],CSK_stop))
+    send_to_PC("move_into_hole", "in_CSK={0}, reached_force={1},z_pos = {2}, z_stop={3}".format(in_CSK,reached_force,p0[2],CSK_stop))
    
     # Failure, not in CSK
     if not in_CSK:
@@ -1788,15 +1785,24 @@ def move_into_hole(fast):
          
     #Set values for force control to get in to hole
     reached_force = False
+
+    stop(DR_SSTOP)
+    release_force()
+    release_compliance_ctrl()
+
+    send_to_PC("move_into_hole", "starting init task_compliance_ctrl in CSK")
  
     task_compliance_ctrl([20000,20000,20000,400,400,400])
                     
+    send_to_PC("move_into_hole", "starting init set_desired_force in CSK")
     set_desired_force([0, 0, 11, 0, 0, 0], [0, 0, 1, 0, 0, 0])
         
     wait(0.1)
    
+    send_to_PC("move_into_hole", "starting final task_compliance_ctrl in CSK")
     task_compliance_ctrl(INSERTION_COMPLIANCE)
    
+    send_to_PC("move_into_hole", "starting final set_desired_force in CSK")
     set_desired_force([0, 0, INSERTION_FORCE + f_z0, 0, 0, 0], [0, 0, 1, 0, 0, 0])
    
     t0 = time.time()
@@ -1808,8 +1814,8 @@ def move_into_hole(fast):
    
         f_z = get_tool_forces_in_tool()[2]
         reached_force = abs(f_z - f_z0) > 0.9 * INSERTION_FORCE
-           
-    #tp_popup("in_hole={0}, reached_force={1},".format(in_hole,reached_force))  
+    
+    send_to_PC("move_into_hole", "in_hole={0}, reached_force={1},".format(in_hole,reached_force))
                
     #Moeten even kijken als we dit uberhaubt wel wilt doen, of als je gewoon gelijk moet probe?      
     #Failure 1
@@ -5325,12 +5331,6 @@ class cl_f_container(cl_uid):
         """
         if self.check_fast_and_location(fast, loc_lst_id):
             self.holes_and_fast_lst[loc_lst_id].fast = fast
-            if self.__storage:
-                if not fast.in_storage: # we don't want this to be done twice because it will potentially set a new TCP
-                    fast.set_as_in_storage()
-            else:
-                if not fast.in_product:
-                    fast.set_as_in_product()
             return True
         else:
             return False
@@ -5345,12 +5345,9 @@ class cl_f_container(cl_uid):
        
         :return: bool, success
         """
-        if self.__storage:
-            self.bin_contents.append(fast)
-            fast.set_as_in_bin()
-            return True
-        else:
-            return False
+        self.bin_contents.append(fast)
+        fast.set_as_in_bin()
+        return True
  
     
     def set_location_as_fast_target(self, fast: cl_fastener, loc_lst_id: int):
@@ -5383,15 +5380,11 @@ class cl_f_container(cl_uid):
        
         :return: bool, success
         """
-       
-        if self.__storage:
-            fast.set_nom_pos(self.bin_location)
-            fast.set_stack_thickness(-1)
-            fast.reset_to_nom_pos_only()
-            return True
-        else:
-            return False
- 
+        fast.set_nom_pos(self.bin_location)
+        fast.set_stack_thickness(-1)
+        fast.reset_to_nom_pos_only()
+        return True
+
     
     def get_loc_lst_id_by_uid(self, uid):
         """Function to get the location id based on a fastener or location uid
@@ -5753,7 +5746,8 @@ class cl_agent():
                 if self.product.add_fast_to_location(permf, prod_lst_id):
                     # Not used for now
                     # reevaluate_deviations(permf, self._get_all_permfs_in_product())
-                   
+                    permf.set_as_in_product()
+
                     return True
            
             return False
@@ -5835,6 +5829,7 @@ class cl_agent():
                 if self.product.add_fast_to_location(tempf, prod_lst_id):
                     # Nor used for now
                     # reevaluate_deviations(tempf, self._get_all_tempfs_in_product())
+                    tempf.set_as_in_product()
 
                     return True
            
@@ -5909,7 +5904,11 @@ class cl_agent():
             # insert the fastener into the product
             if self._insert_fast(tempf, True):
                 # add the fastener to the product
-                return self.tempf_storage.add_fast_to_location(tempf, storage_loc_id)
+                if self.tempf_storage.add_fast_to_location(tempf, storage_loc_id):
+
+                    tempf.set_as_in_storage()
+
+                    return True          
            
             return False
      
@@ -6161,6 +6160,7 @@ class cl_agent():
            
             release_force()
             release_compliance_ctrl()
+            change_operation_speed(HOLE_RETRACTION_SPEED)
             movel(posx(0, 0, -(fast.shaft_height() + fast.tcp_tip_distance() + SAFE_Z_GAP + SAFE_Z_GAP), 0, 0, 0), ref=DR_TOOL)
  
             if is_tempf:
@@ -6177,6 +6177,7 @@ class cl_agent():
            
             release_force()
             release_compliance_ctrl()
+            change_operation_speed(HOLE_RETRACTION_SPEED)
             movel(posx(0, 0, -(fast.shaft_height() + fast.tcp_tip_distance() + SAFE_Z_GAP + SAFE_Z_GAP), 0, 0, 0), ref=DR_TOOL)
            
             return False
@@ -7134,7 +7135,7 @@ class cl_action(cl_uid):
     
 ###########################################             START             ###################################################
   
-set_velx(80,80)
+set_velx(2000,120)
 set_accx(50,50)
 
 # create the axis systems used throughout the program
