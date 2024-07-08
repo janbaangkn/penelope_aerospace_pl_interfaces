@@ -6109,15 +6109,18 @@ class cl_agent():
         Function that picks up a fastener.
         The pick-up location can be found in the fast object
        
-        :param fast: cl_fastener, the fastener object with
-                                        information on where to install it
-        :param is_tempf: bool, Whteher we are dealing with a temporary fastener
-                               or a permanent fastener
-           
+        :param fast: cl_fastener,   the fastener object with
+                                    information on where to install it
+        :param is_tempf: bool,      Wheteher we are dealing with a temporary fastener
+                                    or a permanent fastener
+
         :return: bool, returns True if successful
         """
         self._approach_fast(fast)
         is_untightened = False
+
+        # remember where the fast is.
+        was_in_product = fast.in_product()
 
         is_engaged = False
         if is_tempf:
@@ -6138,7 +6141,7 @@ class cl_agent():
             if is_tempf:
                 self.tf_ee.tempf_in_end_effector = True
  
-                if fast.in_product():
+                if was_in_product:
                     # clamp and tighten the fastener
                     is_untightened = self.tf_ee.untighten_temp(UNTIGHTEN_PROGRAM)
                 else:
@@ -6166,8 +6169,6 @@ class cl_agent():
             return False
        
         if is_untightened:
-            # remember where the fast is.
-            was_in_product = fast.in_product()
            
             # let the fast know its new location, will also change the TCP
             fast.set_as_in_ee()
@@ -6221,6 +6222,9 @@ class cl_agent():
         """
        
         self._approach_fast(fast)
+
+        # remember where the fast is.
+        was_in_product = fast.in_product()
        
         if not move_into_hole(fast):
             movel(posx(0, 0, -(fast.shaft_height() + fast.tcp_tip_distance() + SAFE_Z_GAP + SAFE_Z_GAP), 0, 0, 0), ref=DR_TOOL)
@@ -6230,7 +6234,10 @@ class cl_agent():
             return False
        
         if is_tempf:
-            is_tightened = self.tf_ee.tighten_temp(TIGHTEN_PROGRAM)
+            if was_in_product:
+                is_tightened = True
+            else:
+                is_tightened = self.tf_ee.tighten_temp(TIGHTEN_PROGRAM)
            
             # try again if not tightened
             if not is_tightened:
@@ -7167,7 +7174,7 @@ agent.permf_storage = cl_f_container("permf_storage")
  
 # add hole locations, stack thickness and diameter in the permanent fastener storage list 
 # uid, diam, stack thickness, nom_pos 
-agent.tempf_storage.add_loc_to_holes_and_fast_lst("tfst_01", 5, 10, posx(123,477,59,55,180,-20))
+agent.tempf_storage.add_loc_to_holes_and_fast_lst("tfst_01", 5, 10, posx(124,476,60,55,180,-20))
  
 # add permanent fastener in storage
 # uid, loc uid, fast_install_pos, diam, shaft height, min stack, max stack, tcp_tip_dist, tcp_top_dist, in_storage, in_ee, in_product, in_bin, is_tempf
@@ -7177,15 +7184,21 @@ agent.tempf_storage.add_fast_to_loc_with_uid("tempf_01", "tfst_01", None, 5 , DI
 agent.product = cl_f_container("product")
  
 # add hole locations, stack thickness and diameter in the product list 
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_01", 5, 9, posx(-571.67,572.57,895.07,88.52,69.29,-98.94))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_02", 5, 9, posx(-536.72,571.64,894.70,88.52,69.29,-98.94))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_01", 5, 9, posx(-162,796,1153,90,73.8,-90))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_02", 5, 9, posx(-126.5,796,1153,90,73.8,-90))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_03", 5, 9, posx(-92,796,1153,90,73.8,-90))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_04", 5, 9, posx(-56,796,1153,90,73.8,-90))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_05", 5, 9, posx(-10,796,1152,90,73.8,-90))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_06", 5, 9, posx(25.5,796,1152,90,73.8,-90))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_07", 5, 9, posx(60,796,1152,90,73.8,-90))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_08", 5, 9, posx(96,796,1152,90,73.8,-90))
 
 ###########################################
 # product.log_holes_and_fast_lst()
  
 # add waypoints
 agent._add_waypoint("storage approach", posx(119,474,227,180,-180,105))
-agent._add_waypoint("product_approach", posx(-558,487,865,88.52,69.29,-98.94))
+agent._add_waypoint("product_approach", posx(-38,630,1106,90,73.8,-90))
 agent._add_waypoint("HOME", posx(-34.5,493.4,690.69,90,119,0))
  
  
