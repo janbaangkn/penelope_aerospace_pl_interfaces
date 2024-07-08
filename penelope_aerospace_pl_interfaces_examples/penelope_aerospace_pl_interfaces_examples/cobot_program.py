@@ -6113,6 +6113,9 @@ class cl_agent():
 
         :return: bool, returns True if successful
         """
+        if is_tempf:
+            self.tf_ee.stop_clamping()
+
         self._approach_fast(fast)
         is_untightened = False
 
