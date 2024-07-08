@@ -1688,7 +1688,7 @@ def move_into_hole(fast):
     
     #Compliance mode and force control
     task_compliance_ctrl(PROBE_COMPLIANCE)
-    set_desired_force(PROBE_COMPLIANCE_FORCE, [0, 0, 1, 0, 0, 0])
+    set_desired_force([0, 0, PROBE_COMPLIANCE_FORCE, 0, 0, 0], [0, 0, 1, 0, 0, 0])
 
     reached_force = False
     
