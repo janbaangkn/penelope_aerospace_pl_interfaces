@@ -7186,21 +7186,21 @@ agent.tempf_storage.add_fast_to_loc_with_uid("tempf_01", "tfst_01", None, 5 , DI
 agent.product = cl_f_container("product")
  
 # add hole locations, stack thickness and diameter in the product list 
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_01", 5, 9, posx(-162,796,1153,90,74,-160))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_02", 5, 9, posx(-126.5,796,1153,90,74,-160))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_03", 5, 9, posx(-92,796,1153,90,74,-160))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_04", 5, 9, posx(-56,796,1153,90,74,-160))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_05", 5, 9, posx(-10,796,1152,90,74,-160))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_06", 5, 9, posx(25.5,796,1152,90,74,-160))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_07", 5, 9, posx(60,796,1152,90,74,-160))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_08", 5, 9, posx(96,796,1152,90,74,-160))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_01", 5, 9, posx(-162,796,1153,90,73.7,-160))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_02", 5, 9, posx(-126.5,796,1153,90,73.7,-160))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_03", 5, 9, posx(-92,796,1153,90,73.7,-160))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_04", 5, 9, posx(-56,796,1153,90,73.7,-160))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_05", 5, 9, posx(-10,796,1152,90,73.7,-160))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_06", 5, 9, posx(25.5,796,1152,90,73.7,-160))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_07", 5, 9, posx(60,796,1152,90,73.7,-160))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_08", 5, 9, posx(96,796,1152,90,73.7,-160))
 
 ###########################################
 # product.log_holes_and_fast_lst()
  
 # add waypoints
 agent._add_waypoint("storage approach", posx(119,474,227,160,180,90))
-agent._add_waypoint("product_approach", posx(-38,630,1106,90,74,-160))
+agent._add_waypoint("product_approach", posx(-38,630,1106,90,73.7,-160))
 agent._add_waypoint("HOME", posx(-34.5,493.4,690.69,90,119,0))
  
  
