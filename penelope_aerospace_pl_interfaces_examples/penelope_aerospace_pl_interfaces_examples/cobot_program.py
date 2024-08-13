@@ -128,7 +128,7 @@ MOVE_COMPLIANCE = [3000, 3000, 3000, 400, 400, 400]
 PICK_UP_ENGAGEMENT_SPEED = 40
 PICK_UP_ENGAGEMENT_COMPLIANCE = [250,250,250,300,300,300] #was 500,500,500,400,400,400
 PICK_UP_FORCE = 40 # was 40
- 
+STORAGE_APPROACH_POS = [73,-13,131,0,23,0]
  
 #Insertion
 INSERTION_FORCE = 40 #FIND_HOLE_ENTRY_COMPLIANCE_FORCE = 40
@@ -6315,6 +6315,8 @@ class cl_agent():
         set_ref_coord(DR_BASE)
        
         change_operation_speed(MOVE_SPEED)
+
+        movej(STORAGE_APPROACH_POS)
           
         movel(fast.tcp_approach_pos(), ref=DR_BASE)
        
