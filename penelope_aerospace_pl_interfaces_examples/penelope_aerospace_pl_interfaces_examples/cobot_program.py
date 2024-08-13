@@ -128,7 +128,8 @@ MOVE_COMPLIANCE = [3000, 3000, 3000, 400, 400, 400]
 PICK_UP_ENGAGEMENT_SPEED = 40
 PICK_UP_ENGAGEMENT_COMPLIANCE = [250,250,250,300,300,300] #was 500,500,500,400,400,400
 PICK_UP_FORCE = 40 # was 40
-STORAGE_APPROACH_POS = [73,-13,131,0,23,0]
+STORAGE_APPROACH_POSL = posx(110,478,179,76.8,-180,0)
+STORAGE_APPROACH_POSJ = [73,-13,131,0,23,0]
  
 #Insertion
 INSERTION_FORCE = 40 #FIND_HOLE_ENTRY_COMPLIANCE_FORCE = 40
@@ -5797,6 +5798,25 @@ class cl_agent():
         tempf.set_tool_center_point()
         #tp_popup("Check fastener")
         # pick up the fastener from the storage
+
+        send_to_PC("speed: {}".format(speed))
+
+        # approach the storage location
+        # this is done with movej to ensure that each cobot axis 
+        # is going back to an original position
+        # this is done because the cobot hadd the tendency to 
+        # rotate towards its rotation limits after a couple of operations
+        # first go to approximate position to avoid TCP going over its limits
+        movel(STORAGE_APPROACH_POSL)
+
+        # reduce speed to avoid TCP speed over its limit due to joint move
+        change_operation_speed(int(0.5 * speed))
+
+        movej(STORAGE_APPROACH_POSJ)
+
+        # go back to intended speed
+        change_operation_speed(speed)
+
         if not self._pick_up_fast(tempf, True):
             # discard the fastener
             tempf.set_as_in_bin()
@@ -6315,8 +6335,6 @@ class cl_agent():
         set_ref_coord(DR_BASE)
        
         change_operation_speed(MOVE_SPEED)
-
-        movej(STORAGE_APPROACH_POS)
           
         movel(fast.tcp_approach_pos(), ref=DR_BASE)
        
