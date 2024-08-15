@@ -90,6 +90,9 @@ start_time = time.time()
 BYTES_MSG_LENGTH  = 4
 
 DEFAULT_ENCODER = 1
+
+TCP_SPEED_LIMIT = 1500
+TCP_ROT_LIMIT = 120
  
 # Standard gaps used to prevent collision during movements
 SAFE_Z_GAP = 5
@@ -5772,6 +5775,10 @@ class cl_agent():
                    
         :return: bool, returns True if successful
         """
+        # go to intended speed
+        change_operation_speed(speed)
+        send_to_PC("speed: {}".format(speed))
+
         prod_lst_id = self.product.get_loc_lst_id_by_uid(target_loc_uid)
        
         if prod_lst_id < 0:
@@ -5799,23 +5806,40 @@ class cl_agent():
         #tp_popup("Check fastener")
         # pick up the fastener from the storage
 
-        send_to_PC("speed: {}".format(speed))
+        # store the current desired velj to be able to restore later
+        rotj_0 = get_desired_velj()
 
         # approach the storage location
         # this is done with movej to ensure that each cobot axis 
         # is going back to an original position
         # this is done because the cobot hadd the tendency to 
         # rotate towards its rotation limits after a couple of operations
-        # first go to approximate position to avoid TCP going over its limits
-        movel(STORAGE_APPROACH_POSL)
+        amovej(STORAGE_APPROACH_POSJ)
 
-        # reduce speed to avoid TCP speed over its limit due to joint move
-        change_operation_speed(int(0.5 * speed))
+        # the following while loop keeps the tcp speed and rotation between 0.7 and 0.8 the speed limit
+        while check_motion() > 0:
+            velx = get_current_velx()
 
-        movej(STORAGE_APPROACH_POSJ)
+            tcp_speed = sqrt(velx[0] * velx[0] + velx[1] * velx[1] + velx[2] * velx[2])
+            s_f = (speed * tcp_speed) / (100 * TCP_SPEED_LIMIT)
 
-        # go back to intended speed
-        change_operation_speed(speed)
+            tcp_rot = sqrt(velx[3] * velx[3] + velx[4] * velx[4] + velx[5] * velx[5])
+            r_f = (speed * tcp_rot) / (100 * TCP_ROT_LIMIT)
+
+            vel_f = max(s_f, r_f)
+ 
+            if vel_f > 0.8:
+                rotj = get_desired_velj()
+                r_f = 0.95   #speed reduction factor
+                set_velj([r_f * rotj[0], r_f * rotj[1], r_f * rotj[2], r_f * rotj[3], r_f * rotj[4], r_f * rotj[5]])
+
+            if vel_f < 0.7:
+                rotj = get_desired_velj()
+                r_f = 1.05   #speed increase factor
+                set_velj([r_f * rotj[0], r_f * rotj[1], r_f * rotj[2], r_f * rotj[3], r_f * rotj[4], r_f * rotj[5]])
+
+        # restore the desired rotational speeds to the original values
+        set_velj(rotj_0)
 
         if not self._pick_up_fast(tempf, True):
             # discard the fastener
@@ -7155,7 +7179,7 @@ class cl_action(cl_uid):
     
 ###########################################             START             ###################################################
   
-set_velx(1500,120)
+set_velx(TCP_SPEED_LIMIT, TCP_ROT_LIMIT)
 set_accx(100,60)
 change_operation_speed(100)
 
