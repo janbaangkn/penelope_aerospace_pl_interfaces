@@ -93,6 +93,7 @@ DEFAULT_ENCODER = 1
 
 TCP_SPEED_LIMIT = 1500
 TCP_ROT_LIMIT = 120
+JOINT_SPEED_LIMIT = [120, 120, 180, 225, 225, 225]
  
 # Standard gaps used to prevent collision during movements
 SAFE_Z_GAP = 5
@@ -5777,7 +5778,6 @@ class cl_agent():
         """
         # go to intended speed
         change_operation_speed(speed)
-        send_to_PC("speed: {}".format(speed))
 
         prod_lst_id = self.product.get_loc_lst_id_by_uid(target_loc_uid)
        
@@ -5806,15 +5806,14 @@ class cl_agent():
         #tp_popup("Check fastener")
         # pick up the fastener from the storage
 
-        # store the current desired velj to be able to restore later
-        rotj_0 = get_desired_velj()
-
         # approach the storage location
         # this is done with movej to ensure that each cobot axis 
         # is going back to an original position
         # this is done because the cobot hadd the tendency to 
         # rotate towards its rotation limits after a couple of operations
         amovej(STORAGE_APPROACH_POSJ)
+
+        targetj = JOINT_SPEED_LIMIT
 
         # the following while loop keeps the tcp speed and rotation between 0.7 and 0.8 the speed limit
         while check_motion() > 0:
@@ -5827,19 +5826,40 @@ class cl_agent():
             r_f = (speed * tcp_rot) / (100 * TCP_ROT_LIMIT)
 
             vel_f = max(s_f, r_f)
+
+            send_to_PC("tcp speed: {} mm/s, speed factor: {}  ".format(tcp_speed, s_f))
+            send_to_PC("tcp rot speed: {} deg/s, rot speed factor: {}.".format(tcp_rot, r_f))
  
             if vel_f > 0.8:
+                #TODO use JOINT_SPEED_LIMIT and desired speed to prevent acceleration overrun
                 rotj = get_desired_velj()
+
+                send_to_PC("desired velj: [{}, {}, {} ".format(rotj[0], rotj[1], rotj[2]))
                 r_f = 0.95   #speed reduction factor
-                set_velj([r_f * rotj[0], r_f * rotj[1], r_f * rotj[2], r_f * rotj[3], r_f * rotj[4], r_f * rotj[5]])
+
+                targetj = [r_f * targetj[0], r_f * targetj[1], r_f * targetj[2], r_f * targetj[3], r_f * targetj[4], r_f * targetj[5]]
+
+                set_velj(targetj)
 
             if vel_f < 0.7:
+
                 rotj = get_desired_velj()
+                send_to_PC("desired velj: [{}, {}, {} ".format(rotj[0], rotj[1], rotj[2]))
                 r_f = 1.05   #speed increase factor
-                set_velj([r_f * rotj[0], r_f * rotj[1], r_f * rotj[2], r_f * rotj[3], r_f * rotj[4], r_f * rotj[5]])
+
+                r1 = min(r_f * targetj[0], JOINT_SPEED_LIMIT[0])
+                r2 = min(r_f * targetj[1], JOINT_SPEED_LIMIT[1])
+                r3 = min(r_f * targetj[2], JOINT_SPEED_LIMIT[2])
+                r4 = min(r_f * targetj[3], JOINT_SPEED_LIMIT[3])
+                r5 = min(r_f * targetj[4], JOINT_SPEED_LIMIT[4])
+                r6 = min(r_f * targetj[5], JOINT_SPEED_LIMIT[5])
+
+                targetj = [r1, r2, r3, r4, r5, r6]
+
+                set_velj(targetj)
 
         # restore the desired rotational speeds to the original values
-        set_velj(rotj_0)
+        set_velj(JOINT_SPEED_LIMIT)
 
         if not self._pick_up_fast(tempf, True):
             # discard the fastener
