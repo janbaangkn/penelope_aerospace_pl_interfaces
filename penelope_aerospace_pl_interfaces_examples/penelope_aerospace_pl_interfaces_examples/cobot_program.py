@@ -132,8 +132,6 @@ MOVE_COMPLIANCE = [3000, 3000, 3000, 400, 400, 400]
 PICK_UP_ENGAGEMENT_SPEED = 40
 PICK_UP_ENGAGEMENT_COMPLIANCE = [250,250,250,300,300,300] #was 500,500,500,400,400,400
 PICK_UP_FORCE = 40 # was 40
-STORAGE_APPROACH_POSL = posx(110,478,179,76.8,-180,0)
-STORAGE_APPROACH_POSJ = [73,-13,131,0,23,0]
  
 #Insertion
 INSERTION_FORCE = 40 #FIND_HOLE_ENTRY_COMPLIANCE_FORCE = 40
@@ -1587,7 +1585,113 @@ def _get_posx_from_str(str_in):
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 # Cobot functions
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
- 
+
+def get_closest_posj(target_posx):
+    """
+    Function that finds the closest joint orientation from a posx.  
+   
+    :param target_posx: posx, The position in task space (x,y,z,a,b,c format)
+
+    :return: posj, The position defined by joint rotations close to the current position
+    """
+    # read the current joint rotations
+    current_posj = get_current_posj()
+
+    # find the best target joint orientation
+    # this is the orientation that is closest to the current one 
+    # we square the angle differences, 
+    # so bigger rotations make a bigger contribution
+    r_min = 9e9
+    for i in range(0, 7, 1):
+        solj = ikin(target_posx, i)
+        
+        r_val = 0
+        for j in range(0, 6, 1):
+            r_val += (solj[j] - current_posj[j])^2
+        
+        if r_val < r_min:
+            r_min = r_val
+            target_posj = solj
+    
+    return target_posj
+
+
+def scale_targetj_speed(targetj, percentage):
+    """
+    Function to scale a target speed with a percentage. 
+    The target speed will always remain below the JOINT_SPEED_LIMIT
+   
+    :param targetj: [float, float, float, float, float, float], The target speed for each joint
+    :param percentage: float, The percentage with which to scale the target speed of each joint
+    :param JOINT_SPEED_LIMIT: [float, float, float, float, float, float], The speed limit for each joint
+
+    :return: [float, float, float, float, float, float], The scaled target speed
+    """
+    
+    # speed must reain below the JOINT_SPEED_LIMIT
+    r1 = min(percentage * targetj[0] / 100.0, JOINT_SPEED_LIMIT[0])
+    r2 = min(percentage * targetj[1] / 100.0, JOINT_SPEED_LIMIT[1])
+    r3 = min(percentage * targetj[2] / 100.0, JOINT_SPEED_LIMIT[2])
+    r4 = min(percentage * targetj[3] / 100.0, JOINT_SPEED_LIMIT[3])
+    r5 = min(percentage * targetj[4] / 100.0, JOINT_SPEED_LIMIT[4])
+    r6 = min(percentage * targetj[5] / 100.0, JOINT_SPEED_LIMIT[5])
+
+    return [r1, r2, r3, r4, r5, r6]
+
+
+def speed_limited_movej_on_posx(target_posx, speed):
+    """
+    Function that moves to a position defined in task space (x,y,z,a,b,c format).
+    It first finds the closest position in joint space and then moves there
+    while limiting the speed of the TCP
+   
+    :param target_posx: posx, The target position in task space to move to
+    :param speed: float, Speed definition defined as percentage of the current speed
+    """
+    speed_limited_movej_on_posj(get_closest_posj(target_posx), speed)
+
+
+def speed_limited_movej_on_posj(target_posj, speed):
+    """
+    Function that moves to a position defined in task space (x,y,z,a,b,c format).
+    It first finds the closest position in joint space and then moves there
+    while limiting the speed of the TCP
+   
+    :param target_posx: posj, The target position to move to in joint space
+    :param speed: float, Speed definition defined as percentage of the current speed
+    """
+    targetj = scale_targetj_speed(JOINT_SPEED_LIMIT, speed)
+
+    # start moving
+    amovej(target_posj)
+
+    # the following while loop keeps the tcp speed and rotation between 0.7 and 0.8 the speed limit
+    while check_motion() > 0:
+        velx = get_current_velx()
+
+        tcp_speed = sqrt(velx[0] * velx[0] + velx[1] * velx[1] + velx[2] * velx[2])
+        s_f = (tcp_speed / TCP_SPEED_LIMIT) * (speed / 100.0)
+
+        tcp_rot = sqrt(velx[3] * velx[3] + velx[4] * velx[4] + velx[5] * velx[5])
+        r_f = (tcp_rot / TCP_ROT_LIMIT) * (speed / 100.0)
+
+        vel_f = max(s_f, r_f)
+
+        if vel_f > 0.8:
+            #speed reduction with 5%
+            set_velj(scale_targetj_speed(targetj, 95))
+
+        if vel_f < 0.7:
+            #speed increase with 5%
+            set_velj(scale_targetj_speed(targetj, 105))
+
+        wait(0.1)
+
+    # restore the desired rotational speeds to the original values
+    set_velj(JOINT_SPEED_LIMIT)
+
+
+
 def adjust_xy_location(movement_per_newton = 0.06):
     """
     Function to sense the force and move in the direction of the force.
@@ -5804,63 +5908,8 @@ class cl_agent():
         # set the tempf tcp correctly
         tempf.set_tool_center_point()
         #tp_popup("Check fastener")
+
         # pick up the fastener from the storage
-
-        # approach the storage location
-        # this is done with movej to ensure that each cobot axis 
-        # is going back to an original position
-        # this is done because the cobot hadd the tendency to 
-        # rotate towards its rotation limits after a couple of operations
-        amovej(STORAGE_APPROACH_POSJ)
-
-        targetj = JOINT_SPEED_LIMIT
-
-        # the following while loop keeps the tcp speed and rotation between 0.7 and 0.8 the speed limit
-        while check_motion() > 0:
-            velx = get_current_velx()
-
-            tcp_speed = sqrt(velx[0] * velx[0] + velx[1] * velx[1] + velx[2] * velx[2])
-            s_f = (speed * tcp_speed) / (100 * TCP_SPEED_LIMIT)
-
-            tcp_rot = sqrt(velx[3] * velx[3] + velx[4] * velx[4] + velx[5] * velx[5])
-            r_f = (speed * tcp_rot) / (100 * TCP_ROT_LIMIT)
-
-            vel_f = max(s_f, r_f)
-
-            send_to_PC("tcp speed: {} mm/s, speed factor: {}  ".format(tcp_speed, s_f))
-            send_to_PC("tcp rot speed: {} deg/s, rot speed factor: {}.".format(tcp_rot, r_f))
- 
-            if vel_f > 0.8:
-                #TODO use JOINT_SPEED_LIMIT and desired speed to prevent acceleration overrun
-                rotj = get_desired_velj()
-
-                send_to_PC("desired velj: [{}, {}, {} ".format(rotj[0], rotj[1], rotj[2]))
-                r_f = 0.95   #speed reduction factor
-
-                targetj = [r_f * targetj[0], r_f * targetj[1], r_f * targetj[2], r_f * targetj[3], r_f * targetj[4], r_f * targetj[5]]
-
-                set_velj(targetj)
-
-            if vel_f < 0.7:
-
-                rotj = get_desired_velj()
-                send_to_PC("desired velj: [{}, {}, {} ".format(rotj[0], rotj[1], rotj[2]))
-                r_f = 1.05   #speed increase factor
-
-                r1 = min(r_f * targetj[0], JOINT_SPEED_LIMIT[0])
-                r2 = min(r_f * targetj[1], JOINT_SPEED_LIMIT[1])
-                r3 = min(r_f * targetj[2], JOINT_SPEED_LIMIT[2])
-                r4 = min(r_f * targetj[3], JOINT_SPEED_LIMIT[3])
-                r5 = min(r_f * targetj[4], JOINT_SPEED_LIMIT[4])
-                r6 = min(r_f * targetj[5], JOINT_SPEED_LIMIT[5])
-
-                targetj = [r1, r2, r3, r4, r5, r6]
-
-                set_velj(targetj)
-
-        # restore the desired rotational speeds to the original values
-        set_velj(JOINT_SPEED_LIMIT)
-
         if not self._pick_up_fast(tempf, True):
             # discard the fastener
             tempf.set_as_in_bin()
@@ -5881,7 +5930,7 @@ class cl_agent():
             self.product.set_location_as_fast_target(tempf, prod_lst_id)
            
             # move to the hole apprach position
-            movel(tempf.tcp_approach_pos(), ref=DR_BASE)
+            speed_limited_movej_on_posx(tempf.tcp_approach_pos(), 100)
  
             # calculate the corrected position of the fastener
             # based on all inserted fasteners in the product
@@ -6379,8 +6428,8 @@ class cl_agent():
         set_ref_coord(DR_BASE)
        
         change_operation_speed(MOVE_SPEED)
-          
-        movel(fast.tcp_approach_pos(), ref=DR_BASE)
+
+        speed_limited_movej_on_posx(fast.tcp_approach_pos(), 100)
        
     
     def _engage_permf(self, fast: cl_fastener, force, comp, speed, burst):
@@ -7266,12 +7315,17 @@ agent.product.add_loc_to_holes_and_fast_lst("pr_01_08", 5, 9, posx(96,796,1152,9
 agent._add_waypoint("storage approach", posx(119,474,227,160,180,90))
 agent._add_waypoint("product_approach", posx(-38,630,1106,90,73.7,-160))
 agent._add_waypoint("HOME", posx(-34.5,493.4,690.69,90,119,0))
- 
- 
+
+# go to home
+speed_limited_movej_on_posj(posj(90,-30,120,0,0,0), 100)
+
 # insert and install a permf from storage to product
 agent._add_install_tempf_action("A01", "pr_01_01")
 
 agent.execute_all()
+
+# go to home
+speed_limited_movej_on_posj(posj(90,-30,120,0,0,0), 100)
  
 send_to_PC("end program")
  
