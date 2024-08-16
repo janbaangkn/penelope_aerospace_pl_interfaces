@@ -91,7 +91,7 @@ BYTES_MSG_LENGTH  = 4
 
 DEFAULT_ENCODER = 1
 
-TCP_SPEED_LIMIT = 1500
+TCP_SPEED_LIMIT = 250
 TCP_ROT_LIMIT = 120
 JOINT_SPEED_LIMIT = [120, 120, 180, 225, 225, 225]
  
@@ -1607,7 +1607,9 @@ def get_closest_posj(target_posx):
         
         r_val = 0
         for j in range(0, 6, 1):
-            r_val += (solj[j] - current_posj[j])^2
+            s_j = solj[j]
+            c_j = current_posj[j]
+            r_val += (s_j - c_j) * (s_j - c_j)
         
         if r_val < r_min:
             r_min = r_val
@@ -1660,6 +1662,7 @@ def speed_limited_movej_on_posj(target_posj, speed):
     :param target_posx: posj, The target position to move to in joint space
     :param speed: float, Speed definition defined as percentage of the current speed
     """
+    change_operation_speed(speed)
     targetj = scale_targetj_speed(JOINT_SPEED_LIMIT, speed)
 
     # start moving
@@ -1676,6 +1679,7 @@ def speed_limited_movej_on_posj(target_posj, speed):
         r_f = (tcp_rot / TCP_ROT_LIMIT) * (speed / 100.0)
 
         vel_f = max(s_f, r_f)
+        # send_to_PC("speed: {} mm/s". format(tcp_speed))
 
         if vel_f > 0.8:
             #speed reduction with 5%
@@ -7249,7 +7253,7 @@ class cl_action(cl_uid):
 ###########################################             START             ###################################################
   
 set_velx(TCP_SPEED_LIMIT, TCP_ROT_LIMIT)
-set_accx(100,60)
+set_accx(200,60)
 change_operation_speed(100)
 
 # create the axis systems used throughout the program
