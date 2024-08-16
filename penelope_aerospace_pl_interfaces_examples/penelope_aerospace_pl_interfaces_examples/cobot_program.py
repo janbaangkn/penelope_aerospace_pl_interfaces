@@ -93,7 +93,7 @@ DEFAULT_ENCODER = 1
 
 TCP_SPEED_LIMIT = 250
 TCP_ROT_LIMIT = 120
-JOINT_SPEED_LIMIT = [120, 120, 180, 225, 225, 225]
+JOINT_SPEED_LIMIT = [90, 90, 135, 150, 150, 150]
  
 # Standard gaps used to prevent collision during movements
 SAFE_Z_GAP = 5
@@ -1679,17 +1679,22 @@ def speed_limited_movej_on_posj(target_posj, speed):
         r_f = (tcp_rot / TCP_ROT_LIMIT) * (speed / 100.0)
 
         vel_f = max(s_f, r_f)
-        # send_to_PC("speed: {} mm/s". format(tcp_speed))
+        send_to_PC("speed: {} mm/s". format(tcp_speed))
 
         if vel_f > 0.8:
             #speed reduction with 5%
-            set_velj(scale_targetj_speed(targetj, 95))
+            targetj = scale_targetj_speed(targetj, 95)
+            set_velj(targetj)
+            send_to_PC("j1 reduced to: {} deg/s". format(targetj[0]))
+
+            # do not wait because many decreases might be needed very fast
 
         if vel_f < 0.7:
             #speed increase with 5%
             set_velj(scale_targetj_speed(targetj, 105))
 
-        wait(0.1)
+            # only wait when speed is reduced 
+            wait(0.1)
 
     # restore the desired rotational speeds to the original values
     set_velj(JOINT_SPEED_LIMIT)
