@@ -120,7 +120,7 @@ PROBE_COMPLIANCE = [3000, 3000, 3000, 400, 400, 400]
 PROBE_HOLE_AXIS_SYSTEM_HOLE_EXIT_SPEED = 45
 # Set the force. The force should be in range of 10-20N -
 # small enough not to bend the material but high enough to reach surface in shortest time
-PROBE_COMPLIANCE_FORCE = 15.0
+PROBE_COMPLIANCE_FORCE = 20.0
  
  
 #General move settings
@@ -129,14 +129,14 @@ MOVE_COMPLIANCE = [3000, 3000, 3000, 400, 400, 400]
  
  
 #Pick up
-PICK_UP_ENGAGEMENT_SPEED = 40
-PICK_UP_ENGAGEMENT_COMPLIANCE = [250,250,250,300,300,300] #was 500,500,500,400,400,400
+PICK_UP_ENGAGEMENT_SPEED = 60
+PICK_UP_ENGAGEMENT_COMPLIANCE = [500,500,500,300,300,300] #was 500,500,500,400,400,400
 PICK_UP_FORCE = 40 # was 40
  
 #Insertion
 INSERTION_FORCE = 40 #FIND_HOLE_ENTRY_COMPLIANCE_FORCE = 40
 INSERTION_COMPLIANCE = [500,500,500,300,300,300] #INSERT_IN_PROBED_HOLE_COMPLIANCE_AT_ENTRY = [500,500,500,300,300,300]
-INSERTION_IN_CSK_SPEED = 60
+INSERTION_IN_CSK_SPEED = 35
  
 #Installation
 TIGHTENING_COMPLIANCE = [20, 20, 20, 20, 20, 20] #Not used atm
@@ -1804,20 +1804,29 @@ def move_into_hole(fast):
 
     reached_force = False
 
+    send_to_PC("Starting to probe....")
+
     #Loop waiting for fastener tip to touch product
     while not reached_force:
         f_z = get_tool_forces_in_tool()[2]
-        reached_force = abs(f_z) > 0.9 * PROBE_COMPLIANCE_FORCE
+        reached_force = abs(f_z) > 0.8 * PROBE_COMPLIANCE_FORCE
 
     z0, sol = get_current_posx(ref=DR_USER_NOM)
     
     release_force()
 
-    movel(posx(10, 0, -SAFE_Z_GAP, 0, 0, 0), ref=DR_USER_NOM)
-    movel(posx(0, 0, -SAFE_Z_GAP, 0, 0, 0), ref=DR_USER_NOM)
+    z_comp = z0[2]
+
+    send_to_PC("z_comp={}N....".format(z_comp))
+
+    movel(posx(10, 0, z_comp-SAFE_Z_GAP, 0, 0, 0), ref=DR_USER_NOM)
+    movel(posx(0, 0, z_comp-SAFE_Z_GAP, 0, 0, 0), ref=DR_USER_NOM)
+    movel(posx(0, 0, z_comp, 0, 0, 0), ref=DR_USER_NOM)
     
-    z_stop = fast.tcp_tip_distance() * 0.95 + z0[2]
-    CSK_stop = fast.tcp_tip_distance() * 0.05 + z0[2]
+    send_to_PC("at hole entrance....")
+
+    z_stop = fast.tcp_tip_distance() * 0.95 + z_comp
+    CSK_stop = fast.tcp_tip_distance() * 0.05 + z_comp
  
     #wait a bit to get a good force reading
     wait(0.15)
@@ -1832,7 +1841,7 @@ def move_into_hole(fast):
  
     # Speed for moving tip of fastener in countersink
     change_operation_speed(INSERTION_IN_CSK_SPEED)
- 
+
     # Compliance stiffness to move tip of fastener in countersink
     # High to low stiffness to counter weight of hose and capsule system         
     task_compliance_ctrl(INSERTION_COMPLIANCE)
@@ -3450,7 +3459,7 @@ class cl_temp_fast_ee:
         # do a fast start for two seconds
         self.set_select_program(1)
         self.set_start_on()
-        wait(2.5)
+        wait(2)
         #TODO make this dependent on the stack thickness and time it takes to reach that thickness
         self.reset_cobot_output_pins()
         wait(0.05)
@@ -7297,7 +7306,7 @@ agent.permf_storage = cl_f_container("permf_storage")
  
 # add hole locations, stack thickness and diameter in the permanent fastener storage list 
 # uid, diam, stack thickness, nom_pos 
-agent.tempf_storage.add_loc_to_holes_and_fast_lst("tfst_01", 5, 10, posx(124,476,60,160,180,90))
+agent.tempf_storage.add_loc_to_holes_and_fast_lst("tfst_01", 5, 10, posx(122.4,476.77,59,35,180,-35))
  
 # add permanent fastener in storage
 # uid, loc uid, fast_install_pos, diam, shaft height, min stack, max stack, tcp_tip_dist, tcp_top_dist, in_storage, in_ee, in_product, in_bin, is_tempf
@@ -7307,7 +7316,7 @@ agent.tempf_storage.add_fast_to_loc_with_uid("tempf_01", "tfst_01", None, 5 , DI
 agent.product = cl_f_container("product")
  
 # add hole locations, stack thickness and diameter in the product list 
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_01", 5, 9, posx(-161,796,1154,89.05,74.24,-159.1))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_01", 5, 9, posx(-162,796,1156,89.05,74.24,-159.1))
 agent.product.add_loc_to_holes_and_fast_lst("pr_01_02", 5, 9, posx(-126.5,796,1153,89.05,74.24,-159.1))
 agent.product.add_loc_to_holes_and_fast_lst("pr_01_03", 5, 9, posx(-92,796,1153,89.05,74.24,-159.1))
 agent.product.add_loc_to_holes_and_fast_lst("pr_01_04", 5, 9, posx(-56,796,1153,89.05,74.24,-159.1))
