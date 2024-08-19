@@ -7257,8 +7257,8 @@ class cl_action(cl_uid):
     
 ###########################################             START             ###################################################
   
-set_velx(TCP_SPEED_LIMIT, TCP_ROT_LIMIT)
-set_accx(200,60)
+set_velx(TCP_SPEED_LIMIT, TCP_ROT_LIMIT)  # The global task velocity is set to ...(mm/sec) and ...(deg/sec).
+set_accx(120, 20) # The global task acceleration is set to ...(mm/sec2) and ...(deg/sec2).
 change_operation_speed(100)
 
 # create the axis systems used throughout the program
@@ -7308,14 +7308,14 @@ agent.tempf_storage.add_fast_to_loc_with_uid("tempf_01", "tfst_01", None, 5 , DI
 agent.product = cl_f_container("product")
  
 # add hole locations, stack thickness and diameter in the product list 
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_01", 5, 9, posx(-162,796,1153,90,73.7,-160))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_02", 5, 9, posx(-126.5,796,1153,90,73.7,-160))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_03", 5, 9, posx(-92,796,1153,90,73.7,-160))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_04", 5, 9, posx(-56,796,1153,90,73.7,-160))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_05", 5, 9, posx(-10,796,1152,90,73.7,-160))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_06", 5, 9, posx(25.5,796,1152,90,73.7,-160))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_07", 5, 9, posx(60,796,1152,90,73.7,-160))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_08", 5, 9, posx(96,796,1152,90,73.7,-160))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_01", 5, 9, posx(-161,796,1154,89.05,74.24,-159.1))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_02", 5, 9, posx(-126.5,796,1153,89.05,74.24,-159.1))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_03", 5, 9, posx(-92,796,1153,89.05,74.24,-159.1))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_04", 5, 9, posx(-56,796,1153,89.05,74.24,-159.1))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_05", 5, 9, posx(-10,796,1152,89.05,74.24,-159.1))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_06", 5, 9, posx(25.5,796,1152,89.05,74.24,-159.1))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_07", 5, 9, posx(60,796,1152,89.05,74.24,-159.1))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_08", 5, 9, posx(96,796,1152,89.05,74.24,-159.1))
 
 ###########################################
 # product.log_holes_and_fast_lst()
