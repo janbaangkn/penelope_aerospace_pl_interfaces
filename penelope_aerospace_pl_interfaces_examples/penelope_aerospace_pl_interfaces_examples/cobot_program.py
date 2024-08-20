@@ -1817,13 +1817,9 @@ def move_into_hole(fast):
 
     z_comp = z0[2]
 
-    send_to_PC("z_comp={}N....".format(z_comp))
-
     movel(posx(10, 0, z_comp-SAFE_Z_GAP, 0, 0, 0), ref=DR_USER_NOM)
     movel(posx(0, 0, z_comp-SAFE_Z_GAP, 0, 0, 0), ref=DR_USER_NOM)
     movel(posx(0, 0, z_comp, 0, 0, 0), ref=DR_USER_NOM)
-    
-    send_to_PC("at hole entrance....")
 
     z_stop = fast.tcp_tip_distance() * 0.95 + z_comp
     CSK_stop = fast.tcp_tip_distance() * 0.05 + z_comp
@@ -1917,19 +1913,19 @@ def move_into_hole(fast):
     release_force()
     release_compliance_ctrl()
 
-    send_to_PC("move_into_hole", "starting init task_compliance_ctrl in CSK")
+    #send_to_PC("move_into_hole", "starting init task_compliance_ctrl in CSK")
  
     task_compliance_ctrl([20000,20000,20000,400,400,400])
                     
-    send_to_PC("move_into_hole", "starting init set_desired_force in CSK")
+    #send_to_PC("move_into_hole", "starting init set_desired_force in CSK")
     set_desired_force([0, 0, 11, 0, 0, 0], [0, 0, 1, 0, 0, 0])
         
     wait(0.1)
    
-    send_to_PC("move_into_hole", "starting final task_compliance_ctrl in CSK")
+    #send_to_PC("move_into_hole", "starting final task_compliance_ctrl in CSK")
     task_compliance_ctrl(INSERTION_COMPLIANCE)
    
-    send_to_PC("move_into_hole", "starting final set_desired_force in CSK")
+    #send_to_PC("move_into_hole", "starting final set_desired_force in CSK")
     set_desired_force([0, 0, INSERTION_FORCE + f_z0, 0, 0, 0], [0, 0, 1, 0, 0, 0])
    
     t0 = time.time()
@@ -1944,61 +1940,61 @@ def move_into_hole(fast):
     
     send_to_PC("move_into_hole", "in_hole={0}, reached_force={1},".format(in_hole,reached_force))
                
-    #Moeten even kijken als we dit uberhaubt wel wilt doen, of als je gewoon gelijk moet probe?      
-    #Failure 1
-    #Angles / orientation not OK
-    if not in_hole:
+    # #Moeten even kijken als we dit uberhaubt wel wilt doen, of als je gewoon gelijk moet probe?      
+    # #Failure 1
+    # #Angles / orientation not OK
+    # if not in_hole:
        
-        #Get the position where the fastener is stuck
-        Pos_stuck, sol = get_current_posx(ref=DR_USER_NOM)
+    #     #Get the position where the fastener is stuck
+    #     Pos_stuck, sol = get_current_posx(ref=DR_USER_NOM)
        
-        #Release force to move backwards.
-        release_force()
-        movel(posx(0,0,-5,0,0,0), ref=DR_TOOL, mod= DR_MV_MOD_ABS)
+    #     #Release force to move backwards.
+    #     release_force()
+    #     movel(posx(0,0,-5,0,0,0), ref=DR_TOOL, mod= DR_MV_MOD_ABS)
        
-        #Set force control       
-        set_desired_force([0, 0, INSERTION_FORCE + f_z0, 0, 0, 0], [0, 0, 1, 0, 0, 0])
+    #     #Set force control       
+    #     set_desired_force([0, 0, INSERTION_FORCE + f_z0, 0, 0, 0], [0, 0, 1, 0, 0, 0])
        
-        #Periodic move to find the correct a & b orientation
-        amove_periodic(amp = [0,0,0,1,2.12,0], period = [0,0,0,1,1,0], repeat = 4, ref = DR_USER_NOM)
+    #     #Periodic move to find the correct a & b orientation
+    #     amove_periodic(amp = [0,0,0,1,2.12,0], period = [0,0,0,1,1,0], repeat = 4, ref = DR_USER_NOM)
        
-        t0 = time.time()
+    #     t0 = time.time()
        
-        while not in_hole and (time.time() - t0) < 8:
-            p0, sol = get_current_posx(ref=DR_USER_NOM)
-            in_hole = p0[2] > z_stop
+    #     while not in_hole and (time.time() - t0) < 8:
+    #         p0, sol = get_current_posx(ref=DR_USER_NOM)
+    #         in_hole = p0[2] > z_stop
            
-            #If OK orientation is found, stop the periodic move to prevent safety stop, 1.5mm is extra delta.
-            if (p0[2] - 1.5) > Pos_stuck[2]:
-                stop(DR_SSTOP)
+    #         #If OK orientation is found, stop the periodic move to prevent safety stop, 1.5mm is extra delta.
+    #         if (p0[2] - 1.5) > Pos_stuck[2]:
+    #             stop(DR_SSTOP)
         
       
-    #Failure 2 
-    #Fastener is stuck in between stacks
-    if not in_hole:  
+    # #Failure 2 
+    # #Fastener is stuck in between stacks
+    # if not in_hole:  
         
-        #Get the position where the fastener is stuck
-        Pos_stuck, sol = get_current_posx(ref=DR_USER_NOM)
+    #     #Get the position where the fastener is stuck
+    #     Pos_stuck, sol = get_current_posx(ref=DR_USER_NOM)
        
-        #Release force to move backwards.
-        release_force()
-        movel(posx(0,0,-5,0,0,0), ref=DR_TOOL, mod= DR_MV_MOD_ABS)
+    #     #Release force to move backwards.
+    #     release_force()
+    #     movel(posx(0,0,-5,0,0,0), ref=DR_TOOL, mod= DR_MV_MOD_ABS)
        
-        #Set force control
-        set_desired_force([0, 0, INSERTION_FORCE + f_z0, 0, 0, 0], [0, 0, 1, 0, 0, 0])
+    #     #Set force control
+    #     set_desired_force([0, 0, INSERTION_FORCE + f_z0, 0, 0, 0], [0, 0, 1, 0, 0, 0])
        
-        #Spiral move
-        amove_spiral(rev= 4, rmax= 0.1, time= 4, axis= DR_AXIS_Z, ref= DR_USER_NOM)
+    #     #Spiral move
+    #     amove_spiral(rev= 4, rmax= 0.1, time= 4, axis= DR_AXIS_Z, ref= DR_USER_NOM)
        
-        t0 = time.time()
-        # The while loop below senses whether the fastener is able to un-stuck itself
-        while not in_hole and (time.time() - t0) < 8:
-            p0, sol = get_current_posx(ref=DR_USER_NOM)
-            in_hole = p0[2] > z_stop
+    #     t0 = time.time()
+    #     # The while loop below senses whether the fastener is able to un-stuck itself
+    #     while not in_hole and (time.time() - t0) < 8:
+    #         p0, sol = get_current_posx(ref=DR_USER_NOM)
+    #         in_hole = p0[2] > z_stop
            
-            #If OK orientation is found, stop the periodic move to prevent safety stop, 1.5mm is delta
-            if (p0[2] - 1.5) > Pos_stuck[2]:
-                stop(DR_SSTOP)
+    #         #If OK orientation is found, stop the periodic move to prevent safety stop, 1.5mm is delta
+    #         if (p0[2] - 1.5) > Pos_stuck[2]:
+    #             stop(DR_SSTOP)
  
     #Misschien moet dit wel als eerst. Gewoon geen periodic/spiral in gat gebruiken is het beste.
     #Probing and last try
@@ -2055,7 +2051,7 @@ def move_into_hole(fast):
                     
     release_force()
  
-   # if the hole was not found
+    # if the hole was not found
     if not in_hole:
         tp_log("Fastener did not go into hole\nz_location = {}mm (z_stop = {}mm)"
                .format(round(p0[2], 3), round(z_stop, 3)))
@@ -7316,14 +7312,14 @@ agent.tempf_storage.add_fast_to_loc_with_uid("tempf_01", "tfst_01", None, 5 , DI
 agent.product = cl_f_container("product")
  
 # add hole locations, stack thickness and diameter in the product list 
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_01", 5, 9, posx(-162,796,1156,89.05,74.24,-159.1))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_02", 5, 9, posx(-126.5,796,1153,89.05,74.24,-159.1))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_03", 5, 9, posx(-92,796,1153,89.05,74.24,-159.1))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_04", 5, 9, posx(-56,796,1153,89.05,74.24,-159.1))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_05", 5, 9, posx(-10,796,1152,89.05,74.24,-159.1))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_06", 5, 9, posx(25.5,796,1152,89.05,74.24,-159.1))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_07", 5, 9, posx(60,796,1152,89.05,74.24,-159.1))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_08", 5, 9, posx(96,796,1152,89.05,74.24,-159.1))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_01", 5, 9, posx(-162,796,1155,89.16,74.75,-158.73))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_02", 5, 9, posx(-126.5,796,1155,89.16,74.75,-158.73))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_03", 5, 9, posx(-92,796,1155,89.16,74.75,-158.73))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_04", 5, 9, posx(-56,796,1155,89.16,74.75,-158.73))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_05", 5, 9, posx(-10,796,1154,89.16,74.75,-158.73))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_06", 5, 9, posx(25.5,796,1154,89.16,74.75,-158.73))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_07", 5, 9, posx(60,796,1154,89.16,74.75,-158.73))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_08", 5, 9, posx(96,796,1154,89.16,74.75,-158.73))
 
 ###########################################
 # product.log_holes_and_fast_lst()
