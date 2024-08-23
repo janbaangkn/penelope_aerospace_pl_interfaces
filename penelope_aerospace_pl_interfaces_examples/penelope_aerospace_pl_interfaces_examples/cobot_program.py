@@ -6009,30 +6009,25 @@ class cl_agent():
             # return failure; the ee will be above the tempf location
             return False
         else:   
-            # remove the tempf object from the storage location
+            # remove the tempf object from the storage location object
             self.product.remove_fast_from_location(prod_lst_id)
            
-            # move to the storage location
+            # pass any defined waypoints
             for wp in passing_wp:
                 self.move_to_waypoint(wp)
            
             # set the product location as the tempf target
             self.tempf_storage.set_location_as_fast_target(tempf, storage_loc_id)
-           
-            # move to the hole apprach position
-            movel(self.fast.tcp_approach_pos())
                 
             # we assume that the install position is known for every storage
             # location. Therefore we set the install position
             # to be the primary position by parsing it into the corrected position
             tempf.reset_to_installed_pos()
            
-            # insert the fastener into the product
-            if self._insert_fast(tempf, True):
+            # insert the fastener into the storage location
+            if self._drop_tempf_in_storage(tempf):
                 # add the fastener to the product
                 if self.tempf_storage.add_fast_to_location(tempf, storage_loc_id):
-
-                    tempf.set_as_in_storage()
 
                     return True          
            
@@ -6335,6 +6330,42 @@ class cl_agent():
         return in_ee
  
     
+    def _drop_tempf_in_storage(self, tempf):
+        """
+        Function that drops a tempf into the storage location.
+        The function assumes that the target location is in the fast object
+       
+        :param tempf: cl_fastener, the fastener object with
+                                   information on where to drop it
+           
+        :return: bool, returns True if successful
+        """
+        # move to the hole apprach position
+        speed_limited_movej_on_posx(tempf.tcp_approach_pos(), 100)
+        
+        if not self._engage_tempf(tempf, PICK_UP_FORCE, PICK_UP_ENGAGEMENT_COMPLIANCE, PICK_UP_ENGAGEMENT_SPEED, False):
+            # move back again
+            movel(posx(0, 0, -(tempf.shaft_height() + tempf.tcp_tip_distance() + SAFE_Z_GAP + SAFE_Z_GAP), 0, 0, 0), ref=DR_TOOL)
+           
+            return False
+        else:
+            self.tf_ee.stop_clamping()
+
+            self.tf_ee.start_ejection()
+
+            # tell the tempf object it is in the storage location
+            tempf.set_as_in_storage()
+
+            # set the tcp to the tip of the ee
+            # compliance will also be turned off to enable TCP change.
+            tempf.set_tool_center_point()
+
+            # move back
+            movel(posx(0, 0, -(tempf.shaft_height() + tempf.tcp_tip_distance() + SAFE_Z_GAP + SAFE_Z_GAP), 0, 0, 0), ref=DR_TOOL)
+
+            return True
+
+
     def _insert_fast(self, fast, is_tempf):
         """
         Function that inserts and tightens a fastener.
@@ -6620,8 +6651,6 @@ class cl_agent():
 
         # set the correct complance and speed
         task_compliance_ctrl(comp)
-
-        send_to_PC("setting desired force")
 
         set_desired_force([0, 0, force + f_z0, 0, 0, 0], [0, 0, 1, 0, 0, 0])
 
