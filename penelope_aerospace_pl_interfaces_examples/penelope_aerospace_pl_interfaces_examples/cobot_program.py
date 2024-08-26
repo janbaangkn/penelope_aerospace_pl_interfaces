@@ -97,7 +97,7 @@ JOINT_SPEED_LIMIT = [90, 90, 135, 150, 150, 150]
  
 # Standard gaps used to prevent collision during movements
 SAFE_Z_GAP = 5
-GLOBAL_CLEARANCE_DURING_MOVEMENTS = 40 #Max TCP TOP DIST or any other object + delta 60 + 20
+GLOBAL_CLEARANCE_DURING_MOVEMENTS = 65 #Max TCP TOP DIST or any other object + delta 60 + 20
  
  
 # The default accuracy with which the fastener location is initially known
@@ -1054,7 +1054,10 @@ def _get_action_to_server_str(action_in):
  
     :param action_in: cl_action
     """
-    
+    is_done = action_in.is_done()
+    is_cancelled = action_in.is_cancelled()
+    is_waiting = action_in.is_waiting()
+
     str_out = ACTIONS_TAG
  
     # string uid: uid of the hole Action
@@ -1069,7 +1072,7 @@ def _get_action_to_server_str(action_in):
  
     # string loc_uid: uid of the target location of the object
     str_out = str_out + LOC_UID_TAG + action_in.loc_uid() + CLOSE_TAG
-                                   
+
     # AssemblyActionState state: Status of the action (uint8)
     # ACCEPTED = 2
     # IN_PROGRESS = 3
@@ -1077,11 +1080,11 @@ def _get_action_to_server_str(action_in):
     # WAITING_FOR_OPERATOR_ACTION = 5
     # SUCCESS = 6
     # CANCELLED = 7
-    if action_in.is_done():
+    if is_done:
         str_out = str_out + ACTION_STATE_TAG + "6" + CLOSE_TAG
-    elif action_in.is_cancelled():
+    elif is_cancelled:
         str_out = str_out + ACTION_STATE_TAG + "7" + CLOSE_TAG
-    elif action_in.is_waiting():
+    elif is_waiting:
         str_out = str_out + ACTION_STATE_TAG + "4" + CLOSE_TAG
     else:
         str_out = str_out + ACTION_STATE_TAG + "2" + CLOSE_TAG
@@ -6363,6 +6366,8 @@ class cl_agent():
             # move back
             movel(posx(0, 0, -(tempf.shaft_height() + tempf.tcp_tip_distance() + SAFE_Z_GAP + SAFE_Z_GAP), 0, 0, 0), ref=DR_TOOL)
 
+            self.tf_ee.stop_ejection()
+
             return True
 
 
@@ -7227,7 +7232,6 @@ class cl_action(cl_uid):
        
         :return: bool, whether the action is waiting.
         """
-        self.__is_done = False
         return self.__is_waiting
    
  
@@ -7235,6 +7239,8 @@ class cl_action(cl_uid):
         """
         Sets the action as is waiting.
         """
+        self.__is_cancelled = False
+        self.__is_done = False
         self.__is_waiting = True
        
  
@@ -7335,7 +7341,7 @@ agent.tempf_storage.add_loc_to_holes_and_fast_lst("tfst_01", 5, 10, posx(122.4,4
  
 # add permanent fastener in storage
 # uid, loc uid, fast_install_pos, diam, shaft height, min stack, max stack, tcp_tip_dist, tcp_top_dist, in_storage, in_ee, in_product, in_bin, is_tempf
-agent.tempf_storage.add_fast_to_loc_with_uid("tempf_01", "tfst_01", None, 5 , DIAM_5_SHAFT_HEIGHT,DIAM_5_MIN_STACK, DIAM_5_MAX_STACK,DIAM_5_TCP_TIP_DIST, DIAM_5_TCP_TOP_DIST,True, False, False, False, True)
+#agent.tempf_storage.add_fast_to_loc_with_uid("tempf_01", "tfst_01", None, 5 , DIAM_5_SHAFT_HEIGHT,DIAM_5_MIN_STACK, DIAM_5_MAX_STACK,DIAM_5_TCP_TIP_DIST, DIAM_5_TCP_TOP_DIST,True, False, False, False, True)
 
 # create a class that contains all available hole positions in the product
 agent.product = cl_f_container("product")
@@ -7350,6 +7356,10 @@ agent.product.add_loc_to_holes_and_fast_lst("pr_01_06", 5, 9, posx(25.5,796,1154
 agent.product.add_loc_to_holes_and_fast_lst("pr_01_07", 5, 9, posx(60,796,1154,89.16,74.75,-158.73))
 agent.product.add_loc_to_holes_and_fast_lst("pr_01_08", 5, 9, posx(96,796,1154,89.16,74.75,-158.73))
 
+# add permanent fastener in the product
+# uid, loc uid, fast_install_pos, diam, shaft height, min stack, max stack, tcp_tip_dist, tcp_top_dist, in_storage, in_ee, in_product, in_bin, is_tempf
+agent.product.add_fast_to_loc_with_uid("tempf_01", "pr_01_01", None, 5 , DIAM_5_SHAFT_HEIGHT,DIAM_5_MIN_STACK, DIAM_5_MAX_STACK,DIAM_5_TCP_TIP_DIST, DIAM_5_TCP_TOP_DIST,True, False, False, False, True)
+
 ###########################################
 # product.log_holes_and_fast_lst()
  
@@ -7362,7 +7372,8 @@ agent._add_waypoint("HOME", posx(-34.5,493.4,690.69,90,119,0))
 speed_limited_movej_on_posj(posj(90,-30,120,0,0,0), 100)
 
 # insert and install a permf from storage to product
-agent._add_install_tempf_action("A01", "pr_01_01")
+#agent._add_install_tempf_action("A01", "pr_01_01")
+agent._add_remove_tempf_action("A01", "pr_01_01")
 
 agent.execute_all()
 
