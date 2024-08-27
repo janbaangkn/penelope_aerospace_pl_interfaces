@@ -3,9 +3,6 @@
 Created on Thu Feb 29 11:49:37 2024
 @author: Bram and Jan Baan
 Last update: ....2023
-"""
- 
-"""
 As a reminder:
 a = rotation about z-axis
 b = rotation about rotated y-axis
@@ -2300,14 +2297,10 @@ def probe_hole_axis_syst(fast):
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
  
  
- 
-def retract_and_check_tempf_in_ee(tempf, ee, retract = True):
+
+def retract_tempf(tempf, ee, retract = True):
     """
-    Function to check whether a tempf is in the end effector.
- 
-    The function:   
-        1) moves to a probing position
-        2) probes the surface around the hole
+    Function to retract with the tempf in the end effector.
    
     :param tempf: cl_fastener, Tempf location to be probed
     :param ee: the end effector object
@@ -2322,9 +2315,6 @@ def retract_and_check_tempf_in_ee(tempf, ee, retract = True):
     # Exit the hole (not too fast) to the origin of the DR_USER_PROBE axis system
     change_operation_speed(HOLE_RETRACTION_SPEED)
    
-    # set the DR_USER_PROBE axis system above the hole location before the movel with radius
-    overwrite_user_cart_coord(DR_USER_PROBE, translate_pos(tempf.installed_pos(), 0, 0, -SAFE_Z_GAP))
-   
     # Set the compliance and force
     # Set DR_TOOL as ref coordinate to ensure that the desired forces are in the too axis system
     set_ref_coord(DR_TOOL)
@@ -2332,76 +2322,7 @@ def retract_and_check_tempf_in_ee(tempf, ee, retract = True):
     if retract:
         movel(posx(0, 0, -tempf.tcp_tip_distance() - SAFE_Z_GAP, 0, 0, 0), ref=DR_TOOL)
    
-    change_operation_speed(MOVE_SPEED)
-    movel(posx( 2 * tempf.diam(), 0, 0, 0, 0, 0), ref=DR_USER_PROBE)
-   
-    # now move against surface next to hole
-    # set the correct complance and speed
-    task_compliance_ctrl(PICK_UP_ENGAGEMENT_COMPLIANCE)
-           
-    # Set the force. The force should be in range of 10-20N -
-    # small enough not to bend the material but high enough to reach surface in shortest time
-    set_desired_force([0, 0, PROBE_COMPLIANCE_FORCE, 0, 0, 0], [0, 0, 1, 0, 0, 0])
- 
-    # Wait until the force reaches a value
-    while True:
-        tip_pos, sol = get_current_posx(ref=DR_USER_PROBE)
-       
-        if abs(get_tool_forces_in_tool()[2]) > 0.9 * PROBE_COMPLIANCE_FORCE:
-            break
-   
-    #prepare the end effector
-    ee.reset_cobot_output_pins()
-    ee.start_new_cycle()
-    ee.set_select_program(1)
-   
-    # start tightening the fastener
-    ee.set_start_on()
-   
-    # tightening so the temp does not fit in the hole anymore
-    # shorter than 0.8 seconds will not do anything. Seems like responsetime is long
-    wait(2)
-   
-    #prepare the end effector
-    ee.reset_cobot_output_pins()
-    ee.start_new_cycle()
-   
-    release_force()
-    release_compliance_ctrl()
-    movel(posx( 0, 0, 0, 0, 0, 0), ref=DR_USER_PROBE)
-   
-    task_compliance_ctrl(PICK_UP_ENGAGEMENT_COMPLIANCE)
-    set_desired_force([0, 0, PROBE_COMPLIANCE_FORCE, 0, 0, 0], [0, 0, 1, 0, 0, 0])
-   
-    # wait for the tempf to touch the hole
-    wait(0.5)
-   
-    # slowly untighten
-    ee.set_select_program(2)
-    ee.set_reversestart_on()
-   
-    # when the movement into the hole is regarded as inside the hole
-    # not too soon because the fastener has not yet been fully untightened
-    # not too late because the fastener will untighten too much
-    z_stop = 3 * SAFE_Z_GAP
-    while True:
-        tip_pos, sol = get_current_posx(ref=DR_USER_PROBE)
-        succes = tip_pos[2] > z_stop
-        if succes:
-            # stop the motor before it turns dull again
-            ee.reset_cobot_output_pins()
-           
-            release_force()
-            release_compliance_ctrl()
-            set_ref_coord(DR_BASE)
-            break
-   
-    if succes:
-        send_to_PC("check_tempf_in_ee___", "fastener {} in EE.".format(tempf.uid()))
-    else:
-        send_to_PC("check_tempf_in_ee___", "fastener {} not in EE.".format(tempf.uid()))
-   
-    return succes
+    return True
  
  
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -6313,7 +6234,7 @@ class cl_agent():
         if is_tempf:
             if is_untightened:   
                 if was_in_product:        
-                    in_ee = retract_and_check_tempf_in_ee(fast, self.tf_ee)
+                    in_ee = retract_tempf(fast, self.tf_ee)
                     if not in_ee:
                         if was_in_product:
                             fast.set_as_in_product()
@@ -6349,29 +6270,102 @@ class cl_agent():
         # move to the hole apprach position
         speed_limited_movej_on_posx(tempf.tcp_approach_pos(), 100)
         
-        if not self._engage_tempf(tempf, PICK_UP_FORCE, PICK_UP_ENGAGEMENT_COMPLIANCE, PICK_UP_ENGAGEMENT_SPEED, False):
-            # move back again
-            movel(posx(0, 0, -(tempf.shaft_height() + tempf.tcp_tip_distance() + SAFE_Z_GAP + SAFE_Z_GAP), 0, 0, 0), ref=DR_TOOL)
-           
-            return False
-        else:
-            self.tf_ee.stop_clamping()
+        # set the DR_USER_PROBE axis system above the storage location before the movel with radius
+        overwrite_user_cart_coord(DR_USER_PROBE, translate_pos(tempf.nom_pos(), 0, 0, -SAFE_Z_GAP))
 
-            self.tf_ee.start_ejection()
+        change_operation_speed(MOVE_SPEED)
+        movel(posx( 2 * tempf.diam(), 0, 0, 0, 0, 0), ref=DR_USER_PROBE)
+    
+        # Set the compliance and force
+        # Set DR_TOOL as ref coordinate to ensure that the desired forces are in the too axis system
+        set_ref_coord(DR_TOOL)
 
-            # tell the tempf object it is in the storage location
-            tempf.set_as_in_storage()
+        # now move against surface next to hole
+        # set the correct complance and speed
+        task_compliance_ctrl(PICK_UP_ENGAGEMENT_COMPLIANCE)
+            
+        # Set the force. The force should be in range of 10-20N -
+        # small enough not to bend the material but high enough to reach surface in shortest time
+        set_desired_force([0, 0, PROBE_COMPLIANCE_FORCE, 0, 0, 0], [0, 0, 1, 0, 0, 0])
+ 
+        # Wait until the force reaches a value
+        while True:
+            tip_pos, sol = get_current_posx(ref=DR_USER_PROBE)
+        
+            if abs(get_tool_forces_in_tool()[2]) > 0.9 * PROBE_COMPLIANCE_FORCE:
+                break
+    
+        #prepare the end effector
+        self.tf_ee.reset_cobot_output_pins()
+        self.tf_ee.start_new_cycle()
+        self.tf_ee.set_select_program(1)
+    
+        # start tightening the fastener
+        self.tf_ee.set_start_on()
+    
+        # tightening so the temp does not fit in the hole anymore
+        # shorter than 0.8 seconds will not do anything. Seems like responsetime is long
+        wait(2)
+    
+        #prepare the end effector
+        self.tf_ee.reset_cobot_output_pins()
+        self.tf_ee.start_new_cycle()
+        
 
-            # set the tcp to the tip of the ee
-            # compliance will also be turned off to enable TCP change.
-            tempf.set_tool_center_point()
 
-            # move back
-            movel(posx(0, 0, -(tempf.shaft_height() + tempf.tcp_tip_distance() + SAFE_Z_GAP + SAFE_Z_GAP), 0, 0, 0), ref=DR_TOOL)
+#TODO clamp during movement
+#TODO press tempf in storage
+#TODO slowly clamp
+#TODO stop when moving into hole
+#TODO ditch tempf
 
-            self.tf_ee.stop_ejection()
 
-            return True
+
+
+        release_force()
+        release_compliance_ctrl()
+        movel(posx( 0, 0, 0, 0, 0, 0), ref=DR_USER_PROBE)
+    
+        task_compliance_ctrl(PICK_UP_ENGAGEMENT_COMPLIANCE)
+        set_desired_force([0, 0, PROBE_COMPLIANCE_FORCE, 0, 0, 0], [0, 0, 1, 0, 0, 0])
+    
+        # wait for the tempf to touch the hole
+        wait(0.5)
+    
+        # slowly untighten
+        self.tf_ee.set_select_program(2)
+        self.tf_ee.set_reversestart_on()
+   
+        # when the movement into the hole is regarded as inside the hole
+        # not too soon because the fastener has not yet been fully untightened
+        # not too late because the fastener will untighten too much
+        z_stop = 3 * SAFE_Z_GAP
+        while True:
+            tip_pos, sol = get_current_posx(ref=DR_USER_PROBE)
+            succes = tip_pos[2] > z_stop
+            if succes:
+                # stop the motor before it turns dull again
+                self.tf_ee.reset_cobot_output_pins()
+        
+                break
+
+        self.tf_ee.stop_clamping()
+
+        self.tf_ee.start_ejection()
+
+        # tell the tempf object it is in the storage location
+        tempf.set_as_in_storage()
+
+        # set the tcp to the tip of the ee
+        # compliance will also be turned off to enable TCP change.
+        tempf.set_tool_center_point()
+
+        # move back
+        movel(posx(0, 0, -(tempf.shaft_height() + tempf.tcp_tip_distance() + SAFE_Z_GAP + SAFE_Z_GAP), 0, 0, 0), ref=DR_TOOL)
+
+        self.tf_ee.stop_ejection()
+
+        return True
 
 
     def _insert_fast(self, fast, is_tempf):
