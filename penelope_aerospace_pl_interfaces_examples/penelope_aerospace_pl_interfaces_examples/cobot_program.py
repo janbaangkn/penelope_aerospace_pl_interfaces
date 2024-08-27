@@ -3558,13 +3558,17 @@ class cl_temp_fast_ee:
         #start clamping the fastener
         self.start_clamping()
                                         
-        # switch on the pin for an removal
+        # switch on the pin for a removal
         self.set_reversestart_on()                                  
         
         # wait until everything is set in motion
         wait(0.1) 
         max_duration = self.REM_TIME[program - 1]
-        timed_out = False                                                     
+        timed_out = False           
+
+        send_to_PC("is_output_single_ok: {}".format(self.is_output_single_ok()))
+        send_to_PC("is_output_single_nok: {}".format(self.is_output_single_nok()))
+        send_to_PC("has_output_failure: {}".format(self.has_output_failure()))
         
         while not self.is_output_single_ok() and not self.is_output_single_nok() and not self.has_output_failure() and not timed_out:
             current_time = time.time()
@@ -6251,7 +6255,6 @@ class cl_agent():
         else:
             is_engaged = self._engage_permf(fast, PICK_UP_FORCE, PICK_UP_ENGAGEMENT_COMPLIANCE, PICK_UP_ENGAGEMENT_SPEED, True)
 
-       
         if is_engaged:
            
             # wait to properly settle
@@ -6263,8 +6266,8 @@ class cl_agent():
             # let the ee know there is a fast in its beak
             if is_tempf:
                 self.tf_ee.tempf_in_end_effector = True
- 
                 if was_in_product:
+                    send_to_PC("start untightening")
                     # clamp and tighten the fastener
                     is_untightened = self.tf_ee.untighten_temp(UNTIGHTEN_PROGRAM)
                 else:
@@ -6691,7 +6694,7 @@ class cl_agent():
             self.tf_ee.engagement_burst()
             
             # wait to see if it reached position now
-            wait(1)
+            wait(3)
 
             # get the position progress
             r_i = fast.get_install_ratio()
@@ -7358,7 +7361,7 @@ agent.product.add_loc_to_holes_and_fast_lst("pr_01_08", 5, 9, posx(96,796,1154,8
 
 # add permanent fastener in the product
 # uid, loc uid, fast_install_pos, diam, shaft height, min stack, max stack, tcp_tip_dist, tcp_top_dist, in_storage, in_ee, in_product, in_bin, is_tempf
-agent.product.add_fast_to_loc_with_uid("tempf_01", "pr_01_01", None, 5 , DIAM_5_SHAFT_HEIGHT,DIAM_5_MIN_STACK, DIAM_5_MAX_STACK,DIAM_5_TCP_TIP_DIST, DIAM_5_TCP_TOP_DIST,True, False, False, False, True)
+agent.product.add_fast_to_loc_with_uid("tempf_01", "pr_01_01", None, 5 , DIAM_5_SHAFT_HEIGHT,DIAM_5_MIN_STACK, DIAM_5_MAX_STACK,DIAM_5_TCP_TIP_DIST, DIAM_5_TCP_TOP_DIST,False, False, True, False, True)
 
 ###########################################
 # product.log_holes_and_fast_lst()
