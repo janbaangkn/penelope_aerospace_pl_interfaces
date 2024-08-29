@@ -1,7 +1,11 @@
-import get_str_function  
+
 import re  
 import math
 import numpy as np
+
+from geometry_msgs.msg import Pose
+
+from .get_str_function import *
 
 from penelope_aerospace_pl_msgs.msg import AssemblyAction
 from penelope_aerospace_pl_msgs.msg import AssemblyActionState
@@ -10,7 +14,7 @@ from penelope_aerospace_pl_msgs.msg import AssemblyDrill
 from penelope_aerospace_pl_msgs.msg import AssemblyEe
 from penelope_aerospace_pl_msgs.msg import AssemblyFast
 from penelope_aerospace_pl_msgs.msg import AssemblyMaterialLayer
-from geometry_msgs.msg import Pose
+
 
 def R_matrix_to_quaternion(matrix, isprecise=False):
     """Return quaternion from rotation matrix.

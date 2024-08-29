@@ -1,11 +1,11 @@
-from setuptools import setup
+from setuptools import find_packages, setup
 
-package_name = "penelope_aerospace_pl_interfaces_examples"
+package_name = "penelope_fokker_module"
 
 setup(
     name=package_name,
     version="0.0.0",
-    packages=[package_name],
+    packages=find_packages(exclude=["test"]),
     data_files=[
         ("share/ament_index/resource_index/packages", ["resource/" + package_name]),
         ("share/" + package_name, ["package.xml"]),
@@ -19,8 +19,7 @@ setup(
     license="BSD-3-Clause",
     entry_points={
         "console_scripts": [
-            "example_client = penelope_aerospace_pl_interfaces_examples.example_action_client:main",
-            "example_server = penelope_aerospace_pl_interfaces_examples.example_action_server:main",
+            "action_server = penelope_fokker_module.fokker_action_server:main",
         ],
     },
 )

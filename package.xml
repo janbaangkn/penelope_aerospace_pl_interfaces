@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>penelope_aerospace_pl_interfaces_examples</name>
+  <name>penelope_fokker_module</name>
   <version>1.0.0</version>
   <description>Simple example of a ROS2 action server and client for the PeneloPe specific interfaces</description>
   <maintainer email="e.bernardi@tudelft.nl">Eugenio Bernardi</maintainer>

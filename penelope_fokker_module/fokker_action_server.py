@@ -1,29 +1,30 @@
-import rclpy
-
-import cobot_TCP_server
 import queue
-import get_str_function
-import create_action_obj
+from time import sleep
+
+import rclpy
+from rclpy.action import ActionServer
+from rclpy.node import Node
+
+from .cobot_tcp_server import CobotTCPServer
+from .get_str_function import *
+from .create_action_obj import *
 
 from penelope_aerospace_pl_msgs.action import CobotOp
 from penelope_aerospace_pl_msgs.msg import AssemblyActionState
-
 from penelope_aerospace_pl_msgs.msg import ModuleState
 from penelope_aerospace_pl_msgs.msg import ResultCodes
-from rclpy.action import ActionServer
-from rclpy.node import Node
-from time import sleep
 
 
 class FokkerActionServer(Node):
+
+    action_name: str = "cobot_station/assemble"
+
     def __init__(self):
         super().__init__("fokker_action_server")
-        self._action_server = ActionServer(self, CobotOp, "Cobot Operation", self.execute_callback)
-
-        self.result_msg
+        self._action_server = ActionServer(self, CobotOp, self.action_name, self.execute_callback)
 
         message_queue = queue.Queue()
-        cobot_server = cobot_TCP_server.CobotTCPServer(self.handle_cobot_message, message_queue)
+        cobot_server = CobotTCPServer(self.handle_cobot_message, message_queue)
         cobot_server.start()    # Or run()?
 
     def execute_callback(self, goal_handle):
@@ -75,12 +76,12 @@ class FokkerActionServer(Node):
     # Excution commands are given by sending the uid of the action
     # to be executed.
     def send_execution_action_uid_to_cobot(self, uid_in):  
-        str = get_str_function.EXECUTE_TAG
+        str = EXECUTE_TAG
 
         # uid of the action to be executed
-        str = str + get_str_function.UID_TAG + uid_in + get_str_function.CLOSE_TAG
+        str = str + UID_TAG + uid_in + CLOSE_TAG
 
-        str = str + get_str_function.CLOSE_TAG
+        str = str + CLOSE_TAG
 
         return self.send_msg_to_cobot(str)  
     
@@ -88,62 +89,62 @@ class FokkerActionServer(Node):
     # Sends everything to the Cobot except for the uids to execute
     def send_goal_handle_to_cobot(self, goal_handle_in):
         # storage location container
-        res = self.send_msg_to_cobot(get_str_function.permf_storage_str_to_cobot(goal_handle_in.request.permf_storage))          
+        res = self.send_msg_to_cobot(permf_storage_str_to_cobot(goal_handle_in.request.permf_storage))          
         if res < 0:
             self.get_logger().error("Failed to send permf storage to cobot.")
             return -1
         
         # storage location container
-        res = self.send_msg_to_cobot(get_str_function.tempf_storage_str_to_cobot(goal_handle_in.request.tempf_storage))          
+        res = self.send_msg_to_cobot(tempf_storage_str_to_cobot(goal_handle_in.request.tempf_storage))          
         if res < 0:
             self.get_logger().error("Failed to send tempf storage to cobot.")
             return -1
 
         # product container with holes
-        res = self.send_msg_to_cobot(get_str_function.product_str_to_cobot(goal_handle_in.request.product))        
+        res = self.send_msg_to_cobot(product_str_to_cobot(goal_handle_in.request.product))        
         if res < 0:
             self.get_logger().error("Failed to send product to cobot.")
             return -1
 
         # list of defined waypoints
-        res = self.send_msg_to_cobot(get_str_function.waypoints_str_to_cobot(goal_handle_in.request.waypoints))     
+        res = self.send_msg_to_cobot(waypoints_str_to_cobot(goal_handle_in.request.waypoints))     
         if res < 0:
             self.get_logger().error("Failed to send waypoints to cobot.")
             return -1
 
         # list of holes to be drilled
-        res = self.send_msg_to_cobot(get_str_function.drill_tasks_str_to_cobot(goal_handle_in.request.drill_tasks)) 
+        res = self.send_msg_to_cobot(drill_tasks_str_to_cobot(goal_handle_in.request.drill_tasks)) 
         if res < 0:
             self.get_logger().error("Failed to send drill_tasks to cobot.")
             return -1
 
         # list of available fasteners
-        res = self.send_msg_to_cobot(get_str_function.fasteners_str_to_cobot(goal_handle_in.request.fasteners))    
+        res = self.send_msg_to_cobot(fasteners_str_to_cobot(goal_handle_in.request.fasteners))    
         if res < 0:
             self.get_logger().error("Failed to send fasteners to cobot.")
             return -1
 
         # list of available temporary fasteners
-        res = self.send_msg_to_cobot(get_str_function.tempfs_str_to_cobot(goal_handle_in.request.tempfs))          
+        res = self.send_msg_to_cobot(tempfs_str_to_cobot(goal_handle_in.request.tempfs))          
         if res < 0:
             self.get_logger().error("Failed to send tempfs to cobot.")
             return -1
 
         # list of available docking positions for End Effectors
-        res = self.send_msg_to_cobot(get_str_function.docking_pos_str_to_cobot(goal_handle_in.request.docking_pos))
+        res = self.send_msg_to_cobot(docking_pos_str_to_cobot(goal_handle_in.request.docking_pos))
         if res < 0:
             self.get_logger().error("Failed to send docking_pos to cobot.")
             return -1
 
         # list of available End Effectors
-        res = self.send_msg_to_cobot(get_str_function.ee_str_to_cobot(goal_handle_in.request.ee))              
+        res = self.send_msg_to_cobot(ee_str_to_cobot(goal_handle_in.request.ee))              
         if res < 0:
             self.get_logger().error("Failed to send ee to cobot.")
             return -1
 
         # list of defined actions
         # actions must be last because they require all other stuff to be there
-        res = self.send_msg_to_cobot(get_str_function.actions_str_to_cobot(goal_handle_in.request.actions))         
+        res = self.send_msg_to_cobot(actions_str_to_cobot(goal_handle_in.request.actions))         
         if res < 0:
             self.get_logger().error("Failed to send actions to cobot.")
             return -1
@@ -166,25 +167,25 @@ class FokkerActionServer(Node):
         # Create a feedback message
         feedback_msg = CobotOp.Feedback()
 
-        a_str = create_action_obj._find_substring(c_str, get_str_function.ACTIONS_TAG)
+        a_str = _find_substring(c_str, ACTIONS_TAG)
         if a_str is not None:
-            feedback_msg.actions = create_action_obj._create_actions_from_cobot_output(a_str)  
+            feedback_msg.actions = _create_actions_from_cobot_output(a_str)  
 
-        d_str = create_action_obj._find_substring(c_str, get_str_function.DRILL_TASKS_TAG)
+        d_str = _find_substring(c_str, DRILL_TASKS_TAG)
         if d_str is not None:
-            feedback_msg.drill_tasks = create_action_obj._create_drill_tasks_from_cobot_output(d_str)
+            feedback_msg.drill_tasks = _create_drill_tasks_from_cobot_output(d_str)
 
-        t_str = create_action_obj._find_substring(c_str, get_str_function.TEMPFS_TAG)
+        t_str = _find_substring(c_str, TEMPFS_TAG)
         if t_str is not None:
-            feedback_msg.tempfs = create_action_obj._create_tempfs_from_cobot_output(t_str)
+            feedback_msg.tempfs = _create_tempfs_from_cobot_output(t_str)
 
-        f_str = create_action_obj._find_substring(c_str, get_str_function.FASTENERS_TAG)
+        f_str = _find_substring(c_str, FASTENERS_TAG)
         if f_str is not None:
-            feedback_msg.fasteners = create_action_obj._create_fasteners_from_cobot_output(f_str)
+            feedback_msg.fasteners = _create_fasteners_from_cobot_output(f_str)
 
-        ee_str = create_action_obj._find_substring(c_str, get_str_function.END_EFFECTORS_TAG)
+        ee_str = _find_substring(c_str, END_EFFECTORS_TAG)
         if ee_str is not None:
-            feedback_msg.ee = create_action_obj._create_ee_from_cobot_output(ee_str)
+            feedback_msg.ee = _create_ee_from_cobot_output(ee_str)
         
         # calculate the percentage complete
         complete = 0
@@ -220,25 +221,25 @@ class FokkerActionServer(Node):
         # Create a feedback message
         result_msg = CobotOp.Result()
 
-        a_str = create_action_obj._find_substring(c_str, get_str_function.ACTIONS_TAG)
+        a_str = _find_substring(c_str, ACTIONS_TAG)
         if a_str is not None:
-            result_msg.actions_out = create_action_obj._create_actions_from_cobot_output(a_str)  
+            result_msg.actions_out = _create_actions_from_cobot_output(a_str)  
 
-        d_str = create_action_obj._find_substring(c_str, get_str_function.DRILL_TASKS_TAG)
+        d_str = _find_substring(c_str, DRILL_TASKS_TAG)
         if d_str is not None:
-            result_msg.drill_tasks_out = create_action_obj._create_drill_tasks_from_cobot_output(d_str)
+            result_msg.drill_tasks_out = _create_drill_tasks_from_cobot_output(d_str)
 
-        t_str = create_action_obj._find_substring(c_str, get_str_function.TEMPFS_TAG)
+        t_str = _find_substring(c_str, TEMPFS_TAG)
         if t_str is not None:
-            result_msg.tempfs_out = create_action_obj._create_tempfs_from_cobot_output(t_str)
+            result_msg.tempfs_out = _create_tempfs_from_cobot_output(t_str)
 
-        f_str = create_action_obj._find_substring(c_str, get_str_function.FASTENERS_TAG)
+        f_str = _find_substring(c_str, FASTENERS_TAG)
         if f_str is not None:
-            result_msg.drill_tasks_out = create_action_obj._create_fasteners_from_cobot_output(f_str)
+            result_msg.drill_tasks_out = _create_fasteners_from_cobot_output(f_str)
 
-        ee_str = create_action_obj._find_substring(c_str, get_str_function.END_EFFECTORS_TAG)
+        ee_str = _find_substring(c_str, END_EFFECTORS_TAG)
         if ee_str is not None:
-            result_msg.ee_out = create_action_obj._create_ee_from_cobot_output(ee_str)
+            result_msg.ee_out = _create_ee_from_cobot_output(ee_str)
         
         # see how many actions are complete
         complete = 0
