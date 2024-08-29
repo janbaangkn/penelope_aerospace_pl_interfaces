@@ -23,9 +23,9 @@ class FokkerActionServer(Node):
         super().__init__("fokker_action_server")
         self._action_server = ActionServer(self, CobotOp, self.action_name, self.execute_callback)
 
-        message_queue = queue.Queue()
-        cobot_server = CobotTCPServer(self.handle_cobot_message, message_queue)
-        cobot_server.start()    # Or run()?
+        self.message_queue = queue.Queue()
+        self.cobot_server = CobotTCPServer(self.handle_cobot_message, self.message_queue)
+        self.cobot_server.start()    # Or run()?
 
     def execute_callback(self, goal_handle):
         self.get_logger().info("Executing FokkerActionServer...")
