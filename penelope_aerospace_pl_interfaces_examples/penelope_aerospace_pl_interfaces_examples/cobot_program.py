@@ -6299,7 +6299,7 @@ class cl_agent():
         speed_limited_movej_on_posx(tempf.tcp_approach_pos(), 100)
 
         # set the DR_USER_PROBE axis system above the storage location before the movel with radius
-        overwrite_user_cart_coord(DR_USER_PROBE, translate_pos(tempf.nom_pos(), 0, 0, -SAFE_Z_GAP))
+        overwrite_user_cart_coord(DR_USER_PROBE, tempf.nom_pos())
         change_operation_speed(MOVE_SPEED)
 
         # move down to right above the hole
@@ -6337,11 +6337,10 @@ class cl_agent():
         # when the movement into the hole is regarded as inside the hole
         # not too soon because the fastener has not yet been fully untightened
         # not too late because the fastener will untighten too much
-        z_stop = 3
         not_went_in_hole = True
         while not_went_in_hole:
             tip_pos, sol = get_current_posx(ref=DR_USER_PROBE)
-            not_went_in_hole = tip_pos[2] < z_stop
+            not_went_in_hole = tip_pos[2] < 1
 
         tip_pos, sol = get_current_posx(ref=DR_USER_PROBE)
         send_to_PC("", "after tip pos in DR_USER_PROBE = {}".format(tip_pos[2]))
