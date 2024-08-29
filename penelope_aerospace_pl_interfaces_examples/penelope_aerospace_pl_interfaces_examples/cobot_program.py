@@ -6341,7 +6341,7 @@ class cl_agent():
         not_went_in_hole = True
         while not_went_in_hole:
             tip_pos, sol = get_current_posx(ref=DR_USER_PROBE)
-            not_went_in_hole = tip_pos[2] > z_stop
+            not_went_in_hole = tip_pos[2] < z_stop
 
         tip_pos, sol = get_current_posx(ref=DR_USER_PROBE)
         send_to_PC("", "after tip pos in DR_USER_PROBE = {}".format(tip_pos[2]))
