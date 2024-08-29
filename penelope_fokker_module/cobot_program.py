@@ -2532,7 +2532,6 @@ def point_distance(p1, p2):
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
  
  
- 
 def vector_angle(a, b):
     """
     Function to calculate the angle between two vectors in radians
@@ -2542,6 +2541,10 @@ def vector_angle(a, b):
  
     :return: float, angle between the input vectors in radians
     """
+    # return zero if it is the same vector
+    if (abs(a[0] - b[0]) + abs(a[1] - b[1]) + abs(a[2] - b[2])) < 0.0001:
+        return 0.0
+
     return acos(dot_vect_prod(a, b) / (vector_length(a) * vector_length(b)))
  
  
@@ -6302,8 +6305,8 @@ class cl_agent():
         overwrite_user_cart_coord(DR_USER_PROBE, tempf.nom_pos())
         change_operation_speed(MOVE_SPEED)
 
-        # move down to right above the hole
-        movel(posx(0, 0, 0, 0, 0, 0), ref=DR_USER_PROBE)
+        # move down into the hole (10mm lower than the hole entry)
+        movel(posx(0, 0, 10, 0, 0, 0), ref=DR_USER_PROBE)
         
         # Set the compliance and force
         # Set DR_TOOL as ref coordinate to ensure that the desired forces are in the too axis system
@@ -6332,7 +6335,6 @@ class cl_agent():
         self.tf_ee.set_reversestart_on()
 
         tip_pos, sol = get_current_posx(ref=DR_USER_PROBE)
-        send_to_PC("", "before tip pos in DR_USER_PROBE = {}".format(tip_pos[2]))
    
         # when the movement into the hole is regarded as inside the hole
         # not too soon because the fastener has not yet been fully untightened
@@ -6343,7 +6345,6 @@ class cl_agent():
             not_went_in_hole = tip_pos[2] < 1
 
         tip_pos, sol = get_current_posx(ref=DR_USER_PROBE)
-        send_to_PC("", "after tip pos in DR_USER_PROBE = {}".format(tip_pos[2]))
 
         # stop the motor before it turns dull again
         self.tf_ee.reset_cobot_output_pins()
@@ -7342,7 +7343,7 @@ agent.tempf_storage.add_loc_to_holes_and_fast_lst("tfst_01", 5, 10, posx(122.4,4
 agent.product = cl_f_container("product")
  
 # add hole locations, stack thickness and diameter in the product list 
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_01", 5, 9, posx(-162,796,1155,89.16,74.75,-158.73))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_01", 5, 9, posx(-162,796,1155,89.16,75.8,-158.73))
 agent.product.add_loc_to_holes_and_fast_lst("pr_01_02", 5, 9, posx(-126.5,796,1155,89.16,74.75,-158.73))
 agent.product.add_loc_to_holes_and_fast_lst("pr_01_03", 5, 9, posx(-92,796,1155,89.16,74.75,-158.73))
 agent.product.add_loc_to_holes_and_fast_lst("pr_01_04", 5, 9, posx(-56,796,1155,89.16,74.75,-158.73))
