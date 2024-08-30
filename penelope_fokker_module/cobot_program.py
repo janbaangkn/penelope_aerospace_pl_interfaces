@@ -119,15 +119,13 @@ PROBE_HOLE_AXIS_SYSTEM_HOLE_EXIT_SPEED = 45
 # small enough not to bend the material but high enough to reach surface in shortest time
 PROBE_COMPLIANCE_FORCE = 20.0
  
- 
 #General move settings
 MOVE_SPEED = 100
 MOVE_COMPLIANCE = [3000, 3000, 3000, 400, 400, 400]
  
- 
 #Pick up
 PICK_UP_ENGAGEMENT_SPEED = 60
-PICK_UP_ENGAGEMENT_COMPLIANCE = [500,500,500,300,300,300] #was 500,500,500,400,400,400
+PICK_UP_ENGAGEMENT_COMPLIANCE = [1500,1500,1500,400,400,400] #was 500,500,500,400,400,400
 PICK_UP_FORCE = 40 # was 40
  
 #Insertion
@@ -3411,8 +3409,9 @@ class cl_temp_fast_ee:
         wait(2)
         #TODO make this dependent on the stack thickness and time it takes to reach that thickness
         self.reset_cobot_output_pins()
-        wait(0.05)
-       
+        wait(0.2)
+        
+        # if the the tempf was accidentally fully tightened
         if self.is_output_single_ok():
             send_to_PC("tighten_temp___", "Pre-tightening of fastener tightening using PR{} instead of {}\nfastener might be too tight" .format(1, program))
             return True
@@ -3424,8 +3423,8 @@ class cl_temp_fast_ee:
        
         start_time = time.time()   
         
-        self.set_select_program(program)
         self.start_new_cycle()
+        self.set_select_program(program)
                                         
         # switch on the pin for an installation
         self.set_start_on()                                  
@@ -3512,13 +3511,9 @@ class cl_temp_fast_ee:
         self.set_reversestart_on()                                  
         
         # wait until everything is set in motion
-        wait(0.1) 
+        wait(0.2) 
         max_duration = self.REM_TIME[program - 1]
         timed_out = False           
-
-        send_to_PC("is_output_single_ok: {}".format(self.is_output_single_ok()))
-        send_to_PC("is_output_single_nok: {}".format(self.is_output_single_nok()))
-        send_to_PC("has_output_failure: {}".format(self.has_output_failure()))
         
         while not self.is_output_single_ok() and not self.is_output_single_nok() and not self.has_output_failure() and not timed_out:
             current_time = time.time()
