@@ -173,7 +173,7 @@ TCP_NAME_DIAM_5_TIP = "Lisi_d5_tempf_tip"
 TCP_NAME_LISI_TIP_NO_TEMPF = "Lisi_no_tempf"
  
 #TODO verify values below
-DIAM_5_SHAFT_HEIGHT = 60
+DIAM_5_SHAFT_HEIGHT = 60   # how much the tempf sticks out when installed
 DIAM_5_MIN_STACK = 3
 DIAM_5_MAX_STACK = 17
 DIAM_5_TCP_TIP_DIST = 25   # distance between hole entry point and tip if inserted in a hole
@@ -1803,8 +1803,6 @@ def move_into_hole(fast):
     set_desired_force([0, 0, PROBE_COMPLIANCE_FORCE, 0, 0, 0], [0, 0, 1, 0, 0, 0])
 
     reached_force = False
-
-    send_to_PC("Starting to probe....")
 
     #Loop waiting for fastener tip to touch product
     while not reached_force:
@@ -4690,7 +4688,7 @@ class cl_fastener(cl_fastener_location):
             delta = self.__tcp_tip_distance
         else:
             delta = -self.__tcp_top_distance
-           
+
         self.__tcp_target_pos = translate_pos(self.__corrected_pos, 0, 0, delta)
  
     
@@ -5805,11 +5803,6 @@ class cl_agent():
         else:   
             # remove the permf object from the storage location
             self.permf_storage.remove_fast_from_location(storage_loc_id)
-           
-            # move to the product
-            for wp in passing_wp:
-                if wp.uid() == "product_approach":
-                    self.move_to_waypoint(wp)
  
             # set the product location as the permf target
             self.product.set_location_as_fast_target(permf, prod_lst_id)
@@ -5892,11 +5885,6 @@ class cl_agent():
         else:   
             # remove the tempf object from the storage location
             self.tempf_storage.remove_fast_from_location(storage_loc_id)
-           
-            # move to the product
-            for wp in passing_wp:
-                if wp.uid() == "product_approach":
-                    self.move_to_waypoint(wp)
  
             #tp_popup("Check fastener")
             # set the product location as the tempf target
@@ -6306,7 +6294,7 @@ class cl_agent():
         change_operation_speed(MOVE_SPEED)
 
         # move down into the hole (10mm lower than the hole entry)
-        movel(posx(0, 0, 10, 0, 0, 0), ref=DR_USER_PROBE)
+        movel(posx(0, 0, 2 * SAFE_Z_GAP, 0, 0, 0), ref=DR_USER_PROBE)
         
         # Set the compliance and force
         # Set DR_TOOL as ref coordinate to ensure that the desired forces are in the too axis system
@@ -6623,6 +6611,8 @@ class cl_agent():
         Function that engages an installed fastener or hole.
         The function uses the location in the fast object.
 
+        assuming the end effector is in the fast.tcp_approach_pos
+
         :param fast: cl_fastener, the fastener object with
                             information on where to engage it
         :param force: float, the force applied to the fastener
@@ -6632,18 +6622,18 @@ class cl_agent():
 
         :return: bool, returns True if successful
         """
-        reqd_ratio = 0.1 #Was 0.2
-                
-        task_compliance_ctrl(comp)
-        change_operation_speed(speed)
+        reqd_ratio = 0.1
 
-        # Get a reference force because a force can already be present (example: hanging cables)
-        f_z0 = get_tool_forces_in_tool()[2]
+        # move to right above the tempf
+        movel(translate_pos(fast.tcp_approach_pos(), 0, 0, 3 * SAFE_Z_GAP), ref=DR_BASE)
 
         release_compliance_ctrl()
 
         # Set DR_TOOL as ref coordinate to ensure that the desired forces are in the too axis system
         set_ref_coord(DR_TOOL)
+
+        # Get a reference force because a force can already be present (example: hanging cables)
+        f_z0 = get_tool_forces_in_tool()[2]
             
         # The following prevents drifting of the Cobot position
         task_compliance_ctrl([20000,20000,20000,400,400,400])
@@ -6652,7 +6642,6 @@ class cl_agent():
 
         # set the correct complance and speed
         task_compliance_ctrl(comp)
-
         set_desired_force([0, 0, force + f_z0, 0, 0, 0], [0, 0, 1, 0, 0, 0])
 
         t0 = time.time()
@@ -7312,7 +7301,7 @@ set_user_cart_coord(pos1, ref=DR_BASE)
 set_user_cart_coord(pos1, ref=DR_BASE)
 set_user_cart_coord(pos1, ref=DR_BASE)
  
-sync_data_with_PC = False
+sync_data_with_PC = True
  
 ###########################################
  
@@ -7333,42 +7322,37 @@ agent.permf_storage = cl_f_container("permf_storage")
  
 # add hole locations, stack thickness and diameter in the permanent fastener storage list 
 # uid, diam, stack thickness, nom_pos 
-agent.tempf_storage.add_loc_to_holes_and_fast_lst("tfst_01", 5, 10, posx(122.4,476.77,59,35,180,-35))
+agent.tempf_storage.add_loc_to_holes_and_fast_lst("tfst_01", 5, 10, posx(122.4,476.77,38,35,180,-35))
  
 # add permanent fastener in storage
 # uid, loc uid, fast_install_pos, diam, shaft height, min stack, max stack, tcp_tip_dist, tcp_top_dist, in_storage, in_ee, in_product, in_bin, is_tempf
-#agent.tempf_storage.add_fast_to_loc_with_uid("tempf_01", "tfst_01", None, 5 , DIAM_5_SHAFT_HEIGHT,DIAM_5_MIN_STACK, DIAM_5_MAX_STACK,DIAM_5_TCP_TIP_DIST, DIAM_5_TCP_TOP_DIST,True, False, False, False, True)
+agent.tempf_storage.add_fast_to_loc_with_uid("tempf_01", "tfst_01", None, 5 , DIAM_5_SHAFT_HEIGHT,DIAM_5_MIN_STACK, DIAM_5_MAX_STACK,DIAM_5_TCP_TIP_DIST, DIAM_5_TCP_TOP_DIST,True, False, False, False, True)
 
 # create a class that contains all available hole positions in the product
 agent.product = cl_f_container("product")
  
 # add hole locations, stack thickness and diameter in the product list 
 agent.product.add_loc_to_holes_and_fast_lst("pr_01_01", 5, 9, posx(-162,796,1155,89.16,75.8,-158.73))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_02", 5, 9, posx(-126.5,796,1155,89.16,74.75,-158.73))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_03", 5, 9, posx(-92,796,1155,89.16,74.75,-158.73))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_04", 5, 9, posx(-56,796,1155,89.16,74.75,-158.73))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_05", 5, 9, posx(-10,796,1154,89.16,74.75,-158.73))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_06", 5, 9, posx(25.5,796,1154,89.16,74.75,-158.73))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_07", 5, 9, posx(60,796,1154,89.16,74.75,-158.73))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_08", 5, 9, posx(96,796,1154,89.16,74.75,-158.73))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_02", 5, 9, posx(-126.5,796,1155,89.16,75.8,-158.73))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_03", 5, 9, posx(-92,796,1155,89.16,75.8,-158.73))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_04", 5, 9, posx(-56,796,1154.5,89.16,75.8,-158.73))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_05", 5, 9, posx(-10,796,1154.5,89.16,75.8,-158.73))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_06", 5, 9, posx(25.5,796,1154,89.16,75.8,-158.73))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_07", 5, 9, posx(60,796,1154,89.16,75.8,-158.73))
+agent.product.add_loc_to_holes_and_fast_lst("pr_01_08", 5, 9, posx(96,796,1154,89.16,75.8,-158.73))
 
 # add permanent fastener in the product
 # uid, loc uid, fast_install_pos, diam, shaft height, min stack, max stack, tcp_tip_dist, tcp_top_dist, in_storage, in_ee, in_product, in_bin, is_tempf
-agent.product.add_fast_to_loc_with_uid("tempf_01", "pr_01_01", None, 5 , DIAM_5_SHAFT_HEIGHT,DIAM_5_MIN_STACK, DIAM_5_MAX_STACK,DIAM_5_TCP_TIP_DIST, DIAM_5_TCP_TOP_DIST,False, False, True, False, True)
+#agent.product.add_fast_to_loc_with_uid("tempf_01", "pr_01_01", None, 5 , DIAM_5_SHAFT_HEIGHT,DIAM_5_MIN_STACK, DIAM_5_MAX_STACK,DIAM_5_TCP_TIP_DIST, DIAM_5_TCP_TOP_DIST,False, False, True, False, True)
 
 ###########################################
 # product.log_holes_and_fast_lst()
- 
-# add waypoints
-agent._add_waypoint("storage approach", posx(119,474,227,160,180,90))
-agent._add_waypoint("product_approach", posx(-38,630,1106,90,73.7,-160))
-agent._add_waypoint("HOME", posx(-34.5,493.4,690.69,90,119,0))
 
 # go to home
 speed_limited_movej_on_posj(posj(90,-30,120,0,0,0), 100)
 
 # insert and install a permf from storage to product
-#agent._add_install_tempf_action("A01", "pr_01_01")
+agent._add_install_tempf_action("A01", "pr_01_01")
 agent._add_remove_tempf_action("A01", "pr_01_01")
 
 agent.execute_all()
@@ -7380,5 +7364,5 @@ send_to_PC("end program")
  
 # close sockets and stop threads
 STOP_SERVER = True
-# thread_stop(server_thread)
-# thread_stop(handler_thread)
+#thread_stop(server_thread)
+#thread_stop(handler_thread)
