@@ -5864,10 +5864,10 @@ class cl_agent():
         # get the tempf object
         tempf = self.tempf_storage.holes_and_fast_lst[storage_loc_id].fast
        
-        # we assume that the install position is known for every temporary
-        # fastener that is picked up. Therefore we set the install position
-        # to be the primary position by parsing it into the corrected position
-        tempf.reset_to_installed_pos()
+        # we do not use the installed position as correction 
+        # since this position is not accurate due to cobot compliance
+        # e.g. due to sagging during installation
+        tempf.reset_to_nom_pos_only()
        
         # set the tempf tcp correctly
         tempf.set_tool_center_point()
@@ -5938,10 +5938,10 @@ class cl_agent():
         
         change_operation_speed(MOVE_SPEED)
  
-        # we assume that the install position is known for every temporary
-        # fastener that is picked up. Therefore we set the install position
-        # to be the primary position by parsing it into the corrected position
-        tempf.reset_to_installed_pos()
+        # we do not use the installed position as correction 
+        # since this position is not accurate due to cobot compliance
+        # e.g. due to sagging during installation
+        tempf.reset_to_nom_pos_only()
        
         # set the tcp correctly
         tempf.set_tool_center_point()
@@ -5964,10 +5964,10 @@ class cl_agent():
             # set the product location as the tempf target
             self.tempf_storage.set_location_as_fast_target(tempf, storage_loc_id)
                 
-            # we assume that the install position is known for every storage
-            # location. Therefore we set the install position
-            # to be the primary position by parsing it into the corrected position
-            tempf.reset_to_installed_pos()
+            # we do not use the installed position as correction 
+            # since this position is not accurate due to cobot compliance
+            # e.g. due to sagging during installation
+            tempf.reset_to_nom_pos_only()
            
             # insert the fastener into the storage location
             if self._drop_tempf_in_storage(tempf):
