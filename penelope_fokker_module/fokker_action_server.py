@@ -256,7 +256,7 @@ class FokkerActionServer(Node):
             result_msg.result_code = ResultCodes.RC_FAILED
 
         result_msg.message = "Not implemented yet"  # TODO get any relevant messages from the cobot
-
+        
         return result_msg
 
 
@@ -264,7 +264,7 @@ def main(args=None):
     # Initialize the ROS2 action server node
     rclpy.init(args=args)
     action_server = FokkerActionServer()
-
+    
     # Spin so the server does not shutdown untill requested (e.g. Ctrl-C or another shutdown event)
     rclpy.spin(action_server)
 
