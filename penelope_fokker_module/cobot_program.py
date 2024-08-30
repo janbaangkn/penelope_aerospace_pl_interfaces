@@ -5719,14 +5719,17 @@ class cl_agent():
         send_to_PC("", return_str)
        
         
-    def execute_all(self):
+    def execute_all(self, check_inventory = True):
         """
         Function that will execute all actions in the order given
+
+        :param check_inventory: bool, Whether to check for correct inventory
            
         :return: bool, returns True if successful
         """
-        if not self.check_inventory():
-            return False
+        if check_inventory:
+            if not self.check_inventory():
+                return False
        
         for a in self.actions:
             if not a.is_cancelled():
@@ -7095,6 +7098,7 @@ class cl_action(cl_uid):
         self.__loc_uid = loc_uid
         self.__is_done = is_done
         self.__is_cancelled = False
+        self.__is_waiting = False
         self.__speed = speed
        
         self.passing_wps = []
@@ -7353,9 +7357,9 @@ speed_limited_movej_on_posj(posj(90,-30,120,0,0,0), 100)
 
 # insert and install a permf from storage to product
 agent._add_install_tempf_action("A01", "pr_01_01")
-agent._add_remove_tempf_action("A01", "pr_01_01")
+agent._add_remove_tempf_action("A02", "pr_01_01")
 
-agent.execute_all()
+agent.execute_all(False)
 
 # go to home
 speed_limited_movej_on_posj(posj(90,-30,120,0,0,0), 100)
