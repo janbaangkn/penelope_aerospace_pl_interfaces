@@ -464,33 +464,16 @@ class TCPMessage:
             self.message,
         )
 
-    def __init__(self, message, uid, input_data=None, encoder=DEFAULT_ENCODER, response_required=False):
+    def __init__(self, message, uid, encoder=DEFAULT_ENCODER, response_required=True):
         self.uid = uid
         self.message = message
-        self.input_data = input_data
         self.encoder = encoder
         self.response_required = response_required
-        self.message_type = self.determine_message_type()
         self.encoded = self.construct_encoded_tcp_message()
 
-    def determine_message_type(self):
-        if self.message[:len(MessageNames.STOP)] == MessageNames.STOP:
-            return MessageNames.STOP
-        if self.message[:len(MessageNames.PAUSE)] == MessageNames.PAUSE:
-            return MessageNames.PAUSE
-        if self.message[:len("get")] == "get":
-            return "getter"
-        if self.message[:len("set")] == "set":
-            return "setter"
-        if self.message[:len(MessageNames.RESPONSE)] == MessageNames.RESPONSE:
-            return MessageNames.RESPONSE
 
     def construct_encoded_tcp_message(self):
-        if self.input_data:
-            expanded_message = "/{0}/{1}<{2}><{3}:{4}>".format(
-                self.uid, self.message, self.input_data, MessageNames.RESPOND, self.response_required)
-        else:
-            expanded_message = "/{0}/{1}<{2}:{3}>".format(
+        expanded_message = "/{0}/{1}<{2}:{3}>".format(
                 self.uid, self.message, MessageNames.RESPOND, self.response_required)
         expanded_message = "{0:0>4d}{1}".format(len(expanded_message) + 4, expanded_message)
         return expanded_message.encode(self.encoder)
@@ -546,29 +529,9 @@ class TCPInputProcessor:
         message_end = len(raw_message) - (len(MessageNames.RESPOND) + 3 + len(raw_respond))
         message = raw_message[:message_end]
 
-        # check if message contains <data>
-        input_data = None
-        if "<" in message:
-            message = message.split("<")[0]
-            input_data = raw_message[len(message) + 1: message_end - 1]
-
-        tp_log("processing mess")
-
-        # determine if the message is a response
-        if message.split("_")[0] == MessageNames.RESPONSE:
-            response_uid = int(message.split("_")[-1])
-            return TCPResponse(
-                response=input_data,
-                uid=uid,
-                response_uid=response_uid,
-                encoder=self.encoder,
-                response_required=respond,
-            )
-        else:
-            return TCPMessage(
+        return TCPMessage(
                 message=message,
                 uid=uid,
-                input_data=input_data,
                 encoder=self.encoder,
                 response_required=respond,
             )
@@ -611,7 +574,7 @@ class DoosanTCPServer:
 
     def _listen(self):
         #tp_log("started listening")
-        response, raw_input = server_socket_read(self.socket, timeout=0.1)
+        response, raw_input = server_socket_read(self.socket, timeout=0.01)
         if response in [-1, -2]:
             self._reconnect()
             self._listen()
@@ -641,11 +604,10 @@ class DoosanTCPServer:
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
-def construct_tcp_message(message, input_data=None, encoder=DEFAULT_ENCODER, response_required=False):
+def construct_tcp_message(message, encoder=DEFAULT_ENCODER, response_required=False):
 	return TCPMessage(
 		message=message,
 		uid=MessageUID.get_new_uid(),
-		input_data=input_data,
 		encoder=encoder,
 		response_required=response_required,
 		)
@@ -661,9 +623,8 @@ def construct_tcp_response(response_uid, response="processed", encoder=DEFAULT_E
 		)
 
 
-
-def send_message(message, input_data=None, feedback=True):
-	tcp_message = construct_tcp_message(message=message, input_data=input_data, response_required=feedback)
+def send_message(message, feedback=False):
+	tcp_message = construct_tcp_message(message=message, response_required=feedback)
 	TCPOutbox().add_message(tcp_message)
 	if feedback:
 		response = False
@@ -698,66 +659,6 @@ def send_response(original_message, response="processed", feedback=False):
 def th_run_server():
     tcp_server = DoosanTCPServer(port=20002, encoder=DEFAULT_ENCODER)
     tcp_server.run()
-
-
-def th_process_inbox():
-    global STOP_SERVER
-
-    while not STOP_SERVER:
-        wait(0.1)
-        message = TCPInbox.get_message()
-        if message:
-            tp_log("Message with uid: {0} is being processed".format(message.uid))
-            
-            # STOP_SERVER must become True if stop thread is received
-            if message.message == "stop_thread":
-                STOP_SERVER = True
-                if message.response_required:
-                    send_response(
-                        original_message=message,
-                        response="processed",
-                    )
-            
-            elif message.message == "indicate_safe":
-                set_digital_output(2, 0)
-                set_digital_output(3, 0)
-                set_digital_output(1, 1)
-                if message.response_required:
-                    send_response(
-                        original_message=message,
-                        response="processed",
-                    )
-
-            elif message.message == "indicate_caution":
-                set_digital_output(1, 0)
-                set_digital_output(3, 0)
-                set_digital_output(2, 1)
-                if message.response_required:
-                    send_response(
-                        original_message=message,
-                        response="processed",
-                    )
-
-            elif message.message == "indicate_danger":
-                set_digital_output(1, 0)
-                set_digital_output(2, 0)
-                set_digital_output(3, 1)
-                if message.response_required:
-                    send_response(
-                        original_message=message,
-                        response="processed",
-                    )
-
-            elif message.message == "process_action_file":
-                tp_log("Processing action file: {0}".format(message.input_data), DR_PM_MESSAGE)
-                if message.response_required:
-                    send_response(
-                        original_message=message,
-                        response="processed",
-                    )
-
-            else:
-                tp_log("Message: {0} could not be processed. It is not recognized!".format(message.message))
 
 
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -1278,93 +1179,104 @@ def extract_leaf_content(input_string, open_tag, close_tag):
         return match.group(1)
     else:
         return None
-   
-    
-def handle_ros_msg(msg_str, agent):
+
+
+def handle_ros_msg():
     """
     Function that modifies a cl_agent instance using a message string.
    
     :param msg_str: str, the string from the ROS server to modify the agent instance.
     :param agent: cl_agent, the agent instance to be modified.
     """
-    # tempf_storage: storage location container
-    tempf_st_str = _find_substring(msg_str, TEMPF_STORAGE_LOC_TAG)
-    if tempf_st_str is not None:
-        handle_container_str(tempf_st_str, agent, TEMPF_STORAGE_LOC_TAG)
- 
-    # permf_storage: storage location container
-    permf_st_str = _find_substring(msg_str, PERMF_STORAGE_LOC_TAG)
-    if permf_st_str is not None:
-        handle_container_str(permf_st_str, agent, PERMF_STORAGE_LOC_TAG)
- 
-    # product: storage location container
-    pr_str = _find_substring(msg_str, PRODUCT_TAG)
-    if pr_str is not None:
-        handle_container_str(pr_str, agent, PRODUCT_TAG)
-   
-    # waypoints
-    wps_str = _find_substring(msg_str, WAYPOINTS_TAG)
-    if wps_str is not None:
-        wp_str = _find_substring(wps_str, WAYPOINT_TAG)
-        while wp_str is not None:
-            handle_waypoint_str(wp_str, agent)
-            wp_str = _find_substring(wp_str, WAYPOINT_TAG)
-   
-    # actions
-    actions_str = _find_substring(msg_str, ACTIONS_TAG)
-    if actions_str is not None:
-        action_str = _find_substring(actions_str, ACTION_TAG)
-        while action_str is not None:
-            handle_action_str(action_str, agent)
-            action_str = _find_substring(action_str, ACTIONS_TAG)
-   
-    # holes to be drilled
-    # NOT IMPLEMENTED YET
-   
-    # available fasteners
-    pfs_str = _find_substring(msg_str, FASTENERS_TAG)
-    pf_str = _find_substring(pfs_str, FASTENER_TAG)
-    while pf_str is not None:
-        handle_fastener_str(pf_str, agent, FASTENER_TAG)
-        pf_str = _find_substring(pf_str, FASTENER_TAG)
-   
-    # available fasteners
-    tfs_str = _find_substring(msg_str, TEMPFS_TAG)
-    tf_str = _find_substring(tfs_str, TEMPF_TAG)
-    while tf_str is not None:
-        handle_fastener_str(tf_str, agent, TEMPF_TAG)
-        tf_str = _find_substring(tf_str, TEMPF_TAG)
-   
-    # available docking positions for End Effectors
-    # NOT IMPLEMENTED YET
-   
-    # available End Effectors
-    # NOT IMPLEMENTED YET
-   
-    # actions: uid's to execute
-    # execution actions are always single actions
-    ex_str = _find_substring(msg_str, EXECUTE_TAG)
-    if ex_str is not None:
-        handle_execution_str(ex_str, agent)
- 
- 
+
+    global agent
+    global STOP_SERVER
+
+    while not STOP_SERVER:
+        wait(0.01)
+        message = TCPInbox.get_message()
+
+        msg_str = message.message
+
+
+        # tempf_storage: storage location container
+        tempf_st_str = _find_substring(msg_str, TEMPF_STORAGE_LOC_TAG)
+        if tempf_st_str is not None:
+            handle_container_str(tempf_st_str, agent, TEMPF_STORAGE_LOC_TAG)
+    
+        # permf_storage: storage location container
+        permf_st_str = _find_substring(msg_str, PERMF_STORAGE_LOC_TAG)
+        if permf_st_str is not None:
+            handle_container_str(permf_st_str, agent, PERMF_STORAGE_LOC_TAG)
+    
+        # product: storage location container
+        pr_str = _find_substring(msg_str, PRODUCT_TAG)
+        if pr_str is not None:
+            handle_container_str(pr_str, agent, PRODUCT_TAG)
+    
+        # waypoints
+        wps_str = _find_substring(msg_str, WAYPOINTS_TAG)
+        if wps_str is not None:
+            wp_str = _find_substring(wps_str, WAYPOINT_TAG)
+            while wp_str is not None:
+                handle_waypoint_str(wp_str, agent)
+                wp_str = _find_substring(wp_str, WAYPOINT_TAG)
+    
+        # actions
+        actions_str = _find_substring(msg_str, ACTIONS_TAG)
+        if actions_str is not None:
+            action_str = _find_substring(actions_str, ACTION_TAG)
+            while action_str is not None:
+                handle_action_str(action_str, agent)
+                action_str = _find_substring(action_str, ACTIONS_TAG)
+    
+        # holes to be drilled
+        # NOT IMPLEMENTED YET
+    
+        # available fasteners
+        pfs_str = _find_substring(msg_str, FASTENERS_TAG)
+        pf_str = _find_substring(pfs_str, FASTENER_TAG)
+        while pf_str is not None:
+            handle_fastener_str(pf_str, agent, FASTENER_TAG)
+            pf_str = _find_substring(pf_str, FASTENER_TAG)
+    
+        # available fasteners
+        tfs_str = _find_substring(msg_str, TEMPFS_TAG)
+        tf_str = _find_substring(tfs_str, TEMPF_TAG)
+        while tf_str is not None:
+            handle_fastener_str(tf_str, agent, TEMPF_TAG)
+            tf_str = _find_substring(tf_str, TEMPF_TAG)
+    
+        # available docking positions for End Effectors
+        # NOT IMPLEMENTED YET
+    
+        # available End Effectors
+        # NOT IMPLEMENTED YET
+    
+        # actions: uid's to execute
+        # execution actions are always single actions
+        ex_str = _find_substring(msg_str, EXECUTE_TAG)
+        if ex_str is not None:
+            handle_execution_str(ex_str, agent)
+    
+    
 def handle_container_str(msg_str, agent, type):
     """
     Function that modifies containers in an agent
     using a message string and adds a return to the queue_out
-   
+
     :param msg_str: str, the string from the ROS server to modify the agent instance.
     :param agent: cl_agent, the agent instance to be modified.
     :param type: str The container type
-                     temporary fastener container if TEMPF_STORAGE_LOC_TAG
-                     permanent fastener container if PERMF_STORAGE_LOC_TAG
-                     product container if PRODUCT_TAG
+                    temporary fastener container if TEMPF_STORAGE_LOC_TAG
+                    permanent fastener container if PERMF_STORAGE_LOC_TAG
+                    product container if PRODUCT_TAG
     """
     # create the container object
     uid = extract_leaf_content(msg_str, UID_TAG, CLOSE_TAG)
     max_obstacle_heigth = float(extract_leaf_content(msg_str, MAX_OBST_HEIGHT_TAG, CLOSE_TAG))
     obj = cl_f_container(uid, max_obstacle_heigth)
- 
+
     if type == TEMPF_STORAGE_LOC_TAG:
         agent.tempf_storage = obj
     elif type == PERMF_STORAGE_LOC_TAG:
@@ -1373,7 +1285,7 @@ def handle_container_str(msg_str, agent, type):
         agent.product = obj
     else:
         raise Exception("Unknown storage type encountered in handle_container_str in container with uid {}.".format(uid))
- 
+
     # add the locations
     locs_str = _find_substring(msg_str, LOCATIONS_TAG)
     loc_str = _find_substring(locs_str, HOLE_LOCATION_TAG)
@@ -1382,13 +1294,13 @@ def handle_container_str(msg_str, agent, type):
         diam = float(extract_leaf_content(loc_str, DIAM_TAG, CLOSE_TAG))         
         stack_thickness = float(extract_leaf_content(loc_str, STACK_T_TAG, CLOSE_TAG))
         nom_pos = _get_posx_from_str(_find_substring(loc_str, POSE_TAG))
-       
+    
         obj.add_loc_to_holes_and_fast_lst(loc_uid, diam, stack_thickness, nom_pos)
- 
+
         loc_str = _find_substring(loc_str, HOLE_LOCATION_TAG)
- 
+
     return_str = "container {} received by cobot".format(uid)
- 
+
     send_to_PC("", return_str)
  
  
@@ -1557,6 +1469,8 @@ def handle_execution_str(msg_str, agent):
     a_uid = extract_leaf_content(msg_str, UID_TAG, CLOSE_TAG)
  
     agent.execute_uid(a_uid)
+
+    #TODO Ronald: add workflow parameter to allow messages during execution (e.g. stop msg)
  
     send_to_PC("","action {} received and sent to be axecuted.".format(a_uid))
  
@@ -2110,8 +2024,7 @@ def send_to_PC(label = "", value = ""):
         str_out = add_timestamp(label) + "\n" + value
    
     if sync_data_with_PC:
-        #queue_out.put(str)
-        pass
+        send_message(construct_tcp_message(str_out))
     
     # always log
     tp_log(str_out)
@@ -7293,7 +7206,7 @@ STOP_SERVER = False
 
 # open a connection and a thread with the pc 
 server_thread = thread_run(th_run_server, loop=False)
-handler_thread = thread_run(th_process_inbox, loop=False)
+handler_thread = thread_run(handle_ros_msg, loop=False)
  
 pos1=posx(0,0,0,0,0,0)
 set_user_cart_coord(pos1, ref=DR_BASE)
@@ -7354,7 +7267,7 @@ speed_limited_movej_on_posj(posj(90,-30,120,0,0,0), 100)
 agent._add_install_tempf_action("A01", "pr_01_01")
 agent._add_remove_tempf_action("A02", "pr_01_01")
 
-agent.execute_all(False)
+agent.execute_all(check_inventory = False)
 
 # go to home
 speed_limited_movej_on_posj(posj(90,-30,120,0,0,0), 100)
@@ -7363,5 +7276,3 @@ send_to_PC("end program")
  
 # close sockets and stop threads
 STOP_SERVER = True
-#thread_stop(server_thread)
-#thread_stop(handler_thread)
