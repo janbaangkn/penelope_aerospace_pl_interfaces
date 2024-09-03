@@ -635,9 +635,9 @@ def send_message(message, feedback=False):
 	return True
 
 
-def send_response(original_message, response="processed", feedback=False):
+def send_response(original_message_uid, response="processed", feedback=False):
 	tcp_response = construct_tcp_response(
-		response_uid=original_message.uid,
+		response_uid=original_message_uid,
 		response=response,
 		response_required=feedback,
 	)
@@ -1197,29 +1197,29 @@ def handle_ros_msg():
         message = TCPInbox.get_message()
 
         msg_str = message.message
-
+        msg_id = message.uid
 
         # tempf_storage: storage location container
         tempf_st_str = _find_substring(msg_str, TEMPF_STORAGE_LOC_TAG)
         if tempf_st_str is not None:
-            handle_container_str(tempf_st_str, agent, TEMPF_STORAGE_LOC_TAG)
+            handle_container_str(tempf_st_str, agent, TEMPF_STORAGE_LOC_TAG, msg_id)
     
         # permf_storage: storage location container
         permf_st_str = _find_substring(msg_str, PERMF_STORAGE_LOC_TAG)
         if permf_st_str is not None:
-            handle_container_str(permf_st_str, agent, PERMF_STORAGE_LOC_TAG)
+            handle_container_str(permf_st_str, agent, PERMF_STORAGE_LOC_TAG, msg_id)
     
         # product: storage location container
         pr_str = _find_substring(msg_str, PRODUCT_TAG)
         if pr_str is not None:
-            handle_container_str(pr_str, agent, PRODUCT_TAG)
+            handle_container_str(pr_str, agent, PRODUCT_TAG, msg_id)
     
         # waypoints
         wps_str = _find_substring(msg_str, WAYPOINTS_TAG)
         if wps_str is not None:
             wp_str = _find_substring(wps_str, WAYPOINT_TAG)
             while wp_str is not None:
-                handle_waypoint_str(wp_str, agent)
+                handle_waypoint_str(wp_str, agent, msg_id)
                 wp_str = _find_substring(wp_str, WAYPOINT_TAG)
     
         # actions
@@ -1227,7 +1227,7 @@ def handle_ros_msg():
         if actions_str is not None:
             action_str = _find_substring(actions_str, ACTION_TAG)
             while action_str is not None:
-                handle_action_str(action_str, agent)
+                handle_action_str(action_str, agent, msg_id)
                 action_str = _find_substring(action_str, ACTIONS_TAG)
     
         # holes to be drilled
@@ -1237,14 +1237,14 @@ def handle_ros_msg():
         pfs_str = _find_substring(msg_str, FASTENERS_TAG)
         pf_str = _find_substring(pfs_str, FASTENER_TAG)
         while pf_str is not None:
-            handle_fastener_str(pf_str, agent, FASTENER_TAG)
+            handle_fastener_str(pf_str, agent, FASTENER_TAG, msg_id)
             pf_str = _find_substring(pf_str, FASTENER_TAG)
     
         # available fasteners
         tfs_str = _find_substring(msg_str, TEMPFS_TAG)
         tf_str = _find_substring(tfs_str, TEMPF_TAG)
         while tf_str is not None:
-            handle_fastener_str(tf_str, agent, TEMPF_TAG)
+            handle_fastener_str(tf_str, agent, TEMPF_TAG, msg_id)
             tf_str = _find_substring(tf_str, TEMPF_TAG)
     
         # available docking positions for End Effectors
@@ -1257,10 +1257,10 @@ def handle_ros_msg():
         # execution actions are always single actions
         ex_str = _find_substring(msg_str, EXECUTE_TAG)
         if ex_str is not None:
-            handle_execution_str(ex_str, agent)
+            handle_execution_str(ex_str, agent, msg_id)
     
     
-def handle_container_str(msg_str, agent, type):
+def handle_container_str(msg_str, agent, type, msg_id):
     """
     Function that modifies containers in an agent
     using a message string and adds a return to the queue_out
@@ -1271,6 +1271,7 @@ def handle_container_str(msg_str, agent, type):
                     temporary fastener container if TEMPF_STORAGE_LOC_TAG
                     permanent fastener container if PERMF_STORAGE_LOC_TAG
                     product container if PRODUCT_TAG
+    :param msg_id: str Unique reference to original message
     """
     # create the container object
     uid = extract_leaf_content(msg_str, UID_TAG, CLOSE_TAG)
@@ -1301,16 +1302,17 @@ def handle_container_str(msg_str, agent, type):
 
     return_str = "container {} received by cobot".format(uid)
 
-    send_to_PC("", return_str)
+    send_response(msg_id, return_str)
  
  
-def handle_waypoint_str(msg_str, agent):
+def handle_waypoint_str(msg_str, agent, msg_id):
     """
     Function that modifies waypoints in an agent
     using a message string and adds a return to the queue_out
    
     :param msg_str: str, the string from the ROS server to modify the agent instance.
     :param agent: cl_agent, the agent instance to be modified.
+    :param msg_id: str Unique reference to original message
     """
     # get the waypoint inputs from the string
     uid = extract_leaf_content(msg_str, UID_TAG, CLOSE_TAG)
@@ -1319,10 +1321,10 @@ def handle_waypoint_str(msg_str, agent):
     # add the waypoint
     agent._add_waypoint(uid, wp_pos)
  
-    send_to_PC("","waypoint {} received by cobot".format(uid))
+    send_response(msg_id, "waypoint {} received by cobot".format(uid))
    
  
-def handle_action_str(msg_str, agent):
+def handle_action_str(msg_str, agent, msg_id):
     """
     Function that modifies actions in an agent
     using a message string and adds a return to the queue_out
@@ -1335,6 +1337,7 @@ def handle_action_str(msg_str, agent):
     
     :param msg_str: str, the string from the ROS server to modify the agent instance.
     :param agent: cl_agent, the agent instance to be modified.
+    :param msg_id: str Unique reference to original message
     """
     a_type = int(extract_leaf_content(msg_str, A_TYPE_TAG, CLOSE_TAG))
     a_uid = extract_leaf_content(msg_str, UID_TAG, CLOSE_TAG)
@@ -1395,10 +1398,10 @@ def handle_action_str(msg_str, agent):
  
     return_str = actions_str_to_server(agent.actions)
  
-    send_to_PC("", return_str)
+    send_response(msg_id, return_str)
  
    
-def handle_fastener_str(msg_str, agent, f_tag):
+def handle_fastener_str(msg_str, agent, f_tag, msg_id):
     """
     Function that modifies fastener information of an agent
     using a message string and adds a return to the queue_out
@@ -1406,6 +1409,7 @@ def handle_fastener_str(msg_str, agent, f_tag):
     :param msg_str: str, the string from the ROS server to modify the agent instance.
     :param agent: cl_agent, the agent instance to be modified.
     :param f_tag: str, FASTENER_TAG or TEMPF_TAG
+    :param msg_id: str Unique reference to original message
     """
     obj = cl_f_container()
  
@@ -1455,16 +1459,17 @@ def handle_fastener_str(msg_str, agent, f_tag):
                                  f_min_stack, f_max_stack, f_tcp_tip_dist, f_tcp_top_dist,
                                  f_in_storage, f_in_ee, f_in_product, f_in_bin, is_tempf)
    
-    send_to_PC("","fastener {} received by cobot".format(f_uid))
+    send_response(msg_id, "fastener {} received by cobot".format(f_uid))
  
    
-def handle_execution_str(msg_str, agent):
+def handle_execution_str(msg_str, agent, msg_id):
     """
     Function that triggers execution of actions in an agent
     using a message string and adds a return to the queue_out
    
     :param msg_str: str, the string from the ROS server to modify the agent instance.
     :param agent: cl_agent, the agent instance to be modified.
+    :param msg_id: str Unique reference to original message
     """
     a_uid = extract_leaf_content(msg_str, UID_TAG, CLOSE_TAG)
  
@@ -1472,7 +1477,7 @@ def handle_execution_str(msg_str, agent):
 
     #TODO Ronald: add workflow parameter to allow messages during execution (e.g. stop msg)
  
-    send_to_PC("","action {} received and sent to be axecuted.".format(a_uid))
+    send_response(msg_id, "action {} received and sent to be axecuted.".format(a_uid))
  
  
 def _get_posx_from_str(str_in):
@@ -1591,13 +1596,13 @@ def speed_limited_movej_on_posj(target_posj, speed):
         r_f = (tcp_rot / TCP_ROT_LIMIT) * (speed / 100.0)
 
         vel_f = max(s_f, r_f)
-        #send_to_PC("speed: {} mm/s". format(tcp_speed))
+        #send_message("speed: {} mm/s". format(tcp_speed))
 
         if vel_f > 0.8:
             #speed reduction with 5%
             targetj = scale_targetj_speed(targetj, 95)
             set_velj(targetj)
-            #send_to_PC("j1 reduced to: {} deg/s". format(targetj[0]))
+            #send_message("j1 reduced to: {} deg/s". format(targetj[0]))
 
             # do not wait because many decreases might be needed very fast
 
@@ -1659,7 +1664,7 @@ def adjust_xy_location(movement_per_newton = 0.06):
         fx_av1 = 0.25 * (fx_t0 + fx_t1 + fx_t2 + fx_t3)
         fy_av1 = 0.25 * (fy_t0 + fy_t1 + fy_t2 + fy_t3)
            
-        send_to_PC("adjust_xy_location___", "Before: Fx = {}; Fy = {}; max_variation: {}\nAfter: Fx = {}; Fy = {}\ndx = {}; dy = {}".format(round(fx_av0, 3), round(fy_av0, 3), round(max_diff, 3), round(fx_av1, 3), round(fy_av1, 3), round(dx, 4), round(dy, 4)))
+        send_message("adjust_xy_location___Before: Fx = {}; Fy = {}; max_variation: {}\nAfter: Fx = {}; Fy = {}\ndx = {}; dy = {}".format(round(fx_av0, 3), round(fy_av0, 3), round(max_diff, 3), round(fx_av1, 3), round(fy_av1, 3), round(dx, 4), round(dy, 4)))
  
  
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -1777,7 +1782,7 @@ def move_into_hole(fast):
                 stop(DR_SSTOP)
                 break
    
-    send_to_PC("move_into_hole", "in_CSK={0}, reached_force={1},z_pos = {2}, z_stop={3}".format(in_CSK,reached_force,p0[2],CSK_stop))
+    send_message("move_into_hole____in_CSK={0}, reached_force={1},z_pos = {2}, z_stop={3}".format(in_CSK,reached_force,p0[2],CSK_stop))
    
     # Failure, not in CSK
     if not in_CSK:
@@ -1823,19 +1828,19 @@ def move_into_hole(fast):
     release_force()
     release_compliance_ctrl()
 
-    #send_to_PC("move_into_hole", "starting init task_compliance_ctrl in CSK")
+    #send_message("move_into_hole____starting init task_compliance_ctrl in CSK")
  
     task_compliance_ctrl([20000,20000,20000,400,400,400])
                     
-    #send_to_PC("move_into_hole", "starting init set_desired_force in CSK")
+    #send_message("move_into_hole____starting init set_desired_force in CSK")
     set_desired_force([0, 0, 11, 0, 0, 0], [0, 0, 1, 0, 0, 0])
         
     wait(0.1)
    
-    #send_to_PC("move_into_hole", "starting final task_compliance_ctrl in CSK")
+    #send_message("move_into_hole____starting final task_compliance_ctrl in CSK")
     task_compliance_ctrl(INSERTION_COMPLIANCE)
    
-    #send_to_PC("move_into_hole", "starting final set_desired_force in CSK")
+    #send_message("move_into_hole____starting final set_desired_force in CSK")
     set_desired_force([0, 0, INSERTION_FORCE + f_z0, 0, 0, 0], [0, 0, 1, 0, 0, 0])
    
     t0 = time.time()
@@ -1848,7 +1853,7 @@ def move_into_hole(fast):
         f_z = get_tool_forces_in_tool()[2]
         reached_force = abs(f_z - f_z0) > 0.9 * INSERTION_FORCE
     
-    send_to_PC("move_into_hole", "in_hole={0}, reached_force={1},".format(in_hole,reached_force))
+    send_message("move_into_hole____in_hole={0}, reached_force={1},".format(in_hole,reached_force))
                
     # #Moeten even kijken als we dit uberhaubt wel wilt doen, of als je gewoon gelijk moet probe?      
     # #Failure 1
@@ -2003,31 +2008,10 @@ def get_tool_forces_in_tool():
     fy_t = dot_vect_prod(force_vector_base, vy_axis)
     fz_t = dot_vect_prod(force_vector_base, vz_axis)
    
-    # send_to_PC("move_spiral_into_hole___", "Force is Fx = {}N, Fy = {}N, Fz = {}N\n".format(forces[0], forces[1], forces[2]) +
+    # send_message("move_spiral_into_hole____Force is Fx = {}N, Fy = {}N, Fz = {}N\n".format(forces[0], forces[1], forces[2]) +
     #            "in DR_TOOL Fx = {}N, Fy = {}N, Fz = {}N".format(fx_t, fy_t, fz_t))
  
     return fx_t, fy_t, fz_t
- 
- 
-# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
- 
-def send_to_PC(label = "", value = ""):
-    """
-    Function to sends a message to the PC through a queue
-        
-    :param label: str, the label of the message
-    :param value: str, the content of the message
-    """
-    if label == "":
-        str_out = value
-    else:
-        str_out = add_timestamp(label) + "\n" + value
-   
-    if sync_data_with_PC:
-        send_message(construct_tcp_message(str_out))
-    
-    # always log
-    tp_log(str_out)
        
  
  
@@ -2138,7 +2122,7 @@ def probe_hole_axis_syst(fast):
     # assuming the probe orientation is maximum 10 degrees misaligned with the hole
     probe_variation = 0.3526 * probe_dist
  
-    send_to_PC("probe_hole_axis_syst___", "Probing aroud the hole.")
+    send_message("probe_hole_axis_syst____Probing aroud the hole.")
    
     # Move in +x direction and probe the surface
     P_p = posx(probe_dist, 0, 0, 0, 0, 0)
@@ -2189,7 +2173,7 @@ def probe_hole_axis_syst(fast):
    
     P_out = posx(P_pos[0], P_pos[1], P_pos[2], a_angle, b_angle, c_angle)
    
-    send_to_PC("probe_hole_axis_syst___", "Hole location probed at position:\n" + pos_string(P_out))
+    send_message("probe_hole_axis_syst____Hole location probed at position:\n" + pos_string(P_out))
    
     wait(0.5)
     #  Overwrite DR_USER_PROBE towards the hole entry point
@@ -3262,7 +3246,7 @@ class cl_temp_fast_ee:
        
         # check if program number has been selected correctly
         if not self.set_select_program(program):   
-            send_to_PC("engagement_burst___", "Unsuccesful fastener engagement burst; wrong program selected.")
+            send_message("engagement_burst____Unsuccesful fastener engagement burst; wrong program selected.")
             return False
        
         if in_tight_dir:
@@ -3300,19 +3284,19 @@ class cl_temp_fast_ee:
         self.start_new_cycle()
        
         if not self.tempf_in_end_effector:
-            send_to_PC("tighten_temp___", "Unsuccesful fastener tightening; There was no fastener in the end effector to install.")
+            send_message("tighten_temp____Unsuccesful fastener tightening; There was no fastener in the end effector to install.")
             return False
        
         if not self.is_clamping():
-            send_to_PC("tighten_temp___", "clamping solenoid valve was disengaged when tightening started. Clamping valve will be switched on.")
+            send_message("tighten_temp____clamping solenoid valve was disengaged when tightening started. Clamping valve will be switched on.")
             self.start_clamping()
            
         if self.has_output_failure():
-            send_to_PC("tighten_temp___", "system indicates a failure when tightening started. End Effector will be reset.")
+            send_message("tighten_temp____system indicates a failure when tightening started. End Effector will be reset.")
             self.set_reset_cycle()
        
         if self.is_output_single_nok():
-            send_to_PC("tighten_temp___", "system indicates the previous tightening failed. End Effector will be reset.")
+            send_message("tighten_temp____system indicates the previous tightening failed. End Effector will be reset.")
             self.set_reset_cycle()
  
         # check how long this is.
@@ -3326,12 +3310,12 @@ class cl_temp_fast_ee:
         
         # if the the tempf was accidentally fully tightened
         if self.is_output_single_ok():
-            send_to_PC("tighten_temp___", "Pre-tightening of fastener tightening using PR{} instead of {}\nfastener might be too tight" .format(1, program))
+            send_message("tighten_temp____Pre-tightening of fastener tightening using PR{} instead of {}\nfastener might be too tight" .format(1, program))
             return True
            
         # check if program number has been selected correctly
         if not self.set_select_program(program):    
-            send_to_PC("tighten_temp___", "Unsuccesful fastener tightening; wrong program selected.")
+            send_message("tighten_temp____Unsuccesful fastener tightening; wrong program selected.")
             return False
        
         start_time = time.time()   
@@ -3355,7 +3339,7 @@ class cl_temp_fast_ee:
             if timed_out:
                 self.reset_cobot_output_pins()
                 # exit the function with an error
-                send_to_PC("tighten_temp___", "Time out during fastener tightening using PR{} in {}seconds.".format(program, duration))           
+                send_message("tighten_temp____Time out during fastener tightening using PR{} in {}seconds.".format(program, duration))           
                 return False
             wait(0.1)
             
@@ -3369,7 +3353,7 @@ class cl_temp_fast_ee:
         if self.has_output_failure():
            
             # exit the function with an error
-            send_to_PC("tighten_temp___", "Failure during fastener tightening using PR{} in {}seconds.".format(program, duration))           
+            send_message("tighten_temp____Failure during fastener tightening using PR{} in {}seconds.".format(program, duration))           
             # clamp the fastener again
             self.start_clamping()
             return False
@@ -3377,13 +3361,13 @@ class cl_temp_fast_ee:
         if self.is_output_single_nok():
            
             # exit the function with an error
-            send_to_PC("tighten_temp___", "Unsuccesful fastener tightening using PR{} in {}seconds.".format(program, duration))
+            send_message("tighten_temp____Unsuccesful fastener tightening using PR{} in {}seconds.".format(program, duration))
             # clamp the fastener again
             self.start_clamping()
             return False
         
         # Exit the function with a success
-        send_to_PC("tighten_temp___", "Succesful fastener tightening using PR{} in {}seconds.".format(program, duration))
+        send_message("tighten_temp____Succesful fastener tightening using PR{} in {}seconds.".format(program, duration))
                       
         return True 
  
@@ -3407,12 +3391,12 @@ class cl_temp_fast_ee:
         #adjust_xy_location()
        
         if not self.tempf_in_end_effector:
-            send_to_PC("untighten_temp___", "Unsuccesful fastener untightening; There was no fastener in the end effector to remove.")
+            send_message("untighten_temp____Unsuccesful fastener untightening; There was no fastener in the end effector to remove.")
             return False
        
         # check if a valid program number has been selected; must be 1-8
         if not self.set_select_program(program):
-            send_to_PC("untighten_temp___", "Unsuccesful fastener untightening; wrong PR selected.")
+            send_message("untighten_temp____Unsuccesful fastener untightening; wrong PR selected.")
             return False
                                      
         start_time = time.time()  
@@ -3436,7 +3420,7 @@ class cl_temp_fast_ee:
                 self.set_stop_motor()
                 self.reset_cobot_output_pins()
                 # exit the function with an error
-                send_to_PC("untighten_temp___", "fastener untightening using PR{} in {}seconds.".format(program, duration))           
+                send_message("untighten_temp____fastener untightening using PR{} in {}seconds.".format(program, duration))           
                 return True
             wait(0.01)
        
@@ -3450,17 +3434,17 @@ class cl_temp_fast_ee:
         if self.is_output_single_nok():
            
             # exit the function with an error
-            send_to_PC("untighten_temp___", "Unsuccesful fastener untightening using PR{} in {}seconds.".format(program, duration))
+            send_message("untighten_temp____Unsuccesful fastener untightening using PR{} in {}seconds.".format(program, duration))
             return False
         
         if self.has_output_failure():
            
             # exit the function with an error
-            send_to_PC("untighten_temp___", "Failure during fastener untightening using PR{} in {}seconds.".format(program, duration))           
+            send_message("untighten_temp____Failure during fastener untightening using PR{} in {}seconds.".format(program, duration))           
             return False
         
         # Exit the function with a success
-        send_to_PC("untighten_temp___", "Succesful fastener untightening using PR{} in {}seconds.".format(program, duration))                         
+        send_message("untighten_temp____Succesful fastener untightening using PR{} in {}seconds.".format(program, duration))                         
         
         return True 
             
@@ -3726,7 +3710,7 @@ class cl_fastener_location(cl_uid):
         return "nominal position: \n" + pos_string(self.__nom_pos)
        
     def log_nom_pos(self):
-        send_to_PC("log_nom_pos___", self.fast_nom_pos_string())
+        send_message("log_nom_pos___", self.fast_nom_pos_string())
  
     def pop_up_nom_pos(self):
         tp_popup(self.fast_nom_pos_string())
@@ -3880,7 +3864,7 @@ class cl_fastener(cl_fastener_location):
             no_true += 1
        
         if no_true > 1:
-            send_to_PC("cl_fastener_init___", "wrong input in cl_fastener {}.\n\
+            send_message("cl_fastener_init____wrong input in cl_fastener {}.\n\
                        More than one in_storage, in_ee, in_product, in_bin is true.\n\
                        Must be only one.".format(uid))         
         
@@ -4224,7 +4208,7 @@ class cl_fastener(cl_fastener_location):
         else:
             str_out = FASTENERS_TAG + _get_fastener_to_server_str(self, "") + CLOSE_TAG
  
-        send_to_PC(str_out)
+        send_message(str_out)
  
  
     def is_tempf(self):
@@ -4333,36 +4317,36 @@ class cl_fastener(cl_fastener_location):
         if self.__is_tempf:
             if abs(self.diam() - 5.055) < 0.1:
                 if self.__in_ee:
-                    send_to_PC("set_tool_center_point___", "setting TCP to " + TCP_NAME_DIAM_5_TIP + " for fastener " + self.uid() + "\nForce and compliance are turned off to enable this.")
+                    send_message("set_tool_center_point____setting TCP to " + TCP_NAME_DIAM_5_TIP + " for fastener " + self.uid() + "\nForce and compliance are turned off to enable this.")
                     set_tcp(TCP_NAME_DIAM_5_TIP)
                     return True
                 else:
-                    send_to_PC("set_tool_center_point___", "setting TCP to " + TCP_NAME_LISI_TIP_NO_TEMPF + " for fastener " + self.uid() + "\nForce and compliance are turned off to enable this.")
+                    send_message("set_tool_center_point____setting TCP to " + TCP_NAME_LISI_TIP_NO_TEMPF + " for fastener " + self.uid() + "\nForce and compliance are turned off to enable this.")
                     set_tcp(TCP_NAME_LISI_TIP_NO_TEMPF)
                     return True
         else:
             if abs(self.diam() - 5.055) < 0.1:
                 if abs(self.grip_length() - 9) < 0.1: #For dia code 6 and grip code 9
                     if self.__in_ee:
-                        send_to_PC("set_tool_center_point___", "setting TCP to " + TCP_NAME_DIAM_6_AND_GRIP_9_TIP + " for fastener " + self.uid() + "\nForce and compliance are turned off to enable this.")
+                        send_message("set_tool_center_point____setting TCP to " + TCP_NAME_DIAM_6_AND_GRIP_9_TIP + " for fastener " + self.uid() + "\nForce and compliance are turned off to enable this.")
                         set_tcp(TCP_NAME_DIAM_6_AND_GRIP_9_TIP)
                         return True
                     else:
-                        send_to_PC("set_tool_center_point___", "setting TCP to " + TCP_NAME_PERM_HAND_TOOL + " for fastener " + self.uid() + "\nForce and compliance are turned off to enable this.")
+                        send_message("set_tool_center_point____setting TCP to " + TCP_NAME_PERM_HAND_TOOL + " for fastener " + self.uid() + "\nForce and compliance are turned off to enable this.")
                         set_tcp(TCP_NAME_PERM_HAND_TOOL)
                         return True
                
                 elif abs(self.grip_length() - 6) < 0.1: #For dia code 6 and grip code 6
                     if self.__in_ee:
-                        send_to_PC("set_tool_center_point___", "setting TCP to " + TCP_NAME_DIAM_6_AND_GRIP_6_TIP + " for fastener " + self.uid() + "\nForce and compliance are turned off to enable this.")
+                        send_message("set_tool_center_point____setting TCP to " + TCP_NAME_DIAM_6_AND_GRIP_6_TIP + " for fastener " + self.uid() + "\nForce and compliance are turned off to enable this.")
                         set_tcp(TCP_NAME_DIAM_6_AND_GRIP_6_TIP)
                         return True
                     else:
-                        send_to_PC("set_tool_center_point___", "setting TCP to " + TCP_NAME_PERM_HAND_TOOL + " for fastener " + self.uid() + "\nForce and compliance are turned off to enable this.")
+                        send_message("set_tool_center_point____setting TCP to " + TCP_NAME_PERM_HAND_TOOL + " for fastener " + self.uid() + "\nForce and compliance are turned off to enable this.")
                         set_tcp(TCP_NAME_PERM_HAND_TOOL)
                         return True             
         
-        send_to_PC("set_tool_center_point___", "tool center point could not be set for fastener " + self.uid())
+        send_message("set_tool_center_point____tool center point could not be set for fastener " + self.uid())
        
         return False
    
@@ -4474,10 +4458,10 @@ class cl_fastener(cl_fastener_location):
  
         # At least three fasteners must be installed first
         if len(corr_lst) < 4:
-            send_to_PC("calc_and_set_corrected_pos___", "fastener " + self.uid() + " has no fasteners to correct with.")
+            send_message("calc_and_set_corrected_pos____fastener " + self.uid() + " has no fasteners to correct with.")
             return 0
  
-        send_to_PC("calc_and_set_corrected_pos___", "fastener " + self.uid() + " has {} fasteners to correct with.".format(len(corr_lst)))
+        send_message("calc_and_set_corrected_pos____fastener " + self.uid() + " has {} fasteners to correct with.".format(len(corr_lst)))
  
         # calculate all distances and vectors to the fastener and set all fasteners to unprocessed
         for f in corr_lst:
@@ -4504,12 +4488,12 @@ class cl_fastener(cl_fastener_location):
             self.calc_tcp_target_pos_from_corrected_hole_pos()
             self.calc_tcp_approach_pos_from_corrected_hole_pos()
            
-            send_to_PC("calc_and_set_corrected_pos___", "fastener " + self.uid() + self.corr_pos_string())
+            send_message("calc_and_set_corrected_pos____fastener " + self.uid() + self.corr_pos_string())
            
             return 1
         else:
  
-            send_to_PC("calc_and_set_corrected_pos___", "fastener " + self.uid() + " has no fastener pairs to correct with.")
+            send_message("calc_and_set_corrected_pos____fastener " + self.uid() + " has no fastener pairs to correct with.")
             return 0
  
  
@@ -4647,7 +4631,7 @@ class cl_fastener(cl_fastener_location):
         return s1 + s2 + s3
  
     def log_corr_pos(self):
-        send_to_PC("log_corr_pos___", "fastener " + self.uid() + self.corr_pos_string())
+        send_message("log_corr_pos____fastener " + self.uid() + self.corr_pos_string())
  
     def pop_up_corr_pos(self):
         tp_popup("fastener " + self.uid() + self.corr_pos_string())
@@ -4667,7 +4651,7 @@ class cl_fastener(cl_fastener_location):
         return s1 + s2
  
     def log_inst_pos(self):
-        send_to_PC("log_inst_pos___", "fastener " + self.uid() + self.inst_pos_string())
+        send_message("log_inst_pos____fastener " + self.uid() + self.inst_pos_string())
  
     def pop_up_inst_pos(self):
         tp_popup("fastener " + self.uid() + self.inst_pos_string())
@@ -4696,7 +4680,7 @@ class cl_fl_container():
        
         if self.has_both():
             if not self.is_similar(loc, fast):
-                send_to_PC("cl_fl_container_init___", "fastener {} has been added to location {} \n\
+                send_message("cl_fl_container_init____fastener {} has been added to location {} \n\
                            fastener location was not the same as the location\n\
                            fastener location has been made similar.".format(fast.uid(), loc.uid()))
                 self.set
@@ -4900,7 +4884,7 @@ class cl_fl_container():
                 self.loc = loc
                 return True
            
-        send_to_PC("add_loc___", "location with uid {} could not be added to the fastener and location container.".format(uid))
+        send_message("add_loc____location with uid {} could not be added to the fastener and location container.".format(uid))
         return False
    
     
@@ -5079,7 +5063,7 @@ class cl_f_container(cl_uid):
         for s in self.holes_and_fast_lst:
             if s.has_loc():
                 if s.is_same_pos(loc = loc) and s.is_same_stack(loc = loc) and s.is_same_diam(loc = loc):
-                    send_to_PC("add_loc_to_holes_and_fast_lst___", "Location with uid {} overwritten with location with uid {}.".format(s.loc.uid() ,uid))
+                    send_message("add_loc_to_holes_and_fast_lst____Location with uid {} overwritten with location with uid {}.".format(s.loc.uid() ,uid))
                     s.loc = loc
                     return True
                
@@ -5176,7 +5160,7 @@ class cl_f_container(cl_uid):
                 loc = self.holes_and_fast_lst[loc_lst_id].remove_loc()
             return loc
         else:
-            send_to_PC("remove_loc_from_holes_and_fast_lst___", "unable to remove location {} from the holes_and_fast_lst".format(uid))
+            send_message("remove_loc_from_holes_and_fast_lst____unable to remove location {} from the holes_and_fast_lst".format(uid))
             return None
  
  
@@ -5207,7 +5191,7 @@ class cl_f_container(cl_uid):
             return False
         else:
             if loc_lst_id >= len(self.holes_and_fast_lst):
-                send_to_PC("check_lst_lenght___", "{} location id {} is larger than the list length.".format(self.uid(), loc_lst_id))
+                send_message("check_lst_lenght____{} location id {} is larger than the list length.".format(self.uid(), loc_lst_id))
                 return False
             else:
                 return True
@@ -5225,7 +5209,7 @@ class cl_f_container(cl_uid):
             return False
         else:
             if self.holes_and_fast_lst[loc_lst_id].has_no_fast():
-                send_to_PC("loc_is_empty___", "Action {}: location {} is already occupied.".format(self.uid(), self.holes_and_fast_lst[loc_lst_id].loc.uid()))
+                send_message("loc_is_empty____Action {}: location {} is already occupied.".format(self.uid(), self.holes_and_fast_lst[loc_lst_id].loc.uid()))
                 return False
             else:
                 return True
@@ -5243,7 +5227,7 @@ class cl_f_container(cl_uid):
         """
         if self.check_lst_lenght(loc_lst_id):
             if self.holes_and_fast_lst[loc_lst_id].is_same_diam(fast = fast, diff = diff):
-                send_to_PC("check_diam___", "Action {}: fastener {} and location {} have a different diameter."
+                send_message("check_diam____Action {}: fastener {} and location {} have a different diameter."
                       .format(self.uid(), fast.uid(), self.holes_and_fast_lst[loc_lst_id].fast.uid()))
                 return False
             else:
@@ -5388,7 +5372,7 @@ class cl_f_container(cl_uid):
             if ht.has_fast():
                 if ht.fast.uid() == uid:
                     return i
-        send_to_PC("get_loc_lst_id_by_uid___", "unable to find a fastener or location with uid {}.".format(uid))
+        send_message("get_loc_lst_id_by_uid____unable to find a fastener or location with uid {}.".format(uid))
         return -1
        
     
@@ -5421,7 +5405,7 @@ class cl_f_container(cl_uid):
                 if s.has_diam(diam):
                     return i
                
-        send_to_PC("find_fast_id_of_diam___", "no fastener available with diameter {}.".format(diam))
+        send_message("find_fast_id_of_diam____no fastener available with diameter {}.".format(diam))
         return 0
    
     
@@ -5438,7 +5422,7 @@ class cl_f_container(cl_uid):
                 if s.has_diam(diam):
                     return i
                
-        send_to_PC("find_empty_spot_of_diam___", "no empty spot available with diameter {}.".format(diam))
+        send_message("find_empty_spot_of_diam____no empty spot available with diameter {}.".format(diam))
         return -1
    
  
@@ -5509,7 +5493,7 @@ class cl_f_container(cl_uid):
             if ht.has_fast():
                 string_out += "temp:{}; d{}, ".format(ht.fast.uid(), ht.fast.diam())
         string_out += "]"
-        send_to_PC("log_holes_and_fast_lst___", string_out)
+        send_message("log_holes_and_fast_lst___", string_out)
    
     
     def number_fasteners_of_diam_grip(self, diam, grip):
@@ -5546,7 +5530,7 @@ class cl_f_container(cl_uid):
                 if f.has_diam(diam) and f.has_grip(grip) and not f.fast.in_bin():
                     return i
                
-        send_to_PC("find_fast_id_of_diam___", "no fastener available with diameter {}.".format(diam)) #add grip to error message
+        send_message("find_fast_id_of_diam____no fastener available with diameter {}.".format(diam)) #add grip to error message
         return 0
  
  
@@ -5603,7 +5587,7 @@ class cl_agent():
            
         if a.is_cancelled():
             a.set_as_not_cancelled()
-            send_to_PC("execute___", "Action with uid {} was uncancelled and will be executed.".format(a.uid()))
+            send_message("execute____Action with uid {} was uncancelled and will be executed.".format(a.uid()))
  
         if not a.is_done():
             succes = False
@@ -5617,14 +5601,14 @@ class cl_agent():
             elif a.is_remove_tempf():
                 succes = self.remove_tempf(a.loc_uid(), a.passing_wps, a.speed())
             else:
-                send_to_PC("execute___", "{}: unknown ation type: {}".format(a.uid(), a.a_type()))
+                send_message("execute____{}: unknown ation type: {}".format(a.uid(), a.a_type()))
  
             if succes:
                 a.set_as_done()
  
         return_str = actions_str_to_server(agent.actions)
  
-        send_to_PC("", return_str)
+        send_message("", return_str)
        
         
     def execute_all(self, check_inventory = True):
@@ -5927,7 +5911,7 @@ class cl_agent():
                 if loc is not None:
                     d_needed = loc.diam()
                 else:
-                    send_to_PC("enough_locs___", "No location with uid {} could be found in action {}".format(a.loc_uid(), a.uid()))
+                    send_message("enough_locs____No location with uid {} could be found in action {}".format(a.loc_uid(), a.uid()))
                     d_needed = 0
                 is_in = False
                 for i, known_diam in enumerate(tempf_diam_rem_lst):
@@ -5950,7 +5934,7 @@ class cl_agent():
             # check if there is a shortage anywhere
             for available, needed, diam in zip(storage_loc_available, number_loc_needed_per_diam, tempf_diam_rem_lst):
                 if available < needed:
-                    send_to_PC("enough_locs___", "{} empty locations of diameter {} in storage; {} needed.".format(available, diam, needed))
+                    send_message("enough_locs____{} empty locations of diameter {} in storage; {} needed.".format(available, diam, needed))
                     success = False
        
         # report there is no shortage
@@ -5983,7 +5967,7 @@ class cl_agent():
                 if loc is not None:
                     d_needed = loc.diam()
                 else:
-                    send_to_PC("enough_fast___", "No tempf location with uid {} could be found for action {}".format(a.loc_uid(), a.uid()))
+                    send_message("enough_fast____No tempf location with uid {} could be found for action {}".format(a.loc_uid(), a.uid()))
                     d_needed = 0
                 
                 is_in = False
@@ -6008,7 +5992,7 @@ class cl_agent():
             # check if there is a shortage anywhere
             for available, needed, diam in zip(tempf_in_storage, number_tempf_needed_per_diam, tempf_diam_inst_lst):
                 if available < needed:
-                    send_to_PC("enough_fast___", "{} fasteners of diameter {} in storage; {} needed.".format(available, diam, needed))
+                    send_message("enough_fast____{} fasteners of diameter {} in storage; {} needed.".format(available, diam, needed))
                     tempf_succes = False
                    
         
@@ -6031,7 +6015,7 @@ class cl_agent():
                     d_needed = loc.diam()
                    
                 else:
-                    send_to_PC("enough_fast___", "No permf location with uid {} could be found for action {}".format(a.loc_uid(), a.uid()))
+                    send_message("enough_fast____No permf location with uid {} could be found for action {}".format(a.loc_uid(), a.uid()))
                     grip_needed = 0
                 
                 is_in = False
@@ -6069,7 +6053,7 @@ class cl_agent():
             # check if there is a shortage anywhere
             for available, needed, diam, grip in zip(fasteners_in_storage, number_fastener_needed_per_diam_and_grip, fastener_diam_inst_lst, fastener_grip_inst_lst):
                 if available < needed:
-                    #send_to_PC("Not enough fasteners")("enough_fast___", "{} fasteners of diameter {} and grip {} in storage; {} needed.".format(available, diam, grip, needed)) #grip toevoegen in bericht
+                    #send_message("Not enough fasteners")("enough_fast____{} fasteners of diameter {} and grip {} in storage; {} needed.".format(available, diam, grip, needed)) #grip toevoegen in bericht
                     permf_succes = False
        
         # report the result
@@ -6118,7 +6102,7 @@ class cl_agent():
             if is_tempf:
                 self.tf_ee.tempf_in_end_effector = True
                 if was_in_product:
-                    send_to_PC("start untightening")
+                    send_message("start untightening")
                     # clamp and tighten the fastener
                     is_untightened = self.tf_ee.untighten_temp(UNTIGHTEN_PROGRAM)
                 else:
@@ -6313,7 +6297,7 @@ class cl_agent():
                 self.tf_ee.tempf_in_end_effector = False
  
             else:
-                send_to_PC("insert_fast___", "fastener with uid {} not tightened.".format(fast.uid()))
+                send_message("insert_fast____fastener with uid {} not tightened.".format(fast.uid()))
                
                 # TODO move to bin location must never cause collision
                 movel(BIN_POSITION, ref=DR_BASE)
@@ -6455,7 +6439,7 @@ class cl_agent():
             reached_pos = r_i < reqd_ratio
            
         if reached_force and not reached_pos:
-            send_to_PC("engage_permf___", "starting periodic move to get from {} to {}".format(r_i, reqd_ratio))
+            send_message("engage_permf____starting periodic move to get from {} to {}".format(r_i, reqd_ratio))
             #start a spiral move to see if it will slide over the temp
             #   Periodic move to wiggle the fastener in
             amove_periodic(amp = [5,5,0,0.35,0.35,0], period = [5,5,0,1.0,0.5,0], atime = 0.1, repeat = 3, ref = DR_TOOL)
@@ -6477,7 +6461,7 @@ class cl_agent():
             stop(DR_SSTOP)
        
         if not reached_force and reached_pos:
-            send_to_PC("engage_permf___", "waiting for force to increase from {}N to {}N".format(f_z, force))
+            send_message("engage_permf____waiting for force to increase from {}N to {}N".format(f_z, force))
             t0 = time.time()
  
             while not reached_max_time:
@@ -6490,11 +6474,11 @@ class cl_agent():
         #tp_popup("reached_force={0},reached_pos={1}".format(reached_force,reached_pos))
         if reached_pos:
             if reached_force:
-                send_to_PC("engage_permf___", "did reach force and position when engaging fastener {}\n".format(fast.uid()) +
+                send_message("engage_permf____did reach force and position when engaging fastener {}\n".format(fast.uid()) +
                            "force in tool z-direction is {} and {} at the start.\n".format(f_z, f_z0) +
                            "install ratio is {}; time is {}.".format(r_i, (time.time() - t0)))
             else:
-                send_to_PC("engage_permf___", "did not reach force but reached position when engaging fastener {}\n".format(fast.uid()) +
+                send_message("engage_permf____did not reach force but reached position when engaging fastener {}\n".format(fast.uid()) +
                            "force in tool z-direction is {} and {} at the start.\n".format(f_z, f_z0) +
                            "install ratio is {}; time is {}.".format(r_i, (time.time() - t0)))
            
@@ -6504,11 +6488,11 @@ class cl_agent():
         
         else:
             if reached_force:
-                send_to_PC("engage_permf___", "reached force but not reached position when engaging fastener {}\n".format(fast.uid()) +
+                send_message("engage_permf____reached force but not reached position when engaging fastener {}\n".format(fast.uid()) +
                         "force in tool z-direction is {} and {} at the start.\n".format(f_z, f_z0) +
                         "install ratio is {}; time is {}.".format(r_i, (time.time() - t0)))
             else:
-                send_to_PC("engage_permf___", "did not reach force or position when engaging fastener {}\n".format(fast.uid()) +
+                send_message("engage_permf____did not reach force or position when engaging fastener {}\n".format(fast.uid()) +
                         "force in tool z-direction is {} and {} at the start.\n".format(f_z, f_z0) +
                         "install ratio is {}; time is {}.".format(r_i, (time.time() - t0)))
        
@@ -6594,7 +6578,7 @@ class cl_agent():
             reached_pos = r_i < reqd_ratio
             
         if reached_force and not reached_pos:
-            send_to_PC("engage_tempf___", "starting periodic move to get from {} to {}".format(r_i, reqd_ratio))
+            send_message("engage_tempf____starting periodic move to get from {} to {}".format(r_i, reqd_ratio))
             #start a spiral move to see if it will slide over the temp
             #   Periodic move to wiggle the fastener in
             amove_periodic(amp = [5,5,0,0.35,0.35,0], period = [5,5,0,1.0,0.5,0], atime = 0.1, repeat = 3, ref = DR_TOOL)
@@ -6615,7 +6599,7 @@ class cl_agent():
             stop(DR_SSTOP)
 
         if not reached_force and reached_pos:
-            send_to_PC("engage_tempf___", "waiting for force to increase from {}N to {}N".format(f_z, force))
+            send_message("engage_tempf____waiting for force to increase from {}N to {}N".format(f_z, force))
             t0 = time.time()
 
             while not reached_max_time:
@@ -6628,11 +6612,11 @@ class cl_agent():
         #tp_popup("reached_force={0},reached_pos={1}".format(reached_force,reached_pos))
         if reached_pos:
             if reached_force:
-                send_to_PC("engage_tempf___", "did reach force and position when engaging fastener {}\n".format(fast.uid()) +
+                send_message("engage_tempf____did reach force and position when engaging fastener {}\n".format(fast.uid()) +
                             "force in tool z-direction is {} and {} at the start.\n".format(f_z, f_z0) +
                             "install ratio is {}; time is {}.".format(r_i, (time.time() - t0)))
             else:
-                send_to_PC("engage_tempf___", "did not reach force but reached position when engaging fastener {}\n".format(fast.uid()) +
+                send_message("engage_tempf____did not reach force but reached position when engaging fastener {}\n".format(fast.uid()) +
                             "force in tool z-direction is {} and {} at the start.\n".format(f_z, f_z0) +
                             "install ratio is {}; time is {}.".format(r_i, (time.time() - t0)))
             
@@ -6642,11 +6626,11 @@ class cl_agent():
 
         else:
             if reached_force:
-                send_to_PC("engage_tempf___", "reached force but not reached position when engaging fastener {}\n".format(fast.uid()) +
+                send_message("engage_tempf____reached force but not reached position when engaging fastener {}\n".format(fast.uid()) +
                         "force in tool z-direction is {} and {} at the start.\n".format(f_z, f_z0) +
                         "install ratio is {}; time is {}.".format(r_i, (time.time() - t0)))
             else:
-                send_to_PC("engage_tempf___", "did not reach force or position when engaging fastener {}\n".format(fast.uid()) +
+                send_message("engage_tempf____did not reach force or position when engaging fastener {}\n".format(fast.uid()) +
                         "force in tool z-direction is {} and {} at the start.\n".format(f_z, f_z0) +
                         "install ratio is {}; time is {}.".format(r_i, (time.time() - t0)))
 
@@ -6772,7 +6756,7 @@ class cl_agent():
             return lst[0]
         elif len(lst) > 1:
             if log:
-                send_to_PC("get_from_lst_by_uid___", "Multiple " + o_name + "s with uid " + uid + " exist.\n\
+                send_message("get_from_lst_by_uid____Multiple " + o_name + "s with uid " + uid + " exist.\n\
                            Please make sure you have unique " + o_name + " uids.")
             return lst[0]
         else:
@@ -6782,7 +6766,7 @@ class cl_agent():
                 for s in uids:
                     uid_string += s + ", "
                 uid_string += "]"
-                send_to_PC("get_from_lst_by_uid___", o_name + " with uid " + uid + " does not exist in list:\n" + uid_string)
+                send_message("get_from_lst_by_uid___" + o_name + " with uid " + uid + " does not exist in list:\n" + uid_string)
                
             return None
        
@@ -6913,7 +6897,7 @@ class cl_agent():
         for i, wp in enumerate(self.waypoints):
             string_out += "uid:{}, ".format(wp.uid())
         string_out += "]"
-        send_to_PC("log_waypoints_lst___", string_out)
+        send_message("log_waypoints_lst___", string_out)
    
  
  
@@ -7226,7 +7210,7 @@ tf_ee = cl_temp_fast_ee()
 # create a class that contains all actions
 agent = cl_agent(None, None, None, pf_ee, tf_ee)
     
-send_to_PC("start program")
+send_message("start program")
  
 # create a class that contains all available storage locations
 agent.tempf_storage = cl_f_container("tempf_storage")
@@ -7272,7 +7256,7 @@ agent.execute_all(check_inventory = False)
 # go to home
 speed_limited_movej_on_posj(posj(90,-30,120,0,0,0), 100)
  
-send_to_PC("end program")
+send_message("end program")
  
 # close sockets and stop threads
 STOP_SERVER = True
