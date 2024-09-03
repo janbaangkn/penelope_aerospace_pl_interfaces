@@ -86,7 +86,7 @@ start_time = time.time()
  
 BYTES_MSG_LENGTH  = 4
 
-DEFAULT_ENCODER = 1
+DEFAULT_ENCODER = "UTF-8"
 
 TCP_SPEED_LIMIT = 250
 TCP_ROT_LIMIT = 120
@@ -395,7 +395,6 @@ class TCPOutbox:
 
 
 class TCPInbox:
-    priority_messages = []
     messages = []
     responses = []
 
@@ -404,7 +403,6 @@ class TCPInbox:
 
     @classmethod
     def reset(cls):
-        cls.priority_messages = []
         cls.messages = []
         cls.responses = []
 
@@ -413,17 +411,15 @@ class TCPInbox:
         if not isinstance(message, (TCPMessage, TCPResponse)):
             raise MessageTypeError
         tp_log("Message: {0} added to Inbox <{1}>".format(message.uid, message.message))
-        priority_tags = ["pause", "stop"]
-        if message.message_type in priority_tags:
-            cls.priority_messages.append(message)
-        elif message.message_type == "response":
+        # tp_popup("Message: {0} added to Inbox <{1}>".format(message.uid, message.message), DR_PM_MESSAGE)
+
+        if isinstance(message, TCPResponse):
             cls.responses.append(message)
         else:
             cls.messages.append(message)
 
     @classmethod
     def remove_message(cls, uid):
-        cls.priority_messages = [msg for msg in cls.priority_messages if msg.uid != uid]
         cls.messages = [msg for msg in cls.messages if msg.uid != uid]
         cls.responses = [msg for msg in cls.responses if msg.uid != uid]
         tp_log("Message with uid: {0} is removed from Inbox".format(uid))
@@ -441,8 +437,6 @@ class TCPInbox:
 
     @classmethod
     def _get_first_message(cls):
-        if cls.priority_messages:
-            return cls.priority_messages[0]
         if cls.messages:
             return cls.messages[0]
         return None
@@ -506,13 +500,15 @@ class TCPInputProcessor:
 
     def process_raw_input(self):
         tp_log("processing the raw input: {0}".format(self.raw_input))
+        # tp_popup("processing the raw input: {0}".format(self.raw_input), DR_PM_MESSAGE)
         byte_size_length = 4
         if len(self.raw_input) > byte_size_length:
             byte_size = int(self.raw_input[:byte_size_length].decode(self.encoder))
             if len(self.raw_input) >= byte_size:
                 isolated_message = self.raw_input[:byte_size].decode(self.encoder)
+                tp_popup("Raw data: {0}".format(isolated_message), DR_PM_MESSAGE)
                 tcp_message = self.reconstruct_tcp_message(isolated_message)
-                TCPInbox.add_message(tcp_message)
+                TCPInbox().add_message(tcp_message)
                 self.set_raw_input(self.raw_input[byte_size:])
                 self.process_raw_input()
 
@@ -528,7 +524,7 @@ class TCPInputProcessor:
         respond = raw_respond == "true"
         message_end = len(raw_message) - (len(MessageNames.RESPOND) + 3 + len(raw_respond))
         message = raw_message[:message_end]
-
+        tp_popup("TCP_Message message: {0}, uid: {1}".format(message, uid), DR_PM_MESSAGE)
         return TCPMessage(
                 message=message,
                 uid=uid,
@@ -579,7 +575,7 @@ class DoosanTCPServer:
             self._reconnect()
             self._listen()
         elif response > 0:
-            #tp_popup("Listening - raw input is being updated: {0}".format(raw_input), DR_PM_MESSAGE)
+            tp_popup("Listening - raw input is being updated: {0}".format(raw_input), DR_PM_MESSAGE)
             self.input_processor.update_raw_input(raw_input)
             self.input_processor.process_raw_input()
         elif response == -3:
@@ -1195,69 +1191,75 @@ def handle_ros_msg():
     while not STOP_SERVER:
         wait(0.01)
         message = TCPInbox.get_message()
+        if message:
+            
+            msg_str = message.message
+            msg_id = message.uid
 
-        msg_str = message.message
-        msg_id = message.uid
+            tp_popup("message being processed by handler: {0}".format(msg_str), DR_PM_MESSAGE)
+            
+            tp_popup("message being processed by handler: {0}".format(_find_substring(msg_str, EXECUTE_TAG)), DR_PM_MESSAGE)
 
-        # tempf_storage: storage location container
-        tempf_st_str = _find_substring(msg_str, TEMPF_STORAGE_LOC_TAG)
-        if tempf_st_str is not None:
-            handle_container_str(tempf_st_str, agent, TEMPF_STORAGE_LOC_TAG, msg_id)
-    
-        # permf_storage: storage location container
-        permf_st_str = _find_substring(msg_str, PERMF_STORAGE_LOC_TAG)
-        if permf_st_str is not None:
-            handle_container_str(permf_st_str, agent, PERMF_STORAGE_LOC_TAG, msg_id)
-    
-        # product: storage location container
-        pr_str = _find_substring(msg_str, PRODUCT_TAG)
-        if pr_str is not None:
-            handle_container_str(pr_str, agent, PRODUCT_TAG, msg_id)
-    
-        # waypoints
-        wps_str = _find_substring(msg_str, WAYPOINTS_TAG)
-        if wps_str is not None:
-            wp_str = _find_substring(wps_str, WAYPOINT_TAG)
-            while wp_str is not None:
-                handle_waypoint_str(wp_str, agent, msg_id)
-                wp_str = _find_substring(wp_str, WAYPOINT_TAG)
-    
-        # actions
-        actions_str = _find_substring(msg_str, ACTIONS_TAG)
-        if actions_str is not None:
-            action_str = _find_substring(actions_str, ACTION_TAG)
-            while action_str is not None:
-                handle_action_str(action_str, agent, msg_id)
-                action_str = _find_substring(action_str, ACTIONS_TAG)
-    
-        # holes to be drilled
-        # NOT IMPLEMENTED YET
-    
-        # available fasteners
-        pfs_str = _find_substring(msg_str, FASTENERS_TAG)
-        pf_str = _find_substring(pfs_str, FASTENER_TAG)
-        while pf_str is not None:
-            handle_fastener_str(pf_str, agent, FASTENER_TAG, msg_id)
-            pf_str = _find_substring(pf_str, FASTENER_TAG)
-    
-        # available fasteners
-        tfs_str = _find_substring(msg_str, TEMPFS_TAG)
-        tf_str = _find_substring(tfs_str, TEMPF_TAG)
-        while tf_str is not None:
-            handle_fastener_str(tf_str, agent, TEMPF_TAG, msg_id)
-            tf_str = _find_substring(tf_str, TEMPF_TAG)
-    
-        # available docking positions for End Effectors
-        # NOT IMPLEMENTED YET
-    
-        # available End Effectors
-        # NOT IMPLEMENTED YET
-    
-        # actions: uid's to execute
-        # execution actions are always single actions
-        ex_str = _find_substring(msg_str, EXECUTE_TAG)
-        if ex_str is not None:
-            handle_execution_str(ex_str, agent, msg_id)
+            # tempf_storage: storage location container
+            tempf_st_str = _find_substring(msg_str, TEMPF_STORAGE_LOC_TAG)
+            if tempf_st_str is not None:
+                handle_container_str(tempf_st_str, agent, TEMPF_STORAGE_LOC_TAG, msg_id)
+        
+            # permf_storage: storage location container
+            permf_st_str = _find_substring(msg_str, PERMF_STORAGE_LOC_TAG)
+            if permf_st_str is not None:
+                handle_container_str(permf_st_str, agent, PERMF_STORAGE_LOC_TAG, msg_id)
+        
+            # product: storage location container
+            pr_str = _find_substring(msg_str, PRODUCT_TAG)
+            if pr_str is not None:
+                handle_container_str(pr_str, agent, PRODUCT_TAG, msg_id)
+        
+            # waypoints
+            wps_str = _find_substring(msg_str, WAYPOINTS_TAG)
+            if wps_str is not None:
+                wp_str = _find_substring(wps_str, WAYPOINT_TAG)
+                while wp_str is not None:
+                    handle_waypoint_str(wp_str, agent, msg_id)
+                    wp_str = _find_substring(wp_str, WAYPOINT_TAG)
+        
+            # actions
+            actions_str = _find_substring(msg_str, ACTIONS_TAG)
+            if actions_str is not None:
+                action_str = _find_substring(actions_str, ACTION_TAG)
+                while action_str is not None:
+                    handle_action_str(action_str, agent, msg_id)
+                    action_str = _find_substring(action_str, ACTIONS_TAG)
+        
+            # holes to be drilled
+            # NOT IMPLEMENTED YET
+        
+            # available fasteners
+            pfs_str = _find_substring(msg_str, FASTENERS_TAG)
+            pf_str = _find_substring(pfs_str, FASTENER_TAG)
+            while pf_str is not None:
+                handle_fastener_str(pf_str, agent, FASTENER_TAG, msg_id)
+                pf_str = _find_substring(pf_str, FASTENER_TAG)
+        
+            # available fasteners
+            tfs_str = _find_substring(msg_str, TEMPFS_TAG)
+            tf_str = _find_substring(tfs_str, TEMPF_TAG)
+            while tf_str is not None:
+                handle_fastener_str(tf_str, agent, TEMPF_TAG, msg_id)
+                tf_str = _find_substring(tf_str, TEMPF_TAG)
+        
+            # available docking positions for End Effectors
+            # NOT IMPLEMENTED YET
+        
+            # available End Effectors
+            # NOT IMPLEMENTED YET
+        
+            # actions: uid's to execute
+            # execution actions are always single actions
+            ex_str = _find_substring(msg_str, EXECUTE_TAG)
+            if ex_str is not None:
+                tp_popup("Message is recognized, action is to be defined: {0}".format(ex_str), DR_PM_MESSAGE)
+                handle_execution_str(ex_str, agent, msg_id)
     
     
 def handle_container_str(msg_str, agent, type, msg_id):
@@ -1472,7 +1474,7 @@ def handle_execution_str(msg_str, agent, msg_id):
     :param msg_id: str Unique reference to original message
     """
     a_uid = extract_leaf_content(msg_str, UID_TAG, CLOSE_TAG)
- 
+    tp_popup("message received. about to execute {}".format(a_uid), DR_PM_MESSAGE)
     agent.execute_uid(a_uid)
 
     #TODO Ronald: add workflow parameter to allow messages during execution (e.g. stop msg)
@@ -7251,7 +7253,9 @@ speed_limited_movej_on_posj(posj(90,-30,120,0,0,0), 100)
 agent._add_install_tempf_action("A01", "pr_01_01")
 agent._add_remove_tempf_action("A02", "pr_01_01")
 
-agent.execute_all(check_inventory = False)
+# agent.execute_all(check_inventory = False)
+while True:
+    wait(0.1)
 
 # go to home
 speed_limited_movej_on_posj(posj(90,-30,120,0,0,0), 100)
