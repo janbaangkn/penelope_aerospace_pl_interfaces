@@ -143,20 +143,20 @@ def R_matrix_to_DRL_angles(R):
 def permf_storage_str_to_cobot(storage_in):
     str_ = PERMF_STORAGE_LOC_TAG + _get_hole_location_container_to_cobot_str(storage_in) + CLOSE_TAG
 
-    return str
+    return str_
 
 # Function to send a tempf container with holes to the cobot controller
 # AssemblyHoleLocationContainer
 def tempf_storage_str_to_cobot(storage_in):
     str_ = TEMPF_STORAGE_LOC_TAG + _get_hole_location_container_to_cobot_str(storage_in) + CLOSE_TAG
 
-    return str
+    return str_
 
 # Function to send a product container with holes to the cobot controller
 def product_str_to_cobot(product_in):
     str_ = PRODUCT_TAG + _get_hole_location_container_to_cobot_str(product_in) + CLOSE_TAG
 
-    return str
+    return str_
 
 # Function to send list of defined waypoints to the cobot controller
 def waypoints_str_to_cobot(waypoints_in):
@@ -167,7 +167,7 @@ def waypoints_str_to_cobot(waypoints_in):
 
     str_ = str_ + CLOSE_TAG
 
-    return str
+    return str_
 
 
 # Function to send list of defined actions to the cobot controller
@@ -179,7 +179,7 @@ def actions_str_to_cobot(actions_in):
 
     str_ = str_ + CLOSE_TAG
 
-    return str
+    return str_
 
 # Function to send list of holes to be drilled to the cobot controller
 def drill_tasks_str_to_cobot(drill_tasks_in): 
