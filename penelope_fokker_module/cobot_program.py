@@ -371,7 +371,7 @@ class TCPOutbox:
     def add_message(cls, message):
         if not isinstance(message, (TCPMessage, TCPResponse)):
             raise MessageTypeError
-        # tp_popup("Message: {0} added to Outbox <{1}>".format(message.uid, message.message), DR_PM_MESSAGE)
+        tp_popup("Message: {0} added to Outbox <{1}>".format(message.uid, message.message), DR_PM_MESSAGE)
         tp_log("Message: {0} added to Outbox <{1}>".format(message.uid, message.message))
         cls.messages.append(message)
 
@@ -476,8 +476,8 @@ class TCPMessage:
 class TCPResponse(TCPMessage):
     def __init__(self, uid, response_uid, response="processed", encoder=DEFAULT_ENCODER, response_required=False):
         self.response_uid = response_uid
-        message = "{0}_{1}".format(MessageNames.RESPONSE, self.response_uid)
-        super().__init__(uid=uid, message=message, input_data=response, encoder=encoder,
+        message = "{0}_{1}<{2}>".format(MessageNames.RESPONSE, self.response_uid, response)
+        super().__init__(uid=uid, message=message, encoder=encoder,
                          response_required=response_required)
 
 
@@ -543,7 +543,7 @@ class DoosanTCPServer:
         try:
             self.socket.sendall(message.encoded)
             tp_log("Message {0} send <{1}>".format(message.uid, message.message))
-            #tp_popup(" Message: {0} has been send - message: {1}".format(message.uid, message.message), DR_PM_MESSAGE)
+            tp_popup(" Message: {0} has been send - message: {1}".format(message.uid, message.message), DR_PM_MESSAGE)
             return 0
         except ConnectionResetError:
             self._reconnect()
@@ -637,6 +637,7 @@ def send_response(original_message_uid, response="processed", feedback=False):
 		response=response,
 		response_required=feedback,
 	)
+	tp_popup("Response for message: {0} is created: {1}".format(original_message_uid, response), DR_PM_MESSAGE)
 	TCPOutbox().add_message(tcp_response)
 	if feedback:
 		response = None
@@ -1152,7 +1153,13 @@ def _get_end_effector_to_server_str(ee_in):
 # will return the string after the first search_string
 # the substring is that part of the original_string after a search_string
 def _find_substring(original_string, search_string):
- 
+    
+    if original_string is None:
+        return None
+
+    if search_string is None:
+        return None
+
     # Find the position of the search string
     position = original_string.find(search_string)
  
@@ -1194,43 +1201,39 @@ def handle_ros_msg():
         if message:
             
             msg_str = message.message
-            msg_id = message.uid
-
-            tp_popup("message being processed by handler: {0}".format(msg_str), DR_PM_MESSAGE)
-            
-            tp_popup("message being processed by handler: {0}".format(_find_substring(msg_str, EXECUTE_TAG)), DR_PM_MESSAGE)
+            msg_uid = message.uid
 
             # tempf_storage: storage location container
             tempf_st_str = _find_substring(msg_str, TEMPF_STORAGE_LOC_TAG)
             if tempf_st_str is not None:
-                handle_container_str(tempf_st_str, agent, TEMPF_STORAGE_LOC_TAG, msg_id)
-        
+                handle_container_str(tempf_st_str, agent, TEMPF_STORAGE_LOC_TAG, msg_uid)
+
             # permf_storage: storage location container
             permf_st_str = _find_substring(msg_str, PERMF_STORAGE_LOC_TAG)
             if permf_st_str is not None:
-                handle_container_str(permf_st_str, agent, PERMF_STORAGE_LOC_TAG, msg_id)
-        
+                handle_container_str(permf_st_str, agent, PERMF_STORAGE_LOC_TAG, msg_uid)
+
             # product: storage location container
             pr_str = _find_substring(msg_str, PRODUCT_TAG)
             if pr_str is not None:
-                handle_container_str(pr_str, agent, PRODUCT_TAG, msg_id)
-        
+                handle_container_str(pr_str, agent, PRODUCT_TAG, msg_uid)
+
             # waypoints
             wps_str = _find_substring(msg_str, WAYPOINTS_TAG)
             if wps_str is not None:
                 wp_str = _find_substring(wps_str, WAYPOINT_TAG)
                 while wp_str is not None:
-                    handle_waypoint_str(wp_str, agent, msg_id)
+                    handle_waypoint_str(wp_str, agent, msg_uid)
                     wp_str = _find_substring(wp_str, WAYPOINT_TAG)
-        
+
             # actions
             actions_str = _find_substring(msg_str, ACTIONS_TAG)
             if actions_str is not None:
                 action_str = _find_substring(actions_str, ACTION_TAG)
                 while action_str is not None:
-                    handle_action_str(action_str, agent, msg_id)
+                    handle_action_str(action_str, agent, msg_uid)
                     action_str = _find_substring(action_str, ACTIONS_TAG)
-        
+
             # holes to be drilled
             # NOT IMPLEMENTED YET
         
@@ -1238,16 +1241,16 @@ def handle_ros_msg():
             pfs_str = _find_substring(msg_str, FASTENERS_TAG)
             pf_str = _find_substring(pfs_str, FASTENER_TAG)
             while pf_str is not None:
-                handle_fastener_str(pf_str, agent, FASTENER_TAG, msg_id)
+                handle_fastener_str(pf_str, agent, FASTENER_TAG, msg_uid)
                 pf_str = _find_substring(pf_str, FASTENER_TAG)
         
             # available fasteners
             tfs_str = _find_substring(msg_str, TEMPFS_TAG)
             tf_str = _find_substring(tfs_str, TEMPF_TAG)
             while tf_str is not None:
-                handle_fastener_str(tf_str, agent, TEMPF_TAG, msg_id)
+                handle_fastener_str(tf_str, agent, TEMPF_TAG, msg_uid)
                 tf_str = _find_substring(tf_str, TEMPF_TAG)
-        
+
             # available docking positions for End Effectors
             # NOT IMPLEMENTED YET
         
@@ -1259,7 +1262,9 @@ def handle_ros_msg():
             ex_str = _find_substring(msg_str, EXECUTE_TAG)
             if ex_str is not None:
                 tp_popup("Message is recognized, action is to be defined: {0}".format(ex_str), DR_PM_MESSAGE)
-                handle_execution_str(ex_str, agent, msg_id)
+                send_response(msg_uid,"received")
+
+                handle_execution_str(ex_str, agent, msg_uid)
     
     
 def handle_container_str(msg_str, agent, type, msg_id):
@@ -7212,7 +7217,7 @@ tf_ee = cl_temp_fast_ee()
 # create a class that contains all actions
 agent = cl_agent(None, None, None, pf_ee, tf_ee)
     
-send_message("start program")
+# send_message("start program")
  
 # create a class that contains all available storage locations
 agent.tempf_storage = cl_f_container("tempf_storage")

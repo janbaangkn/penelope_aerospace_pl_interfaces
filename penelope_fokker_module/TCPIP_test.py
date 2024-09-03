@@ -1,5 +1,7 @@
 from tcp_communication.tcp_client import run_tcp_client
 from tcp_communication.communication_functions import send_message
+from tcp_communication.message_service_class import MessageService
+import time
 import threading
 
 ip_address = "10.237.20.101"
@@ -10,7 +12,11 @@ tcp_client_thread = threading.Thread(target=run_tcp_client, args=(ip_address, po
 tcp_client_thread.start()
 message = "execute<uid<A01>>"
 
-send_message(uid=robot_uid, message=message)
+feedback = send_message(uid=robot_uid, message=message, feedback=True)
+if feedback:
+    print(f"Feedback: {feedback}")
 
-# agent._add_install_tempf_action("A01", "pr_01_01")
-# agent._add_remove_tempf_action("A02", "pr_01_01")
+while True:
+    if MessageService().inboxes.get(robot_uid) and len(MessageService().inboxes.get(robot_uid)) > 0:
+        print(f"Message in inbox: {MessageService().get_inbox_message(robot_uid)}")
+    time.sleep(0.01)
