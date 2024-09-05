@@ -310,6 +310,20 @@ class StatusInputError(Exception):
         super().__init__(message)
 
 
+class CommandsForRobot:
+    POPULATE_AGENT = "populate_agent"
+    EXECUTE_SINGLE_OPERATION = "execute_single_operation"
+    STOP_OPERATIONS = "stop_operations"
+
+
+class CommandsFromRobot:
+    OPERATION_INITIATED = "operation_initiated"
+
+
+class MessageResponses:
+    PROCESSED = "processed"
+
+
 class MessageNames:
     RESPOND = "respond"
     STOP = "stop"
@@ -328,8 +342,9 @@ class StatusOptions:
 
 class WorkflowParameterOptions:
     STATIONARY = "stationary"
-    MOVE = "move"
-    REMOVE_TEMPORARY_FASTENER = "remove_temporary_fastener"
+    POPULATE_AGENT = "populate_agent"
+    EXECUTE_UID = "execute_uid"
+    OUTPUT_MANUFACTURING_ACTUALS = "output_manufacturing_actuals"
 
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 # classes for the TCP-IP connection
@@ -458,16 +473,20 @@ class TCPMessage:
             self.message,
         )
 
-    def __init__(self, message, uid, encoder=DEFAULT_ENCODER, response_required=True):
+    def __init__(self, message, uid, input_data=None, encoder=DEFAULT_ENCODER, response_required=True):
         self.uid = uid
         self.message = message
+        self.input_data = input_data
         self.encoder = encoder
         self.response_required = response_required
         self.encoded = self.construct_encoded_tcp_message()
 
-
     def construct_encoded_tcp_message(self):
-        expanded_message = "/{0}/{1}<{2}:{3}>".format(
+        if self.input_data:
+            expanded_message = "/{0}/{1}<{2}><{3}:{4}>".format(
+                self.uid, self.message, self.input_data, MessageNames.RESPOND, self.response_required)
+        else:
+            expanded_message = "/{0}/{1}<{2}:{3}>".format(
                 self.uid, self.message, MessageNames.RESPOND, self.response_required)
         expanded_message = "{0:0>4d}{1}".format(len(expanded_message) + 4, expanded_message)
         return expanded_message.encode(self.encoder)
@@ -476,8 +495,8 @@ class TCPMessage:
 class TCPResponse(TCPMessage):
     def __init__(self, uid, response_uid, response="processed", encoder=DEFAULT_ENCODER, response_required=False):
         self.response_uid = response_uid
-        message = "{0}_{1}<{2}>".format(MessageNames.RESPONSE, self.response_uid, response)
-        super().__init__(uid=uid, message=message, encoder=encoder,
+        message = "{0}_{1}".format(MessageNames.RESPONSE, self.response_uid, response)
+        super().__init__(uid=uid, message=message, input_data=response, encoder=encoder,
                          response_required=response_required)
 
 
@@ -513,7 +532,6 @@ class TCPInputProcessor:
                 self.process_raw_input()
 
     def reconstruct_tcp_message(self, raw_tcp_message):
-        tp_log("reconstructing the raw tcp input: {0}".format(raw_tcp_message))
         # determine size of preamble
         byte_size, uid = raw_tcp_message.split("/")[:2]
         preamble_size = len(byte_size) + len(uid) + 2
@@ -524,13 +542,25 @@ class TCPInputProcessor:
         respond = raw_respond == "true"
         message_end = len(raw_message) - (len(MessageNames.RESPOND) + 3 + len(raw_respond))
         message = raw_message[:message_end]
-        tp_popup("TCP_Message message: {0}, uid: {1}".format(message, uid), DR_PM_MESSAGE)
-        return TCPMessage(
-                message=message,
+
+        # check if message contains <data>
+        input_data = None
+        if "<" in message:
+            message = message.split("<")[0]
+            input_data = raw_message[len(message) + 1: message_end - 1]
+
+        # determine if the message is a response
+        if message.split("_")[0] == MessageNames.RESPONSE:
+            response_uid = int(message.split("_")[-1])
+            return TCPResponse(
+                response=input_data,
                 uid=uid,
+                response_uid=response_uid,
                 encoder=self.encoder,
                 response_required=respond,
             )
+        else:
+            return TCPMessage(message, uid, input_data, self.encoder, respond)
 
 class DoosanTCPServer:
     def __init__(self, port, encoder=DEFAULT_ENCODER):
@@ -657,6 +687,64 @@ def th_run_server():
     tcp_server = DoosanTCPServer(port=20002, encoder=DEFAULT_ENCODER)
     tcp_server.run()
 
+
+# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+# Main Operator Class
+# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+class Operator:
+    def __init__(self):
+        self.status = StatusOptions.IDLE
+        self.agent = cl_agent()
+        self.workflow_parameter = WorkflowParameterOptions.STATIONARY
+        self.workflow_arguments = None
+    
+    def update_status(self, status):
+        self.status = status
+
+    # Get info from a message and put in workflow parameter
+    # The trigger how the message must be treated
+    def set_workflow_parameter(self, workflow_parameter):
+        tp_popup("workflow parameter is set to: {0}".format(workflow_parameter), DR_PM_MESSAGE)
+        self.workflow_parameter = workflow_parameter
+
+    # information from the message that is available for the execution of functions
+    # those functions are triggered by the workflow parameter
+    # is a dict
+    def set_workflow_arguments(self, workflow_arguments):
+        self.workflow_arguments = workflow_arguments
+
+    def reset_workflow_parameter(self):
+        self.set_workflow_parameter(WorkflowParameterOptions.STATIONARY)
+
+    def reset_workflow_arguments(self):
+        self.workflow_arguments = None
+
+    def run(self):
+        while True:
+            wait(0.001)
+           
+            if self.workflow_parameter == WorkflowParameterOptions.EXECUTE_UID:
+                if self.workflow_arguments:
+                    self.agent.execute_uid(uid=self.workflow_arguments["uid"])
+                    self.reset_workflow_arguments
+                    self.reset_workflow_parameter
+
+            elif self.workflow_parameter == WorkflowParameterOptions.POPULATE_AGENT:
+                if self.workflow_arguments:
+                    # data is the xml like string received in the message
+                    self.agent.populate_agent(self.workflow_arguments["data"])
+                    send_response(self.workflow_arguments["original_message_uid"], MessageResponses.PROCESSED)
+                    self.reset_workflow_arguments
+                    self.reset_workflow_parameter
+            elif self.workflow_parameter == "test_run":
+                tp_popup("Operator is running Test Run", DR_PM_MESSAGE)
+                send_response(self.workflow_arguments["original_message_uid"])
+                self.reset_workflow_arguments()
+                self.reset_workflow_parameter()
+            # Any new message type must be added here and in def handle_ros_msg function
+            # and in CommandsForRobot class
 
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 # functions to build string messages to be sent to the server
@@ -1186,13 +1274,14 @@ def extract_leaf_content(input_string, open_tag, close_tag):
 
 def handle_ros_msg():
     """
-    Function that modifies a cl_agent instance using a message string.
-   
-    :param msg_str: str, the string from the ROS server to modify the agent instance.
-    :param agent: cl_agent, the agent instance to be modified.
-    """
+    Function that processes messages from the inbox.
+    Based on the command listed in the message it will update parameters.
+    Theses parameters trigger functions or update values.
 
-    global agent
+    workflow_parameter and workflow_arguments in a class: Operator instance contain this information
+    The main thread (operator.run()) further processes this prepared information.
+    """
+    global operator
     global STOP_SERVER
 
     while not STOP_SERVER:
@@ -1203,78 +1292,33 @@ def handle_ros_msg():
             msg_str = message.message
             msg_uid = message.uid
 
-            # tempf_storage: storage location container
-            tempf_st_str = _find_substring(msg_str, TEMPF_STORAGE_LOC_TAG)
-            if tempf_st_str is not None:
-                handle_container_str(tempf_st_str, agent, TEMPF_STORAGE_LOC_TAG, msg_uid)
+            tp_popup("Message: {0} collected from Inbox".format(msg_str), DR_PM_MESSAGE)
 
-            # permf_storage: storage location container
-            permf_st_str = _find_substring(msg_str, PERMF_STORAGE_LOC_TAG)
-            if permf_st_str is not None:
-                handle_container_str(permf_st_str, agent, PERMF_STORAGE_LOC_TAG, msg_uid)
-
-            # product: storage location container
-            pr_str = _find_substring(msg_str, PRODUCT_TAG)
-            if pr_str is not None:
-                handle_container_str(pr_str, agent, PRODUCT_TAG, msg_uid)
-
-            # waypoints
-            wps_str = _find_substring(msg_str, WAYPOINTS_TAG)
-            if wps_str is not None:
-                wp_str = _find_substring(wps_str, WAYPOINT_TAG)
-                while wp_str is not None:
-                    handle_waypoint_str(wp_str, agent, msg_uid)
-                    wp_str = _find_substring(wp_str, WAYPOINT_TAG)
-
-            # actions
-            actions_str = _find_substring(msg_str, ACTIONS_TAG)
-            if actions_str is not None:
-                action_str = _find_substring(actions_str, ACTION_TAG)
-                while action_str is not None:
-                    handle_action_str(action_str, agent, msg_uid)
-                    action_str = _find_substring(action_str, ACTIONS_TAG)
-
-            # holes to be drilled
-            # NOT IMPLEMENTED YET
-        
-            # available fasteners
-            pfs_str = _find_substring(msg_str, FASTENERS_TAG)
-            pf_str = _find_substring(pfs_str, FASTENER_TAG)
-            while pf_str is not None:
-                handle_fastener_str(pf_str, agent, FASTENER_TAG, msg_uid)
-                pf_str = _find_substring(pf_str, FASTENER_TAG)
-        
-            # available fasteners
-            tfs_str = _find_substring(msg_str, TEMPFS_TAG)
-            tf_str = _find_substring(tfs_str, TEMPF_TAG)
-            while tf_str is not None:
-                handle_fastener_str(tf_str, agent, TEMPF_TAG, msg_uid)
-                tf_str = _find_substring(tf_str, TEMPF_TAG)
-
-            # available docking positions for End Effectors
-            # NOT IMPLEMENTED YET
-        
-            # available End Effectors
-            # NOT IMPLEMENTED YET
-        
-            # actions: uid's to execute
-            # execution actions are always single actions
-            ex_str = _find_substring(msg_str, EXECUTE_TAG)
-            if ex_str is not None:
-                tp_popup("Message is recognized, action is to be defined: {0}".format(ex_str), DR_PM_MESSAGE)
-                send_response(msg_uid,"received")
-
-                handle_execution_str(ex_str, agent, msg_uid)
+            if msg_str == CommandsForRobot.POPULATE_AGENT:
+                workflow_arguments = {"uid": message.input_data, "original_message_uid": msg_uid}
+                operator.set_workflow_arguments(workflow_arguments)
+                operator.set_workflow_parameter(WorkflowParameterOptions.POPULATE_AGENT)
+            elif msg_str == CommandsForRobot.EXECUTE_SINGLE_OPERATION:
+                workflow_arguments = {"data": message.input_data, "original_message_uid": msg_uid}
+                operator.set_workflow_arguments(message.input_data)
+                operator.set_workflow_parameter(WorkflowParameterOptions.EXECUTE_UID)
+            elif msg_str == "test_message":
+                tp_popup("Test message is being processed", DR_PM_MESSAGE)
+                workflow_arguments = {"data": "random_message", "original_message_uid": msg_uid}
+                operator.set_workflow_arguments(workflow_arguments)
+                operator.set_workflow_parameter("test_run")
+            # Any new message type must be added here and in operator class
+            # and in CommandsForRobot class
     
     
-def handle_container_str(msg_str, agent, type, msg_id):
+def handle_container_str(msg_str, agent, cont_type):
     """
     Function that modifies containers in an agent
     using a message string and adds a return to the queue_out
 
     :param msg_str: str, the string from the ROS server to modify the agent instance.
     :param agent: cl_agent, the agent instance to be modified.
-    :param type: str The container type
+    :param cont_type: str The container type
                     temporary fastener container if TEMPF_STORAGE_LOC_TAG
                     permanent fastener container if PERMF_STORAGE_LOC_TAG
                     product container if PRODUCT_TAG
@@ -1285,11 +1329,11 @@ def handle_container_str(msg_str, agent, type, msg_id):
     max_obstacle_heigth = float(extract_leaf_content(msg_str, MAX_OBST_HEIGHT_TAG, CLOSE_TAG))
     obj = cl_f_container(uid, max_obstacle_heigth)
 
-    if type == TEMPF_STORAGE_LOC_TAG:
+    if cont_type == TEMPF_STORAGE_LOC_TAG:
         agent.tempf_storage = obj
-    elif type == PERMF_STORAGE_LOC_TAG:
+    elif cont_type == PERMF_STORAGE_LOC_TAG:
         agent.permf_storage = obj
-    elif type == PRODUCT_TAG:
+    elif cont_type == PRODUCT_TAG:
         agent.product = obj
     else:
         raise Exception("Unknown storage type encountered in handle_container_str in container with uid {}.".format(uid))
@@ -1309,10 +1353,10 @@ def handle_container_str(msg_str, agent, type, msg_id):
 
     return_str = "container {} received by cobot".format(uid)
 
-    send_response(msg_id, return_str)
+    send_message(return_str)
  
  
-def handle_waypoint_str(msg_str, agent, msg_id):
+def handle_waypoint_str(msg_str, agent):
     """
     Function that modifies waypoints in an agent
     using a message string and adds a return to the queue_out
@@ -1328,10 +1372,10 @@ def handle_waypoint_str(msg_str, agent, msg_id):
     # add the waypoint
     agent._add_waypoint(uid, wp_pos)
  
-    send_response(msg_id, "waypoint {} received by cobot".format(uid))
+    send_message("waypoint {} received by cobot".format(uid))
    
  
-def handle_action_str(msg_str, agent, msg_id):
+def handle_action_str(msg_str, agent):
     """
     Function that modifies actions in an agent
     using a message string and adds a return to the queue_out
@@ -1405,10 +1449,10 @@ def handle_action_str(msg_str, agent, msg_id):
  
     return_str = actions_str_to_server(agent.actions)
  
-    send_response(msg_id, return_str)
+    send_message(return_str)
  
    
-def handle_fastener_str(msg_str, agent, f_tag, msg_id):
+def handle_fastener_str(msg_str, agent, f_tag):
     """
     Function that modifies fastener information of an agent
     using a message string and adds a return to the queue_out
@@ -1466,10 +1510,10 @@ def handle_fastener_str(msg_str, agent, f_tag, msg_id):
                                  f_min_stack, f_max_stack, f_tcp_tip_dist, f_tcp_top_dist,
                                  f_in_storage, f_in_ee, f_in_product, f_in_bin, is_tempf)
    
-    send_response(msg_id, "fastener {} received by cobot".format(f_uid))
+    send_message("fastener {} received by cobot".format(f_uid))
  
    
-def handle_execution_str(msg_str, agent, msg_id):
+def handle_execution_str(msg_str, agent):
     """
     Function that triggers execution of actions in an agent
     using a message string and adds a return to the queue_out
@@ -1483,8 +1527,9 @@ def handle_execution_str(msg_str, agent, msg_id):
     agent.execute_uid(a_uid)
 
     #TODO Ronald: add workflow parameter to allow messages during execution (e.g. stop msg)
+    #TODO Faster response needed
  
-    send_response(msg_id, "action {} received and sent to be axecuted.".format(a_uid))
+    send_message("action {} received and sent to be axecuted.".format(a_uid))
  
  
 def _get_posx_from_str(str_in):
@@ -5558,9 +5603,8 @@ class cl_agent():
     - Check whether the system has enough fasteners or free locations to work with
  
     """
- 
-    # TODO check this sometime     
-    def __init__(self, tempf_storage: cl_f_container, permf_storage: cl_f_container, product: cl_f_container, pf_ee: cl_perm_fast_ee, tf_ee: cl_temp_fast_ee):
+   
+    def __init__(self):
         """
         Function that initializes the cl_agent class.
        
@@ -5572,15 +5616,64 @@ class cl_agent():
         :param tf_ee: cl_temp_fast_ee, the active fastener end effector instance
         """
  
-        self.tempf_storage = tempf_storage
-        self.permf_storage = permf_storage
-        self.product = product
-        self.pf_ee = pf_ee
-        self.tf_ee = tf_ee
+        self.tempf_storage = cl_f_container("tempf_storage")
+        self.permf_storage = cl_f_container("permf_storage")
+        self.product = cl_f_container("product")
+        self.pf_ee = cl_perm_fast_ee()
+        self.tf_ee = cl_temp_fast_ee()
        
         self.actions = []    # list of cl_action
         self.waypoints = []  # list of cl_waypoint  
     
+    def populate_agent(self, data):
+        # tempf_storage: storage location container
+        tempf_st_str = _find_substring(data, TEMPF_STORAGE_LOC_TAG)
+        if tempf_st_str is not None:
+            handle_container_str(tempf_st_str, self, TEMPF_STORAGE_LOC_TAG)
+
+        # permf_storage: storage location container
+        permf_st_str = _find_substring(data, PERMF_STORAGE_LOC_TAG)
+        if permf_st_str is not None:
+            handle_container_str(permf_st_str, self, PERMF_STORAGE_LOC_TAG)
+
+        # product: storage location container
+        pr_str = _find_substring(data, PRODUCT_TAG)
+        if pr_str is not None:
+            handle_container_str(pr_str, self, PRODUCT_TAG)
+
+        # waypoints
+        wps_str = _find_substring(data, WAYPOINTS_TAG)
+        if wps_str is not None:
+            wp_str = _find_substring(wps_str, WAYPOINT_TAG)
+            while wp_str is not None:
+                handle_waypoint_str(wp_str, self)
+                wp_str = _find_substring(wp_str, WAYPOINT_TAG)
+
+        # actions
+        actions_str = _find_substring(data, ACTIONS_TAG)
+        if actions_str is not None:
+            action_str = _find_substring(actions_str, ACTION_TAG)
+            while action_str is not None:
+                handle_action_str(action_str, self)
+                action_str = _find_substring(action_str, ACTIONS_TAG)
+
+        # holes to be drilled
+        # NOT IMPLEMENTED YET
+    
+        # available fasteners
+        pfs_str = _find_substring(data, FASTENERS_TAG)
+        pf_str = _find_substring(pfs_str, FASTENER_TAG)
+        while pf_str is not None:
+            handle_fastener_str(pf_str, self, FASTENER_TAG)
+            pf_str = _find_substring(pf_str, FASTENER_TAG)
+    
+        # available fasteners
+        tfs_str = _find_substring(data, TEMPFS_TAG)
+        tf_str = _find_substring(tfs_str, TEMPF_TAG)
+        while tf_str is not None:
+            handle_fastener_str(tf_str, self, TEMPF_TAG)
+            tf_str = _find_substring(tf_str, TEMPF_TAG)
+
     
     def execute_uid(self, uid):
         """
@@ -7195,9 +7288,13 @@ DR_USER_NOM_OPP = create_axis_syst_on_current_position()
  
 STOP_SERVER = False
 
+operator = Operator()
+
 # open a connection and a thread with the pc 
 server_thread = thread_run(th_run_server, loop=False)
 handler_thread = thread_run(handle_ros_msg, loop=False)
+
+operator.run()
  
 pos1=posx(0,0,0,0,0,0)
 set_user_cart_coord(pos1, ref=DR_BASE)
@@ -7209,40 +7306,40 @@ sync_data_with_PC = True
 ###########################################
  
 # instantiate the end effector
-pf_ee = cl_perm_fast_ee()
-tf_ee = cl_temp_fast_ee()
+# pf_ee = cl_perm_fast_ee()
+# tf_ee = cl_temp_fast_ee()
  
-###########################################
+# ###########################################
  
-# create a class that contains all actions
-agent = cl_agent(None, None, None, pf_ee, tf_ee)
+# # create a class that contains all actions
+# agent = cl_agent(None, None, None, pf_ee, tf_ee)
     
-# send_message("start program")
+# # send_message("start program")
  
-# create a class that contains all available storage locations
-agent.tempf_storage = cl_f_container("tempf_storage")
-agent.permf_storage = cl_f_container("permf_storage")
+# # create a class that contains all available storage locations
+# agent.tempf_storage = cl_f_container("tempf_storage")
+# agent.permf_storage = cl_f_container("permf_storage")
  
 # add hole locations, stack thickness and diameter in the permanent fastener storage list 
 # uid, diam, stack thickness, nom_pos 
-agent.tempf_storage.add_loc_to_holes_and_fast_lst("tfst_01", 5, 10, posx(122.4,476.77,38,35,180,-35))
+# agent.tempf_storage.add_loc_to_holes_and_fast_lst("tfst_01", 5, 10, posx(122.4,476.77,38,35,180,-35))
  
-# add permanent fastener in storage
-# uid, loc uid, fast_install_pos, diam, shaft height, min stack, max stack, tcp_tip_dist, tcp_top_dist, in_storage, in_ee, in_product, in_bin, is_tempf
-agent.tempf_storage.add_fast_to_loc_with_uid("tempf_01", "tfst_01", None, 5 , DIAM_5_SHAFT_HEIGHT,DIAM_5_MIN_STACK, DIAM_5_MAX_STACK,DIAM_5_TCP_TIP_DIST, DIAM_5_TCP_TOP_DIST,True, False, False, False, True)
+# # add permanent fastener in storage
+# # uid, loc uid, fast_install_pos, diam, shaft height, min stack, max stack, tcp_tip_dist, tcp_top_dist, in_storage, in_ee, in_product, in_bin, is_tempf
+# agent.tempf_storage.add_fast_to_loc_with_uid("tempf_01", "tfst_01", None, 5 , DIAM_5_SHAFT_HEIGHT,DIAM_5_MIN_STACK, DIAM_5_MAX_STACK,DIAM_5_TCP_TIP_DIST, DIAM_5_TCP_TOP_DIST,True, False, False, False, True)
 
-# create a class that contains all available hole positions in the product
-agent.product = cl_f_container("product")
+# # create a class that contains all available hole positions in the product
+# agent.product = cl_f_container("product")
  
-# add hole locations, stack thickness and diameter in the product list 
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_01", 5, 9, posx(-162,796,1155,89.16,75.8,-158.73))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_02", 5, 9, posx(-126.5,796,1155,89.16,75.8,-158.73))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_03", 5, 9, posx(-92,796,1155,89.16,75.8,-158.73))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_04", 5, 9, posx(-56,796,1154.5,89.16,75.8,-158.73))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_05", 5, 9, posx(-10,796,1154.5,89.16,75.8,-158.73))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_06", 5, 9, posx(25.5,796,1154,89.16,75.8,-158.73))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_07", 5, 9, posx(60,796,1154,89.16,75.8,-158.73))
-agent.product.add_loc_to_holes_and_fast_lst("pr_01_08", 5, 9, posx(96,796,1154,89.16,75.8,-158.73))
+# # add hole locations, stack thickness and diameter in the product list 
+# agent.product.add_loc_to_holes_and_fast_lst("pr_01_01", 5, 9, posx(-162,796,1155,89.16,75.8,-158.73))
+# agent.product.add_loc_to_holes_and_fast_lst("pr_01_02", 5, 9, posx(-126.5,796,1155,89.16,75.8,-158.73))
+# agent.product.add_loc_to_holes_and_fast_lst("pr_01_03", 5, 9, posx(-92,796,1155,89.16,75.8,-158.73))
+# agent.product.add_loc_to_holes_and_fast_lst("pr_01_04", 5, 9, posx(-56,796,1154.5,89.16,75.8,-158.73))
+# agent.product.add_loc_to_holes_and_fast_lst("pr_01_05", 5, 9, posx(-10,796,1154.5,89.16,75.8,-158.73))
+# agent.product.add_loc_to_holes_and_fast_lst("pr_01_06", 5, 9, posx(25.5,796,1154,89.16,75.8,-158.73))
+# agent.product.add_loc_to_holes_and_fast_lst("pr_01_07", 5, 9, posx(60,796,1154,89.16,75.8,-158.73))
+# agent.product.add_loc_to_holes_and_fast_lst("pr_01_08", 5, 9, posx(96,796,1154,89.16,75.8,-158.73))
 
 # add permanent fastener in the product
 # uid, loc uid, fast_install_pos, diam, shaft height, min stack, max stack, tcp_tip_dist, tcp_top_dist, in_storage, in_ee, in_product, in_bin, is_tempf
@@ -7255,12 +7352,11 @@ agent.product.add_loc_to_holes_and_fast_lst("pr_01_08", 5, 9, posx(96,796,1154,8
 speed_limited_movej_on_posj(posj(90,-30,120,0,0,0), 100)
 
 # insert and install a permf from storage to product
-agent._add_install_tempf_action("A01", "pr_01_01")
-agent._add_remove_tempf_action("A02", "pr_01_01")
+# agent._add_install_tempf_action("A01", "pr_01_01")
+# agent._add_remove_tempf_action("A02", "pr_01_01")
 
 # agent.execute_all(check_inventory = False)
-while True:
-    wait(0.1)
+
 
 # go to home
 speed_limited_movej_on_posj(posj(90,-30,120,0,0,0), 100)

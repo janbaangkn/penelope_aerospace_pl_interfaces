@@ -138,10 +138,10 @@ class TCPInbox:
     def add_message(self, message):
         if not isinstance(message, (TCPMessage, TCPResponse)):
             raise MessageTypeError
-        priority_tags = ["pause", "stop"]
-        if message.message_type in priority_tags:
-            self.priority_messages.append(message)
-        elif message.message_type == "response":
+        
+        print(f"Message added to inbox: {message.message}")
+
+        if isinstance(message, TCPResponse):
             self.responses.append(message)
         else:
             self.messages.append(message)

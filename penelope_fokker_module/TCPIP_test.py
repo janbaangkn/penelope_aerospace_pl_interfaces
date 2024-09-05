@@ -10,13 +10,13 @@ robot_uid = f"{ip_address}/{port}"
 
 tcp_client_thread = threading.Thread(target=run_tcp_client, args=(ip_address, port))
 tcp_client_thread.start()
-message = "execute<uid<A01>>"
+message = "test_message"
 
 feedback = send_message(uid=robot_uid, message=message, feedback=True)
 if feedback:
     print(f"Feedback: {feedback}")
 
-while True:
-    if MessageService().inboxes.get(robot_uid) and len(MessageService().inboxes.get(robot_uid)) > 0:
-        print(f"Message in inbox: {MessageService().get_inbox_message(robot_uid)}")
-    time.sleep(0.01)
+# while True:
+#     if MessageService().inboxes.get(robot_uid) and len(MessageService().inboxes.get(robot_uid).messages) > 0:
+#         print(f"Message in inbox: {MessageService().get_inbox_message(robot_uid)}")
+#     time.sleep(0.01)

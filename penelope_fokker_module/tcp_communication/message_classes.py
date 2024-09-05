@@ -34,23 +34,10 @@ class TCPMessage:
     def __init__(self, message, uid, input_data=None, encoder=DEFAULT_ENCODER, response_required=False):
         self.uid = uid
         self.message = message
-        self.input_data = input_data
         self.encoder = encoder
+        self.input_data = input_data
         self.response_required = response_required
-        self.message_type = self.determine_message_type()
         self.encoded = self.construct_encoded_tcp_message()
-
-    def determine_message_type(self):
-        if self.message[:len(MessageNames.STOP)] == MessageNames.STOP:
-            return MessageNames.STOP
-        if self.message[:len(MessageNames.PAUSE)] == MessageNames.PAUSE:
-            return MessageNames.PAUSE
-        if self.message[:len("get")] == "get":
-            return "getter"
-        if self.message[:len("set")] == "set":
-            return "setter"
-        if self.message[:len(MessageNames.RESPONSE)] == MessageNames.RESPONSE:
-            return MessageNames.RESPONSE
 
     def construct_encoded_tcp_message(self):
         if self.input_data is not None:
@@ -66,6 +53,6 @@ class TCPMessage:
 class TCPResponse(TCPMessage):
     def __init__(self, uid, response_uid, response="processed", encoder=DEFAULT_ENCODER, response_required=False):
         self.response_uid = response_uid
-        message = "{0}_{1}".format(MessageNames.RESPONSE, self.response_uid)
+        message = "{0}_{1}".format(MessageNames.RESPONSE, self.response_uid, response)
         super().__init__(uid=uid, message=message, input_data=response, encoder=encoder,
                          response_required=response_required)
