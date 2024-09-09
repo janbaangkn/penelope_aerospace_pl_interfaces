@@ -317,7 +317,7 @@ class CommandsForRobot:
     POPULATE_AGENT = "populate_agent"
     EXECUTE_SINGLE_OPERATION = "execute_single_operation"
     STOP_OPERATIONS = "stop_operations"
-
+    GET_STATUS = "get_status"
 
 class CommandsFromRobot:
     OPERATION_INITIATED = "operation_initiated"
@@ -341,12 +341,15 @@ class StatusOptions:
     PAUSED = "paused"
     CANCELING = "canceling"
     STOPPED = "stopped"
+    READY = "ready"
 
 
 class WorkflowParameterOptions:
     STATIONARY = "stationary"
     POPULATE_AGENT = "populate_agent"
     EXECUTE_UID = "execute_uid"
+    STOP_OPERATIONS = "stop_operations"
+    GET_STATUS = "get_status"
     OUTPUT_MANUFACTURING_ACTUALS = "output_manufacturing_actuals"
 
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -733,13 +736,6 @@ class Operator:
     def set_workflow_arguments(self, workflow_arguments):
         self.workflow_arguments = workflow_arguments
 
-# StatusOptions:
-#     ACCEPTED = "accepted"
-#     EXECUTING = "executing"
-#     PAUSED = "paused"
-#     CANCELING = "canceling"
-#     STOPPED = "stopped"
-
 
     def reset_workflow(self):
         self.set_workflow_parameter(WorkflowParameterOptions.STATIONARY)
@@ -754,6 +750,8 @@ class Operator:
                     self.status = StatusOptions.EXECUTING
                     if not self.agent.execute_uid(uid=self.workflow_arguments["uid"]):
                         self.status = StatusOptions.STOPPED
+                    else:
+                        self.status = StatusOptions.PAUSED
                     self.reset_workflow()
 
             elif self.workflow_parameter == WorkflowParameterOptions.POPULATE_AGENT:
@@ -763,10 +761,24 @@ class Operator:
                     self.status = StatusOptions.ACCEPTED
                     send_response(self.workflow_arguments["original_message_uid"], MessageResponses.PROCESSED)
                     self.reset_workflow()
-            elif self.workflow_parameter == "test_run":
-                tp_popup("Operator is running Test Run", DR_PM_MESSAGE)
-                send_response(self.workflow_arguments["original_message_uid"])
-                self.reset_workflow()
+                    self.status = StatusOptions.READY
+
+            elif self.workflow_parameter == WorkflowParameterOptions.STOP_OPERATIONS:
+                self.status = StatusOptions.CANCELING
+                if self.workflow_arguments:
+                    self.agent.stop_cobot()
+                    self.status = StatusOptions.STOPPED
+                    self.reset_workflow()
+
+            elif self.workflow_parameter == WorkflowParameterOptions.GET_STATUS:
+                if self.workflow_arguments:
+                    send_response(self.workflow_arguments["original_message_uid"], self.status)
+                    self.reset_workflow()
+
+            # elif self.workflow_parameter == "test_run":
+            #     tp_popup("Operator is running Test Run", DR_PM_MESSAGE)
+            #     send_response(self.workflow_arguments["original_message_uid"])
+            #     self.reset_workflow()
             # Any new message type must be added here and in def handle_ros_msg function
             # and in CommandsForRobot class
 
@@ -1324,13 +1336,22 @@ def handle_ros_msg():
                 operator.set_workflow_parameter(WorkflowParameterOptions.POPULATE_AGENT)
             elif msg_str == CommandsForRobot.EXECUTE_SINGLE_OPERATION:
                 workflow_arguments = {"data": message.input_data, "original_message_uid": msg_uid}
-                operator.set_workflow_arguments(message.input_data)
-                operator.set_workflow_parameter(WorkflowParameterOptions.EXECUTE_UID)
-            elif msg_str == "test_message":
-                tp_popup("Test message is being processed", DR_PM_MESSAGE)
-                workflow_arguments = {"data": "random_message", "original_message_uid": msg_uid}
                 operator.set_workflow_arguments(workflow_arguments)
-                operator.set_workflow_parameter("test_run")
+                operator.set_workflow_parameter(WorkflowParameterOptions.EXECUTE_UID)
+            elif msg_str == CommandsForRobot.STOP_OPERATIONS:
+                workflow_arguments = {"stop": message.input_data, "original_message_uid": msg_uid}
+                operator.set_workflow_arguments(workflow_arguments)
+                operator.set_workflow_parameter(WorkflowParameterOptions.STOP_OPERATIONS)
+            elif msg_str == CommandsForRobot.GET_STATUS:
+                workflow_arguments = {"get_status": message.input_data, "original_message_uid": msg_uid}
+                operator.set_workflow_arguments(workflow_arguments)
+                operator.set_workflow_parameter(WorkflowParameterOptions.GET_STATUS)
+            # elif msg_str == "test_message":
+            #     tp_popup("Test message is being processed", DR_PM_MESSAGE)
+            #     workflow_arguments = {"data": "random_message", "original_message_uid": msg_uid}
+            #     operator.set_workflow_arguments(workflow_arguments)
+            #     operator.set_workflow_parameter("test_run")
+            
             # Any new message type must be added here and in operator class
             # and in CommandsForRobot class
     
@@ -5698,7 +5719,12 @@ class cl_agent():
             handle_fastener_str(tf_str, self, TEMPF_TAG)
             tf_str = _find_substring(tf_str, TEMPF_TAG)
 
-    
+
+    def stop_cobot(self):
+        # trigger a safety stop by setting pin 16 to on
+        set_digital_output(16, 1)
+
+
     def execute_uid(self, uid):
         """
         Function that executes an action with a certain uid

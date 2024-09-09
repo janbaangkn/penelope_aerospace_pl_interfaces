@@ -9,7 +9,7 @@ robot_uid = f"{ip_address}/{port}"
 
 tcp_client_thread = threading.Thread(target=run_tcp_client, args=(ip_address, port))
 tcp_client_thread.start()
-message = "test_message"
+message = "get_status"
 
 feedback = send_message(uid=robot_uid, message=message, feedback=True)
 if feedback:
