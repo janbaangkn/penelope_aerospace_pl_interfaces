@@ -91,6 +91,9 @@ DEFAULT_ENCODER = "UTF-8"
 TCP_SPEED_LIMIT = 250
 TCP_ROT_LIMIT = 120
 JOINT_SPEED_LIMIT = [90, 90, 135, 150, 150, 150]
+
+# the home position in joint space
+HOME_POSJ = posj(90,-30,120,0,0,0)
  
 # Standard gaps used to prevent collision during movements
 SAFE_Z_GAP = 5
@@ -333,11 +336,11 @@ class MessageNames:
 
 
 class StatusOptions:
-    IDLE = "idle"
-    MOVING = "moving"
-    EVADING = "evading"
+    ACCEPTED = "accepted"
+    EXECUTING = "executing"
+    PAUSED = "paused"
+    CANCELING = "canceling"
     STOPPED = "stopped"
-    COMPLETED = "completed"
 
 
 class WorkflowParameterOptions:
@@ -695,10 +698,25 @@ def th_run_server():
 
 class Operator:
     def __init__(self):
-        self.status = StatusOptions.IDLE
+        global TCP_SPEED_LIMIT
+        global TCP_ROT_LIMIT
+        global DR_USER_NOM
+        global DR_USER_PROBE
+        global DR_USER_NOM_OPP
+
+        self.status = StatusOptions.PAUSED
         self.agent = cl_agent()
         self.workflow_parameter = WorkflowParameterOptions.STATIONARY
         self.workflow_arguments = None
+
+        set_velx(TCP_SPEED_LIMIT, TCP_ROT_LIMIT)  # The global task velocity is set to ...(mm/sec) and ...(deg/sec).
+        set_accx(120, 20) # The global task acceleration is set to ...(mm/sec2) and ...(deg/sec2).
+        change_operation_speed(100)
+
+        # create the axis systems used throughout the program
+        DR_USER_NOM = create_axis_syst_on_current_position()
+        DR_USER_PROBE = create_axis_syst_on_current_position()
+        DR_USER_NOM_OPP = create_axis_syst_on_current_position()
     
     def update_status(self, status):
         self.status = status
@@ -715,10 +733,16 @@ class Operator:
     def set_workflow_arguments(self, workflow_arguments):
         self.workflow_arguments = workflow_arguments
 
-    def reset_workflow_parameter(self):
-        self.set_workflow_parameter(WorkflowParameterOptions.STATIONARY)
+# StatusOptions:
+#     ACCEPTED = "accepted"
+#     EXECUTING = "executing"
+#     PAUSED = "paused"
+#     CANCELING = "canceling"
+#     STOPPED = "stopped"
 
-    def reset_workflow_arguments(self):
+
+    def reset_workflow(self):
+        self.set_workflow_parameter(WorkflowParameterOptions.STATIONARY)
         self.workflow_arguments = None
 
     def run(self):
@@ -727,22 +751,22 @@ class Operator:
            
             if self.workflow_parameter == WorkflowParameterOptions.EXECUTE_UID:
                 if self.workflow_arguments:
-                    self.agent.execute_uid(uid=self.workflow_arguments["uid"])
-                    self.reset_workflow_arguments
-                    self.reset_workflow_parameter
+                    self.status = StatusOptions.EXECUTING
+                    if not self.agent.execute_uid(uid=self.workflow_arguments["uid"]):
+                        self.status = StatusOptions.STOPPED
+                    self.reset_workflow()
 
             elif self.workflow_parameter == WorkflowParameterOptions.POPULATE_AGENT:
                 if self.workflow_arguments:
                     # data is the xml like string received in the message
                     self.agent.populate_agent(self.workflow_arguments["data"])
+                    self.status = StatusOptions.ACCEPTED
                     send_response(self.workflow_arguments["original_message_uid"], MessageResponses.PROCESSED)
-                    self.reset_workflow_arguments
-                    self.reset_workflow_parameter
+                    self.reset_workflow()
             elif self.workflow_parameter == "test_run":
                 tp_popup("Operator is running Test Run", DR_PM_MESSAGE)
                 send_response(self.workflow_arguments["original_message_uid"])
-                self.reset_workflow_arguments()
-                self.reset_workflow_parameter()
+                self.reset_workflow()
             # Any new message type must be added here and in def handle_ros_msg function
             # and in CommandsForRobot class
 
@@ -7277,15 +7301,7 @@ class cl_action(cl_uid):
     
 ###########################################             START             ###################################################
   
-set_velx(TCP_SPEED_LIMIT, TCP_ROT_LIMIT)  # The global task velocity is set to ...(mm/sec) and ...(deg/sec).
-set_accx(120, 20) # The global task acceleration is set to ...(mm/sec2) and ...(deg/sec2).
-change_operation_speed(100)
 
-# create the axis systems used throughout the program
-DR_USER_NOM = create_axis_syst_on_current_position()
-DR_USER_PROBE = create_axis_syst_on_current_position()
-DR_USER_NOM_OPP = create_axis_syst_on_current_position()
- 
 STOP_SERVER = False
 
 operator = Operator()
@@ -7294,14 +7310,11 @@ operator = Operator()
 server_thread = thread_run(th_run_server, loop=False)
 handler_thread = thread_run(handle_ros_msg, loop=False)
 
+# go to home
+speed_limited_movej_on_posj(HOME_POSJ, 100)
+
 operator.run()
- 
-pos1=posx(0,0,0,0,0,0)
-set_user_cart_coord(pos1, ref=DR_BASE)
-set_user_cart_coord(pos1, ref=DR_BASE)
-set_user_cart_coord(pos1, ref=DR_BASE)
- 
-sync_data_with_PC = True
+
  
 ###########################################
  
@@ -7348,8 +7361,7 @@ sync_data_with_PC = True
 ###########################################
 # product.log_holes_and_fast_lst()
 
-# go to home
-speed_limited_movej_on_posj(posj(90,-30,120,0,0,0), 100)
+
 
 # insert and install a permf from storage to product
 # agent._add_install_tempf_action("A01", "pr_01_01")
@@ -7359,7 +7371,7 @@ speed_limited_movej_on_posj(posj(90,-30,120,0,0,0), 100)
 
 
 # go to home
-speed_limited_movej_on_posj(posj(90,-30,120,0,0,0), 100)
+speed_limited_movej_on_posj(HOME_POSJ, 100)
  
 send_message("end program")
  
