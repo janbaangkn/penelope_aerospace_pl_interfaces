@@ -1,7 +1,6 @@
 from tcp_communication.tcp_client import run_tcp_client
 from tcp_communication.communication_functions import send_message
 from tcp_communication.message_service_class import MessageService
-import time
 import threading
 
 ip_address = "10.237.20.101"
