@@ -723,6 +723,7 @@ class Operator:
     
     def update_status(self, status):
         self.status = status
+        send_message("status_update", self.status)
 
     # Get info from a message and put in workflow parameter
     # The trigger how the message must be treated
@@ -747,27 +748,27 @@ class Operator:
            
             if self.workflow_parameter == WorkflowParameterOptions.EXECUTE_UID:
                 if self.workflow_arguments:
-                    self.status = StatusOptions.EXECUTING
+                    self.update_status(StatusOptions.EXECUTING)
                     if not self.agent.execute_uid(uid=self.workflow_arguments["uid"]):
-                        self.status = StatusOptions.STOPPED
+                        self.update_status(StatusOptions.STOPPED)
                     else:
-                        self.status = StatusOptions.PAUSED
+                        self.update_status(StatusOptions.PAUSED)
                     self.reset_workflow()
 
             elif self.workflow_parameter == WorkflowParameterOptions.POPULATE_AGENT:
                 if self.workflow_arguments:
                     # data is the xml like string received in the message
                     self.agent.populate_agent(self.workflow_arguments["data"])
-                    self.status = StatusOptions.ACCEPTED
+                    self.update_status(StatusOptions.ACCEPTED)
                     send_response(self.workflow_arguments["original_message_uid"], MessageResponses.PROCESSED)
                     self.reset_workflow()
-                    self.status = StatusOptions.READY
+                    self.update_status(StatusOptions.READY)
 
             elif self.workflow_parameter == WorkflowParameterOptions.STOP_OPERATIONS:
-                self.status = StatusOptions.CANCELING
+                self.update_status(StatusOptions.CANCELING)
                 if self.workflow_arguments:
                     self.agent.stop_cobot()
-                    self.status = StatusOptions.STOPPED
+                    self.update_status(StatusOptions.STOPPED)
                     self.reset_workflow()
 
             elif self.workflow_parameter == WorkflowParameterOptions.GET_STATUS:

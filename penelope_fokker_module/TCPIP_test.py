@@ -19,3 +19,7 @@ if feedback:
 #     if MessageService().inboxes.get(robot_uid) and len(MessageService().inboxes.get(robot_uid).messages) > 0:
 #         print(f"Message in inbox: {MessageService().get_inbox_message(robot_uid)}")
 #     time.sleep(0.01)
+
+# add hole locations, stack thickness and diameter in the permanent fastener storage list 
+# uid, diam, stack thickness, nom_pos 
+# agent.tempf_storage.add_loc_to_holes_and_fast_lst("tfst_01", 5, 10, posx(122.4,476.77,38,35,180,-35))
