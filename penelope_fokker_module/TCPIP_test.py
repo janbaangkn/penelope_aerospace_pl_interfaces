@@ -15,11 +15,33 @@ feedback = send_message(uid=robot_uid, message=message, feedback=True)
 if feedback:
     print(f"Feedback: {feedback}")
 
+msg = "populate_agent<"\
+"tempf_storage_loc<"\
+    "uid<tempf_storage>"\
+    "locations<"\
+        "hole_location<"\
+            "uid<tfst_01>"\
+            "max_obstacle_height<40.0>"\
+            "diam<5.0>"\
+            "stack_thickness_tag<10.0>"\
+            "pose<"\
+                "pose_p_x<122.4>"\
+                "pose_p_y<476.77>"\
+                "pose_p_z<38>"\
+                "pose_o_x<35>"\
+                "pose_o_y<180>"\
+                "pose_o_z<-35>"\
+            ">"\
+        ">"\
+    ">"\
+">"
+
+feedback = send_message(uid=robot_uid, message=msg, feedback=True)
+if feedback:
+    print(f"Feedback: {feedback}")
+
 # while True:
 #     if MessageService().inboxes.get(robot_uid) and len(MessageService().inboxes.get(robot_uid).messages) > 0:
 #         print(f"Message in inbox: {MessageService().get_inbox_message(robot_uid)}")
 #     time.sleep(0.01)
 
-# add hole locations, stack thickness and diameter in the permanent fastener storage list 
-# uid, diam, stack thickness, nom_pos 
-# agent.tempf_storage.add_loc_to_holes_and_fast_lst("tfst_01", 5, 10, posx(122.4,476.77,38,35,180,-35))

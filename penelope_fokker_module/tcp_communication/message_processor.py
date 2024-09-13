@@ -18,7 +18,7 @@ class TCPInputProcessor:
 
     def update_raw_input(self, reading_input):
         self.raw_input += reading_input
-        print(f"raw input is set to: {self.raw_input}")
+        #print(f"raw input is set to: {self.raw_input}")
 
     def process_raw_input(self):
         byte_size_length = 4

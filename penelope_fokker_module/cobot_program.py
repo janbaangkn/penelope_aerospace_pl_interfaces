@@ -392,7 +392,6 @@ class TCPOutbox:
     def add_message(cls, message):
         if not isinstance(message, (TCPMessage, TCPResponse)):
             raise MessageTypeError
-        tp_popup("Message: {0} added to Outbox <{1}>".format(message.uid, message.message), DR_PM_MESSAGE)
         tp_log("Message: {0} added to Outbox <{1}>".format(message.uid, message.message))
         cls.messages.append(message)
 
@@ -447,13 +446,12 @@ class TCPInbox:
 
     @classmethod
     def get_response(cls, uid):
-        tp_log("Getting response to message with uid: {0}".format(uid))
+        #tp_log("Getting response to message with uid: {0}".format(uid))
         response = next((msg for msg in cls.responses if msg.response_uid == uid), None)
         if response:
             cls.responses = [msg for msg in cls.responses if msg.uid != response.uid]
-            tp_log("Response to message {0} found: {1}".format(uid, response.message))
-        else:
-            tp_log("No response found for message {0}".format(uid))
+            #tp_log("Response to message {0} found: {1}".format(uid, response.message))
+
         return response
 
     @classmethod
@@ -473,10 +471,11 @@ class TCPInbox:
 
 class TCPMessage:
     def __repr__(self):
-        return "{0} (uid: {1}, message: {2})".format(
+        return "{0} (uid: {1}, message: {2}, input data: {3})".format(
             self.__class__.__name__,
             self.uid,
             self.message,
+            self.input_data
         )
 
     def __init__(self, message, uid, input_data=None, encoder=DEFAULT_ENCODER, response_required=True):
@@ -531,8 +530,9 @@ class TCPInputProcessor:
             byte_size = int(self.raw_input[:byte_size_length].decode(self.encoder))
             if len(self.raw_input) >= byte_size:
                 isolated_message = self.raw_input[:byte_size].decode(self.encoder)
-                tp_popup("Raw data: {0}".format(isolated_message), DR_PM_MESSAGE)
+                tp_log("isolated_message: {0}".format(isolated_message))
                 tcp_message = self.reconstruct_tcp_message(isolated_message)
+                tp_log("tcp_message: {0}".format(tcp_message))
                 TCPInbox().add_message(tcp_message)
                 self.set_raw_input(self.raw_input[byte_size:])
                 self.process_raw_input()
@@ -579,7 +579,6 @@ class DoosanTCPServer:
         try:
             self.socket.sendall(message.encoded)
             tp_log("Message {0} send <{1}>".format(message.uid, message.message))
-            tp_popup(" Message: {0} has been send - message: {1}".format(message.uid, message.message), DR_PM_MESSAGE)
             return 0
         except ConnectionResetError:
             self._reconnect()
@@ -611,7 +610,7 @@ class DoosanTCPServer:
             self._reconnect()
             self._listen()
         elif response > 0:
-            tp_popup("Listening - raw input is being updated: {0}".format(raw_input), DR_PM_MESSAGE)
+            tp_log("Listening - raw input is being updated: {0}".format(raw_input))
             self.input_processor.update_raw_input(raw_input)
             self.input_processor.process_raw_input()
         elif response == -3:
@@ -723,12 +722,12 @@ class Operator:
     
     def update_status(self, status):
         self.status = status
-        send_message("status_update", self.status)
+        send_message("status_updated to " + self.status)
 
     # Get info from a message and put in workflow parameter
     # The trigger how the message must be treated
     def set_workflow_parameter(self, workflow_parameter):
-        tp_popup("workflow parameter is set to: {0}".format(workflow_parameter), DR_PM_MESSAGE)
+        #tp_log("workflow parameter is set to: {0}".format(workflow_parameter))
         self.workflow_parameter = workflow_parameter
 
     # information from the message that is available for the execution of functions
@@ -1329,14 +1328,14 @@ def handle_ros_msg():
             msg_str = message.message
             msg_uid = message.uid
 
-            tp_popup("Message: {0} collected from Inbox".format(msg_str), DR_PM_MESSAGE)
+            tp_log("handle_ros_msg: {0} collected from Inbox: {1}".format(msg_uid, msg_str))
 
             if msg_str == CommandsForRobot.POPULATE_AGENT:
-                workflow_arguments = {"uid": message.input_data, "original_message_uid": msg_uid}
+                workflow_arguments = {"data": message.input_data, "original_message_uid": msg_uid}
                 operator.set_workflow_arguments(workflow_arguments)
                 operator.set_workflow_parameter(WorkflowParameterOptions.POPULATE_AGENT)
             elif msg_str == CommandsForRobot.EXECUTE_SINGLE_OPERATION:
-                workflow_arguments = {"data": message.input_data, "original_message_uid": msg_uid}
+                workflow_arguments = {"uid": message.input_data, "original_message_uid": msg_uid}
                 operator.set_workflow_arguments(workflow_arguments)
                 operator.set_workflow_parameter(WorkflowParameterOptions.EXECUTE_UID)
             elif msg_str == CommandsForRobot.STOP_OPERATIONS:
@@ -1372,6 +1371,10 @@ def handle_container_str(msg_str, agent, cont_type):
     """
     # create the container object
     uid = extract_leaf_content(msg_str, UID_TAG, CLOSE_TAG)
+
+    tp_log("handle_container_str: handling {}".format(uid))
+    #tp_log("max_obstacle_heigth: {}".format(extract_leaf_content(msg_str, MAX_OBST_HEIGHT_TAG, CLOSE_TAG)))
+
     max_obstacle_heigth = float(extract_leaf_content(msg_str, MAX_OBST_HEIGHT_TAG, CLOSE_TAG))
     obj = cl_f_container(uid, max_obstacle_heigth)
 
@@ -1389,7 +1392,9 @@ def handle_container_str(msg_str, agent, cont_type):
     loc_str = _find_substring(locs_str, HOLE_LOCATION_TAG)
     while loc_str is not None:
         loc_uid = extract_leaf_content(loc_str, UID_TAG, CLOSE_TAG)
-        diam = float(extract_leaf_content(loc_str, DIAM_TAG, CLOSE_TAG))         
+        #tp_log("diam: {}".format(extract_leaf_content(loc_str, DIAM_TAG, CLOSE_TAG)))
+        diam = float(extract_leaf_content(loc_str, DIAM_TAG, CLOSE_TAG))   
+        #tp_log("stack_thickness: {}".format(extract_leaf_content(loc_str, STACK_T_TAG, CLOSE_TAG)))    
         stack_thickness = float(extract_leaf_content(loc_str, STACK_T_TAG, CLOSE_TAG))
         nom_pos = _get_posx_from_str(_find_substring(loc_str, POSE_TAG))
     
@@ -1584,14 +1589,22 @@ def _get_posx_from_str(str_in):
    
     :param str_in: str, the string with the position definition.
     """
+    #tp_log("_get_posx_from_str: "+ str_in)
+
     # get the position
+    #tp_log("x: {}".format(extract_leaf_content(str_in, POSE_PX_TAG, CLOSE_TAG)))
     x = float(extract_leaf_content(str_in, POSE_PX_TAG, CLOSE_TAG))
+    #tp_log("y: {}".format(extract_leaf_content(str_in, POSE_PY_TAG, CLOSE_TAG)))
     y = float(extract_leaf_content(str_in, POSE_PY_TAG, CLOSE_TAG))
+    #tp_log("z: {}".format(extract_leaf_content(str_in, POSE_PZ_TAG, CLOSE_TAG)))
     z = float(extract_leaf_content(str_in, POSE_PZ_TAG, CLOSE_TAG))
  
     # Get orientation
+    #tp_log("a: {}".format(extract_leaf_content(str_in, POSE_OX_TAG, CLOSE_TAG)))
     a = float(extract_leaf_content(str_in, POSE_OX_TAG, CLOSE_TAG))
+    #tp_log("b: {}".format(extract_leaf_content(str_in, POSE_OY_TAG, CLOSE_TAG)))
     b = float(extract_leaf_content(str_in, POSE_OY_TAG, CLOSE_TAG))
+    #tp_log("c: {}".format(extract_leaf_content(str_in, POSE_OZ_TAG, CLOSE_TAG)))
     c = float(extract_leaf_content(str_in, POSE_OZ_TAG, CLOSE_TAG))
  
     return posx(x, y, z, a, b, c)
@@ -7399,6 +7412,9 @@ operator.run()
 
 # go to home
 speed_limited_movej_on_posj(HOME_POSJ, 100)
+
+thread_stop(server_thread)
+thread_stop(handler_thread)
  
 send_message("end program")
  
