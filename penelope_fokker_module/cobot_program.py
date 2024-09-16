@@ -595,7 +595,7 @@ class DoosanTCPServer:
                 continue_sending = False
 
     def _reconnect(self):
-        tp_popup("Reconnecting", DR_PM_MESSAGE)
+        tp_log("Reconnecting")
         try:
             server_socket_close(self.socket)
         except:
@@ -626,7 +626,7 @@ class DoosanTCPServer:
         while not STOP_SERVER:
             self._listen()
             self._send_messages()
-        tp_popup("Stopped running server", DR_PM_MESSAGE)
+        tp_log("Stopped running server")
         return 0
 
 
@@ -672,7 +672,7 @@ def send_response(original_message_uid, response="processed", feedback=False):
 		response=response,
 		response_required=feedback,
 	)
-	tp_popup("Response for message: {0} is created: {1}".format(original_message_uid, response), DR_PM_MESSAGE)
+	tp_log("Response for message: {0} is created: {1}".format(original_message_uid, response))
 	TCPOutbox().add_message(tcp_response)
 	if feedback:
 		response = None
@@ -775,12 +775,6 @@ class Operator:
                     send_response(self.workflow_arguments["original_message_uid"], self.status)
                     self.reset_workflow()
 
-            # elif self.workflow_parameter == "test_run":
-            #     tp_popup("Operator is running Test Run", DR_PM_MESSAGE)
-            #     send_response(self.workflow_arguments["original_message_uid"])
-            #     self.reset_workflow()
-            # Any new message type must be added here and in def handle_ros_msg function
-            # and in CommandsForRobot class
 
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 # functions to build string messages to be sent to the server
@@ -1346,11 +1340,6 @@ def handle_ros_msg():
                 workflow_arguments = {"get_status": message.input_data, "original_message_uid": msg_uid}
                 operator.set_workflow_arguments(workflow_arguments)
                 operator.set_workflow_parameter(WorkflowParameterOptions.GET_STATUS)
-            # elif msg_str == "test_message":
-            #     tp_popup("Test message is being processed", DR_PM_MESSAGE)
-            #     workflow_arguments = {"data": "random_message", "original_message_uid": msg_uid}
-            #     operator.set_workflow_arguments(workflow_arguments)
-            #     operator.set_workflow_parameter("test_run")
             
             # Any new message type must be added here and in operator class
             # and in CommandsForRobot class
@@ -1574,7 +1563,7 @@ def handle_execution_str(msg_str, agent):
     :param msg_id: str Unique reference to original message
     """
     a_uid = extract_leaf_content(msg_str, UID_TAG, CLOSE_TAG)
-    tp_popup("message received. about to execute {}".format(a_uid), DR_PM_MESSAGE)
+    tp_log("message received. about to execute {}".format(a_uid))
     agent.execute_uid(a_uid)
 
     #TODO Ronald: add workflow parameter to allow messages during execution (e.g. stop msg)
