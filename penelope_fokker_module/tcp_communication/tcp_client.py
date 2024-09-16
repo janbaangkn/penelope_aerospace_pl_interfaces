@@ -32,7 +32,7 @@ class TCPClient:
     def _send_message(self, message):
         try:
             self.socket.sendall(message.encoded)
-            print("message is send: {0}".format(message))
+            #print("message is send: {0}".format(message))
             return 0
         except ConnectionResetError:
             self._reconnect()
@@ -43,7 +43,7 @@ class TCPClient:
         while continue_sending:
             message = MessageService().get_outbox_message(uid=self.uid)
             if message:
-                print("Sending message: {0} <{1}>".format(message.uid, message.message))
+                #print("Sending message: {0} <{1}>".format(message.uid, message.message))
                 self._send_message(message)
             else:
                 return 0

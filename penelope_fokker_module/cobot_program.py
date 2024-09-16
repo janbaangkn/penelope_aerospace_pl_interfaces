@@ -7355,61 +7355,6 @@ speed_limited_movej_on_posj(HOME_POSJ, 100)
 
 operator.run()
 
- 
-###########################################
- 
-# instantiate the end effector
-# pf_ee = cl_perm_fast_ee()
-# tf_ee = cl_temp_fast_ee()
- 
-# ###########################################
- 
-# # create a class that contains all actions
-# agent = cl_agent(None, None, None, pf_ee, tf_ee)
-    
-# # send_message("start program")
- 
-# # create a class that contains all available storage locations
-# agent.tempf_storage = cl_f_container("tempf_storage")
-# agent.permf_storage = cl_f_container("permf_storage")
- 
-# add hole locations, stack thickness and diameter in the permanent fastener storage list 
-# uid, diam, stack thickness, nom_pos 
-# agent.tempf_storage.add_loc_to_holes_and_fast_lst("tfst_01", 5, 10, posx(122.4,476.77,38,35,180,-35))
- 
-# # add permanent fastener in storage
-# # uid, loc uid, fast_install_pos, diam, shaft height, min stack, max stack, tcp_tip_dist, tcp_top_dist, in_storage, in_ee, in_product, in_bin, is_tempf
-# agent.tempf_storage.add_fast_to_loc_with_uid("tempf_01", "tfst_01", None, 5 , DIAM_5_SHAFT_HEIGHT,DIAM_5_MIN_STACK, DIAM_5_MAX_STACK,DIAM_5_TCP_TIP_DIST, DIAM_5_TCP_TOP_DIST,True, False, False, False, True)
-
-# # create a class that contains all available hole positions in the product
-# agent.product = cl_f_container("product")
- 
-# # add hole locations, stack thickness and diameter in the product list 
-# agent.product.add_loc_to_holes_and_fast_lst("pr_01_01", 5, 9, posx(-162,796,1155,89.16,75.8,-158.73))
-# agent.product.add_loc_to_holes_and_fast_lst("pr_01_02", 5, 9, posx(-126.5,796,1155,89.16,75.8,-158.73))
-# agent.product.add_loc_to_holes_and_fast_lst("pr_01_03", 5, 9, posx(-92,796,1155,89.16,75.8,-158.73))
-# agent.product.add_loc_to_holes_and_fast_lst("pr_01_04", 5, 9, posx(-56,796,1154.5,89.16,75.8,-158.73))
-# agent.product.add_loc_to_holes_and_fast_lst("pr_01_05", 5, 9, posx(-10,796,1154.5,89.16,75.8,-158.73))
-# agent.product.add_loc_to_holes_and_fast_lst("pr_01_06", 5, 9, posx(25.5,796,1154,89.16,75.8,-158.73))
-# agent.product.add_loc_to_holes_and_fast_lst("pr_01_07", 5, 9, posx(60,796,1154,89.16,75.8,-158.73))
-# agent.product.add_loc_to_holes_and_fast_lst("pr_01_08", 5, 9, posx(96,796,1154,89.16,75.8,-158.73))
-
-# add permanent fastener in the product
-# uid, loc uid, fast_install_pos, diam, shaft height, min stack, max stack, tcp_tip_dist, tcp_top_dist, in_storage, in_ee, in_product, in_bin, is_tempf
-#agent.product.add_fast_to_loc_with_uid("tempf_01", "pr_01_01", None, 5 , DIAM_5_SHAFT_HEIGHT,DIAM_5_MIN_STACK, DIAM_5_MAX_STACK,DIAM_5_TCP_TIP_DIST, DIAM_5_TCP_TOP_DIST,False, False, True, False, True)
-
-###########################################
-# product.log_holes_and_fast_lst()
-
-
-
-# insert and install a permf from storage to product
-# agent._add_install_tempf_action("A01", "pr_01_01")
-# agent._add_remove_tempf_action("A02", "pr_01_01")
-
-# agent.execute_all(check_inventory = False)
-
-
 # go to home
 speed_limited_movej_on_posj(HOME_POSJ, 100)
 

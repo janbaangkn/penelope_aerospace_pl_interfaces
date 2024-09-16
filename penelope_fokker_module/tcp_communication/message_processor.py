@@ -26,7 +26,7 @@ class TCPInputProcessor:
             byte_size = int(self.raw_input[:byte_size_length].decode(self.encoder))
             if len(self.raw_input) >= byte_size:
                 isolated_message = self.raw_input[:byte_size].decode(self.encoder)
-                print(f"Raw incoming message: {isolated_message}")
+                #print(f"Raw incoming message: {isolated_message}")
                 tcp_message = self.reconstruct_tcp_message(isolated_message)
                 MessageService().add_inbox_message(self.uid, tcp_message)
                 self.set_raw_input(self.raw_input[byte_size:])
