@@ -1421,16 +1421,16 @@ def handle_action_str(msg_str, agent):
     using a message string and adds a return to the queue_out
    
     Supported types (a_type)
-    if a_type == 1: ACTION_TYPE_MOVE_WAYPOINT = "move_to_waypoint"  
-    if a_type == 2: ACTION_TYPE_INSTALL_PERMF = "install_permf" 
-    if a_type == 3: ACTION_TYPE_INSTALL_TEMPF = "install_tempf" 
-    if a_type == 4: ACTION_TYPE_REMOVE_TEMPF = "remove_fastener" 
-    
+    ACTION_TYPE_MOVE_WAYPOINT = "move_to_waypoint" 
+    ACTION_TYPE_INSTALL_PERMF = "install_permf"     
+    ACTION_TYPE_INSTALL_TEMPF = "install_tempf"     
+    ACTION_TYPE_REMOVE_TEMPF = "remove_fastener"   
+
     :param msg_str: str, the string from the ROS server to modify the agent instance.
     :param agent: cl_agent, the agent instance to be modified.
     :param msg_id: str Unique reference to original message
     """
-    a_type = int(extract_leaf_content(msg_str, A_TYPE_TAG, CLOSE_TAG))
+    a_type = extract_leaf_content(msg_str, A_TYPE_TAG, CLOSE_TAG)
     a_uid = extract_leaf_content(msg_str, UID_TAG, CLOSE_TAG)
     a_loc_uid = extract_leaf_content(msg_str, LOC_UID_TAG, CLOSE_TAG)
    
@@ -1457,23 +1457,22 @@ def handle_action_str(msg_str, agent):
     else:
         raise Exception("Unknown state encountered in handle_action_str in action with uid {}.".format(a_uid))
    
-    a_speed = float(extract_leaf_content(msg_str, SPEED_TAG, CLOSE_TAG))
+    a_speed = int(extract_leaf_content(msg_str, SPEED_TAG, CLOSE_TAG))
  
-    if a_type == 1:
+    if a_type == "move_to_waypoint":
         agent._add_move_to_waypoint_action(a_uid, a_loc_uid, a_is_done, a_speed)  
-    if a_type == 2:
+    if a_type == "install_permf":
         agent._add_install_permf_action(a_uid, a_loc_uid, a_is_done, a_speed)
-    if a_type == 3:
+    if a_type == "install_tempf":
         agent._add_install_tempf_action(a_uid, a_loc_uid, a_is_done, a_speed)
-    if a_type == 4:
+    if a_type == "remove_fastener":
         agent._add_remove_tempf_action(a_uid, a_loc_uid, a_is_done, a_speed)
  
+    action = agent._get_from_lst_by_uid(agent.actions, a_uid, "", False)
     if a_is_cancelled:
-        action = agent._get_from_lst_by_uid(agent.actions, a_uid, "", False)
         action.set_as_cancelled()
  
     if a_is_waiting:
-        action = agent._get_from_lst_by_uid(agent.actions, a_uid, "", False)
         action.set_as_waiting()
  
     passing_lst = []
@@ -5791,7 +5790,7 @@ class cl_agent():
         :return: bool, returns True if successful
         """
         w = self.get_waypoint_by_uid(wp_uid)
-        change_operation_speed(speed)
+        change_operation_speed(int(speed))
         if wait:
             movel(w, ref=DR_BASE, r = BLEND_RADIUS_LARGE)
         else:
@@ -5895,7 +5894,7 @@ class cl_agent():
         :return: bool, returns True if successful
         """
         # go to intended speed
-        change_operation_speed(speed)
+        change_operation_speed(int(speed))
 
         prod_lst_id = self.product.get_loc_lst_id_by_uid(target_loc_uid)
        
@@ -6530,7 +6529,7 @@ class cl_agent():
         reqd_ratio = 0.1 #Was 0.2
               
         task_compliance_ctrl(comp)
-        change_operation_speed(speed)
+        change_operation_speed(int(speed))
         movel(posx(0,0,GLOBAL_CLEARANCE_DURING_MOVEMENTS+SAFE_Z_GAP+SAFE_Z_GAP-fast.shaft_height()+2,0,0,0),ref=DR_TOOL)      
         
         wait(0.5)
@@ -7121,7 +7120,7 @@ class cl_action(cl_uid):
     Class that describes a fastener action
     """
    
-    def __init__(self, uid, a_type, loc_uid, is_done, speed = 100.0):
+    def __init__(self, uid, a_type, loc_uid, is_done, speed = 100):
         """
         Initiation of the action.
        
@@ -7325,7 +7324,7 @@ class cl_action(cl_uid):
        
         :param s: float, the percentage of maximum speed
         """
-        self.__speed = s
+        self.__speed = int(s)
        
     
 ###########################################             START             ###################################################

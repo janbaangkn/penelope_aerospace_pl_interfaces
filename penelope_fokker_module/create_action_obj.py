@@ -2,10 +2,9 @@
 import re  
 import math
 import numpy as np
+import get_str_function
 
 from geometry_msgs.msg import Pose
-
-from .get_str_function import *
 
 from penelope_aerospace_pl_msgs.msg import AssemblyAction
 from penelope_aerospace_pl_msgs.msg import AssemblyActionState
@@ -247,8 +246,17 @@ def _get_action_from_str(c_str):
     # ACTION_TYPE_INSTALL_PERMF = 2 
     # ACTION_TYPE_INSTALL_TEMPF = 3  
     # ACTION_TYPE_REMOVE_TEMPF = 4  
-    obj.a_type = AssemblyActionType(extract_leaf_content(c_str, get_str_function.A_TYPE_TAG, get_str_function.CLOSE_TAG))
 
+    a_type_str = extract_leaf_content(c_str, get_str_function.A_TYPE_TAG, get_str_function.CLOSE_TAG)
+    if a_type_str == get_str_function.ACTION_TYPE_MOVE_WAYPOINT_STR:
+        obj.a_type = AssemblyActionType(1)  
+    if a_type_str == get_str_function.ACTION_TYPE_INSTALL_PERMF_STR:
+        obj.a_type = AssemblyActionType(2)
+    if a_type_str == get_str_function.ACTION_TYPE_INSTALL_TEMPF_STR:
+        obj.a_type = AssemblyActionType(3)
+    if a_type_str == get_str_function.ACTION_TYPE_REMOVE_TEMPF_STR:
+        obj.a_type = AssemblyActionType(4)
+    
     # get the 'loc_uid': 'string',
     obj.loc_uid = extract_leaf_content(c_str, get_str_function.LOC_UID_TAG, get_str_function.CLOSE_TAG)
 

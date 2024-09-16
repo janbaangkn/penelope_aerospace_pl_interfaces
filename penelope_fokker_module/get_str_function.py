@@ -61,6 +61,11 @@ END_EFFECTOR_STATE_TAG = "end_effector_state" + OPEN_TAG
 END_EFFECTOR_UID_TAG = "end_effector_uid" + OPEN_TAG
 EXECUTE_TAG = "execute" + OPEN_TAG
 
+ACTION_TYPE_MOVE_WAYPOINT_STR = "move_to_waypoint" 
+ACTION_TYPE_INSTALL_PERMF_STR = "install_permf"     
+ACTION_TYPE_INSTALL_TEMPF_STR = "install_tempf"     
+ACTION_TYPE_REMOVE_TEMPF_STR = "remove_fastener"   
+
 
 def quaternion_to_R_matrix(quaternion):
     """Return rotation matrix from quaternion.
@@ -358,7 +363,16 @@ def _get_action_to_cobot_str(action_in):
     # ACTION_TYPE_INSTALL_PERMF = 2  
     # ACTION_TYPE_INSTALL_TEMPF = 3  
     # ACTION_TYPE_REMOVE_TEMPF = 4 
-    str_ = str_ + A_TYPE_TAG + str(action_in.a_type) + CLOSE_TAG
+    action_int = action_in.a_type
+
+    if action_int == 1:
+        str_ = str_ + A_TYPE_TAG + ACTION_TYPE_MOVE_WAYPOINT_STR + CLOSE_TAG
+    if action_int == 2:
+        str_ = str_ + A_TYPE_TAG + ACTION_TYPE_INSTALL_PERMF_STR + CLOSE_TAG
+    if action_int == 3:
+        str_ = str_ + A_TYPE_TAG + ACTION_TYPE_INSTALL_TEMPF_STR + CLOSE_TAG
+    if action_int == 4:
+        str_ = str_ + A_TYPE_TAG + ACTION_TYPE_REMOVE_TEMPF_STR + CLOSE_TAG
 
     # string loc_uid: uid of the target location of the object
     str_ = str_ + LOC_UID_TAG + action_in.loc_uid + CLOSE_TAG
