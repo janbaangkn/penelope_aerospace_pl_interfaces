@@ -28,11 +28,11 @@ msg = "populate_agent<"\
             "stack_thickness_tag<10.0>"\
             "pose<"\
                 "pose_p_x<68.5>"\
-                "pose_p_y<493>"\
-                "pose_p_z<38>"\
-                "pose_o_x<71>"\
-                "pose_o_y<180>"\
-                "pose_o_z<0>"\
+                "pose_p_y<493.0>"\
+                "pose_p_z<38.0>"\
+                "pose_o_x<71.0>"\
+                "pose_o_y<180.0>"\
+                "pose_o_z<0.0>"\
             ">"\
         ">"\
         "hole_location<"\
@@ -42,11 +42,11 @@ msg = "populate_agent<"\
             "stack_thickness_tag<10.0>"\
             "pose<"\
                 "pose_p_x<104.5>"\
-                "pose_p_y<493>"\
-                "pose_p_z<38>"\
-                "pose_o_x<71>"\
-                "pose_o_y<180>"\
-                "pose_o_z<0>"\
+                "pose_p_y<493.0>"\
+                "pose_p_z<38.0>"\
+                "pose_o_x<71.0>"\
+                "pose_o_y<180.0>"\
+                "pose_o_z<0.0>"\
             ">"\
         ">"\
         "hole_location<"\
@@ -56,11 +56,11 @@ msg = "populate_agent<"\
             "stack_thickness_tag<10.0>"\
             "pose<"\
                 "pose_p_x<140.5>"\
-                "pose_p_y<493>"\
-                "pose_p_z<38>"\
-                "pose_o_x<71>"\
-                "pose_o_y<180>"\
-                "pose_o_z<0>"\
+                "pose_p_y<493.0>"\
+                "pose_p_z<38.0>"\
+                "pose_o_x<71.0>"\
+                "pose_o_y<180.0>"\
+                "pose_o_z<0.0>"\
             ">"\
         ">"\
         "hole_location<"\
@@ -69,12 +69,12 @@ msg = "populate_agent<"\
             "diam<5.0>"\
             "stack_thickness_tag<10.0>"\
             "pose<"\
-                "pose_p_x<177>"\
-                "pose_p_y<493>"\
-                "pose_p_z<38>"\
-                "pose_o_x<71>"\
-                "pose_o_y<180>"\
-                "pose_o_z<0>"\
+                "pose_p_x<177.0>"\
+                "pose_p_y<493.0>"\
+                "pose_p_z<38.0>"\
+                "pose_o_x<71.0>"\
+                "pose_o_y<180.0>"\
+                "pose_o_z<0.0>"\
             ">"\
         ">"\
         "hole_location<"\
@@ -84,11 +84,11 @@ msg = "populate_agent<"\
             "stack_thickness_tag<10.0>"\
             "pose<"\
                 "pose_p_x<68.5>"\
-                "pose_p_y<457>"\
-                "pose_p_z<38>"\
-                "pose_o_x<71>"\
-                "pose_o_y<180>"\
-                "pose_o_z<0>"\
+                "pose_p_y<457.0>"\
+                "pose_p_z<38.0>"\
+                "pose_o_x<71.0>"\
+                "pose_o_y<180.0>"\
+                "pose_o_z<0.0>"\
             ">"\
         ">"\
         "hole_location<"\
@@ -98,11 +98,11 @@ msg = "populate_agent<"\
             "stack_thickness_tag<10.0>"\
             "pose<"\
                 "pose_p_x<104.5>"\
-                "pose_p_y<457>"\
-                "pose_p_z<38>"\
-                "pose_o_x<71>"\
-                "pose_o_y<180>"\
-                "pose_o_z<0>"\
+                "pose_p_y<457.0>"\
+                "pose_p_z<38.0>"\
+                "pose_o_x<71.0>"\
+                "pose_o_y<180.0>"\
+                "pose_o_z<0.0>"\
             ">"\
         ">"\
         "hole_location<"\
@@ -112,11 +112,11 @@ msg = "populate_agent<"\
             "stack_thickness_tag<10.0>"\
             "pose<"\
                 "pose_p_x<140.5>"\
-                "pose_p_y<457>"\
-                "pose_p_z<38>"\
-                "pose_o_x<71>"\
-                "pose_o_y<180>"\
-                "pose_o_z<0>"\
+                "pose_p_y<457.0>"\
+                "pose_p_z<38.0>"\
+                "pose_o_x<71.0>"\
+                "pose_o_y<180.0>"\
+                "pose_o_z<0.0>"\
             ">"\
         ">"\
         "hole_location<"\
@@ -125,12 +125,12 @@ msg = "populate_agent<"\
             "diam<5.0>"\
             "stack_thickness_tag<10.0>"\
             "pose<"\
-                "pose_p_x<177>"\
-                "pose_p_y<457>"\
-                "pose_p_z<38>"\
-                "pose_o_x<71>"\
-                "pose_o_y<180>"\
-                "pose_o_z<0>"\
+                "pose_p_x<177.0>"\
+                "pose_p_y<457.0>"\
+                "pose_p_z<38.0>"\
+                "pose_o_x<71.0>"\
+                "pose_o_y<180.0>"\
+                "pose_o_z<0.0>"\
             ">"\
         ">"\
         "hole_location<"\
@@ -140,11 +140,11 @@ msg = "populate_agent<"\
             "stack_thickness_tag<10.0>"\
             "pose<"\
                 "pose_p_x<68.5>"\
-                "pose_p_y<421>"\
-                "pose_p_z<38>"\
-                "pose_o_x<71>"\
-                "pose_o_y<180>"\
-                "pose_o_z<0>"\
+                "pose_p_y<421.0>"\
+                "pose_p_z<38.0>"\
+                "pose_o_x<71.0>"\
+                "pose_o_y<180.0>"\
+                "pose_o_z<0.0>"\
             ">"\
         ">"\
         "hole_location<"\
@@ -154,11 +154,11 @@ msg = "populate_agent<"\
             "stack_thickness_tag<10.0>"\
             "pose<"\
                 "pose_p_x<104.5>"\
-                "pose_p_y<421>"\
-                "pose_p_z<38>"\
-                "pose_o_x<71>"\
-                "pose_o_y<180>"\
-                "pose_o_z<0>"\
+                "pose_p_y<421.0>"\
+                "pose_p_z<38.0>"\
+                "pose_o_x<71.0>"\
+                "pose_o_y<180.0>"\
+                "pose_o_z<0.0>"\
             ">"\
         ">"\
         "hole_location<"\
@@ -168,11 +168,11 @@ msg = "populate_agent<"\
             "stack_thickness_tag<10.0>"\
             "pose<"\
                 "pose_p_x<140.5>"\
-                "pose_p_y<421>"\
-                "pose_p_z<38>"\
-                "pose_o_x<71>"\
-                "pose_o_y<180>"\
-                "pose_o_z<0>"\
+                "pose_p_y<421.0>"\
+                "pose_p_z<38.0>"\
+                "pose_o_x<71.0>"\
+                "pose_o_y<180.0>"\
+                "pose_o_z<0.0>"\
             ">"\
         ">"\
         "hole_location<"\
@@ -181,12 +181,12 @@ msg = "populate_agent<"\
             "diam<5.0>"\
             "stack_thickness_tag<10.0>"\
             "pose<"\
-                "pose_p_x<177>"\
-                "pose_p_y<421>"\
-                "pose_p_z<38>"\
-                "pose_o_x<71>"\
-                "pose_o_y<180>"\
-                "pose_o_z<0>"\
+                "pose_p_x<177.0>"\
+                "pose_p_y<421.0>"\
+                "pose_p_z<38.0>"\
+                "pose_o_x<71.0>"\
+                "pose_o_y<180.0>"\
+                "pose_o_z<0.0>"\
             ">"\
         ">"\
     ">"\
@@ -332,115 +332,45 @@ msg = "populate_agent<"\
     "uid<product>"\
     "locations<"\
         "hole_location<"\
-            "uid<pr_01_01>"\
+            "uid<left_drill_jig_01>"\
             "max_obstacle_height<40.0>"\
             "diam<5.0>"\
             "stack_thickness_tag<9.0>"\
             "pose<"\
-                "pose_p_x<-162.0>"\
-                "pose_p_y<796.0>"\
-                "pose_p_z<1155.0>"\
-                "pose_o_x<89.16>"\
-                "pose_o_y<75.8>"\
-                "pose_o_z<-158.73>"\
+                "pose_p_x<11.0>"\
+                "pose_p_y<794.0>"\
+                "pose_p_z<1105.0>"\
+                "pose_o_x<90.0>"\
+                "pose_o_y<75.0>"\
+                "pose_o_z<0.0>"\
             ">"\
         ">"\
         "hole_location<"\
-            "uid<pr_01_02>"\
+            "uid<left_drill_jig_08>"\
             "max_obstacle_height<40.0>"\
             "diam<5.0>"\
             "stack_thickness_tag<9.0>"\
             "pose<"\
-                "pose_p_x<-126.5>"\
-                "pose_p_y<796.0>"\
-                "pose_p_z<1155.0>"\
-                "pose_o_x<89.16>"\
-                "pose_o_y<75.8>"\
-                "pose_o_z<-158.73>"\
+                "pose_p_x<13.5>"\
+                "pose_p_y<859.0>"\
+                "pose_p_z<892.0>"\
+                "pose_o_x<90.0>"\
+                "pose_o_y<69.0>"\
+                "pose_o_z<0.0>"\
             ">"\
         ">"\
         "hole_location<"\
-            "uid<pr_01_03>"\
+            "uid<left_drill_jig_15>"\
             "max_obstacle_height<40.0>"\
             "diam<5.0>"\
             "stack_thickness_tag<9.0>"\
             "pose<"\
-                "pose_p_x<-92.0>"\
-                "pose_p_y<796.0>"\
-                "pose_p_z<1155.0>"\
-                "pose_o_x<89.16>"\
-                "pose_o_y<75.8>"\
-                "pose_o_z<-158.73>"\
-            ">"\
-        ">"\
-        "hole_location<"\
-            "uid<pr_01_04>"\
-            "max_obstacle_height<40.0>"\
-            "diam<5.0>"\
-            "stack_thickness_tag<9.0>"\
-            "pose<"\
-                "pose_p_x<-56.0>"\
-                "pose_p_y<796.0>"\
-                "pose_p_z<1154.0>"\
-                "pose_o_x<89.16>"\
-                "pose_o_y<75.8>"\
-                "pose_o_z<-158.73>"\
-            ">"\
-        ">"\
-        "hole_location<"\
-            "uid<pr_01_05>"\
-            "max_obstacle_height<40.0>"\
-            "diam<5.0>"\
-            "stack_thickness_tag<9.0>"\
-            "pose<"\
-                "pose_p_x<-10.0>"\
-                "pose_p_y<796.0>"\
-                "pose_p_z<1154.0>"\
-                "pose_o_x<89.16>"\
-                "pose_o_y<75.8>"\
-                "pose_o_z<-158.73>"\
-            ">"\
-        ">"\
-        "hole_location<"\
-            "uid<pr_01_06>"\
-            "max_obstacle_height<40.0>"\
-            "diam<5.0>"\
-            "stack_thickness_tag<9.0>"\
-            "pose<"\
-                "pose_p_x<25.5>"\
-                "pose_p_y<796.0>"\
-                "pose_p_z<1154.0>"\
-                "pose_o_x<89.16>"\
-                "pose_o_y<75.8>"\
-                "pose_o_z<-158.73>"\
-            ">"\
-        ">"\
-        "hole_location<"\
-            "uid<pr_01_07>"\
-            "max_obstacle_height<40.0>"\
-            "diam<5.0>"\
-            "stack_thickness_tag<9.0>"\
-            "pose<"\
-                "pose_p_x<60.0>"\
-                "pose_p_y<796.0>"\
-                "pose_p_z<1154.0>"\
-                "pose_o_x<89.16>"\
-                "pose_o_y<75.8>"\
-                "pose_o_z<-158.73>"\
-            ">"\
-        ">"\
-        "hole_location<"\
-            "uid<pr_01_08>"\
-            "max_obstacle_height<40.0>"\
-            "diam<5.0>"\
-            "stack_thickness_tag<9.0>"\
-            "pose<"\
-                "pose_p_x<96.0>"\
-                "pose_p_y<796.0>"\
-                "pose_p_z<1154.0>"\
-                "pose_o_x<89.16>"\
-                "pose_o_y<75.8>"\
-                "pose_o_z<-158.73>"\
+                "pose_p_x<16.5>"\
+                "pose_p_y<949.0>"\
+                "pose_p_z<687.0>"\
+                "pose_o_x<90.0>"\
+                "pose_o_y<63.0>"\
+                "pose_o_z<0.0>"\
             ">"\
         ">"\
     ">"\
@@ -456,14 +386,21 @@ msg = "populate_agent<"\
     "action<"\
         "uid<A01>"\
         "action_type<install_tempf>"\
-        "loc_uid<pr_01_01>"\
+        "loc_uid<left_drill_jig_01>"\
         "action_state<1>"\
         "speed<100>"\
     ">"\
     "action<"\
         "uid<A02>"\
         "action_type<remove_fastener>"\
-        "loc_uid<pr_01_01>"\
+        "loc_uid<left_drill_jig_08>"\
+        "action_state<1>"\
+        "speed<100>"\
+    ">"\
+        "action<"\
+        "uid<A03>"\
+        "action_type<remove_fastener>"\
+        "loc_uid<left_drill_jig_15>"\
         "action_state<1>"\
         "speed<100>"\
     ">"\
