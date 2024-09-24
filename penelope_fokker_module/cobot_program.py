@@ -702,9 +702,6 @@ class Operator:
     def __init__(self):
         global TCP_SPEED_LIMIT
         global TCP_ROT_LIMIT
-        global DR_USER_NOM
-        global DR_USER_PROBE
-        global DR_USER_NOM_OPP
 
         self.status = StatusOptions.PAUSED
         self.agent = cl_agent()
@@ -714,18 +711,7 @@ class Operator:
         set_velx(TCP_SPEED_LIMIT, TCP_ROT_LIMIT)  # The global task velocity is set to ...(mm/sec) and ...(deg/sec).
         set_accx(120, 20) # The global task acceleration is set to ...(mm/sec2) and ...(deg/sec2).
         change_operation_speed(100)
-
-        temp_pos=posx(0,0,0,0,0,0)
-        # create the axis systems used throughout the program
-        DR_USER_NOM = create_axis_syst_on_current_position()
-        set_user_cart_coord(temp_pos, ref=DR_BASE)
-
-        DR_USER_PROBE = create_axis_syst_on_current_position()
-        set_user_cart_coord(temp_pos, ref=DR_BASE)
-
-        DR_USER_NOM_OPP = create_axis_syst_on_current_position()
-        set_user_cart_coord(temp_pos, ref=DR_BASE)
-        
+      
     
     def update_status(self, status):
         self.status = status
@@ -3322,13 +3308,13 @@ class cl_temp_fast_ee:
             else:
                
                 # Exit the function with an error
-                tp_popup("Trying to install a fastener using PR" + program + ". Pin not connected.", DR_PM_WARNING)
+                tp_log("Trying to install a fastener using PR" + program + ". Pin not connected.")
                 self.reset_output_pins()
                 return False                                                  
         else:
             
             # exit the function with an error
-            tp_popup("No proper fastener program selected. Number has to be 1-8", DR_PM_WARNING)
+            tp_log("No proper fastener program selected. Number has to be 1-8")
             self.reset_output_pins()
             return False 
     
@@ -4617,6 +4603,8 @@ class cl_fastener(cl_fastener_location):
            
         # get the current position of the TCP (tip of the fastener)
         insert_pos, sol = get_current_posx(ref=DR_BASE)
+
+        overwrite_user_cart_coord(DR_USER_NOM, insert_pos, ref=DR_BASE)
        
         if self.in_ee():
             delta = -self.__tcp_tip_distance
@@ -4639,6 +4627,7 @@ class cl_fastener(cl_fastener_location):
         Calculate and store the distance in the xy plane of DR_USER_NOM between
         the installed position and the corrected position.
         This can be used to estimate the accuracy of the correction.
+        ATTENTION DR_USER_NOM must be set
         """
         cp = coord_transform(self.__corrected_pos, DR_BASE, DR_USER_NOM)
         ci = coord_transform(self.__installed_pos, DR_BASE, DR_USER_NOM)
@@ -4653,7 +4642,8 @@ class cl_fastener(cl_fastener_location):
         """
         Calculate and store the distance in the z-dir of DR_USER_NOM between
         the installed position and the corrected position.
-       This can be used to estimate the accuracy of the correction.
+        This can be used to estimate the accuracy of the correction.
+        ATTENTION DR_USER_NOM must be set
         """
         cp = coord_transform(self.__corrected_pos, DR_BASE, DR_USER_NOM)
         ci = coord_transform(self.__installed_pos, DR_BASE, DR_USER_NOM)
@@ -6290,7 +6280,6 @@ class cl_agent():
             return False
        
         if is_untightened:
-           
             # let the fast know its new location, will also change the TCP
             fast.set_as_in_ee()
         else:
@@ -6945,7 +6934,7 @@ class cl_agent():
         if self._get_waypoint_by_uid(uid, False) is None:
             for w in self.waypoints:
                 if get_distance(w.pos(), pos) < 3 * BLEND_RADIUS_LARGE:
-                    tp_popup("distance between waypoints to small.\nWill cause problems with blend radius.")
+                    tp_log("distance between waypoints to small.\nWill cause problems with blend radius.")
             self.waypoints.append(cl_waypoint(uid, pos))
             return True
         else:
@@ -7338,6 +7327,15 @@ class cl_action(cl_uid):
   
 
 STOP_SERVER = False
+
+# create the axis systems used throughout the program
+DR_USER_NOM = create_axis_syst_on_current_position()
+DR_USER_PROBE = create_axis_syst_on_current_position()
+DR_USER_NOM_OPP = create_axis_syst_on_current_position()
+pos1=posx(0,0,0,0,0,0)
+set_user_cart_coord(pos1, ref=DR_BASE)
+set_user_cart_coord(pos1, ref=DR_BASE)
+set_user_cart_coord(pos1, ref=DR_BASE)
 
 operator = Operator()
 
