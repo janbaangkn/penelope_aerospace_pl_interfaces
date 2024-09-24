@@ -2022,50 +2022,51 @@ def move_into_hole(fast):
     #             stop(DR_SSTOP)
  
     #Misschien moet dit wel als eerst. Gewoon geen periodic/spiral in gat gebruiken is het beste.
+    # DISABLED BECAUSE NO ROOM TO DO THIS WITH THE DRILL JIG IN PLACE
     #Probing and last try
-    if not in_hole:
-        #tp_popup("start failure 3")
-        release_force()
+    # if not in_hole:
+    #     #tp_popup("start failure 3")
+    #     release_force()
        
-        #Uit gat en re-orienteren
-        change_operation_speed(20)
-        movel(posx(0, 0, -5, 0, 0, 0), ref=DR_USER_NOM)
-        change_operation_speed(60)
+    #     #Uit gat en re-orienteren
+    #     change_operation_speed(20)
+    #     movel(posx(0, 0, -5, 0, 0, 0), ref=DR_USER_NOM)
+    #     change_operation_speed(60)
    
-        #Start re-orientatie / probing
-        probe_hole_axis_syst(fast)
+    #     #Start re-orientatie / probing
+    #     probe_hole_axis_syst(fast)
        
-        release_compliance_ctrl()
+    #     release_compliance_ctrl()
        
-        set_ref_coord(DR_USER_PROBE)
+    #     set_ref_coord(DR_USER_PROBE)
        
-        movel(posx(0, 0, -20, 0, 0, 0), ref=DR_USER_NOM)
+    #     movel(posx(0, 0, -20, 0, 0, 0), ref=DR_USER_NOM)
        
-        # use xy of Pos_stuck, otherwise it can potentially use a misaligned xy value
-        movel(posx(Pos_stuck[0], Pos_stuck[1], -5, 0, 0, 0), ref=DR_USER_PROBE)
+    #     # use xy of Pos_stuck, otherwise it can potentially use a misaligned xy value
+    #     movel(posx(Pos_stuck[0], Pos_stuck[1], -5, 0, 0, 0), ref=DR_USER_PROBE)
        
-        #Alles hierna moet dan in nieuwe REF + moet weer in CSK, en in hole etc.
+    #     #Alles hierna moet dan in nieuwe REF + moet weer in CSK, en in hole etc.
        
-        #Try insertion again
-        task_compliance_ctrl([20000,20000,20000,400,400,400])
+    #     #Try insertion again
+    #     task_compliance_ctrl([20000,20000,20000,400,400,400])
                     
-        set_desired_force([0, 0, 11, 0, 0, 0], [0, 0, 1, 0, 0, 0])
+    #     set_desired_force([0, 0, 11, 0, 0, 0], [0, 0, 1, 0, 0, 0])
         
-        wait(0.1)
+    #     wait(0.1)
        
-        task_compliance_ctrl(INSERTION_COMPLIANCE)
+    #     task_compliance_ctrl(INSERTION_COMPLIANCE)
        
-        set_desired_force([0, 0, INSERTION_FORCE + f_z0, 0, 0, 0], [0, 0, 1, 0, 0, 0])
+    #     set_desired_force([0, 0, INSERTION_FORCE + f_z0, 0, 0, 0], [0, 0, 1, 0, 0, 0])
        
-        t0 = time.time()
+    #     t0 = time.time()
        
-        #Loop to check z-forces during insertion and position
-        while not in_hole and (time.time() - t0) < 10:
-           p0, sol = get_current_posx(ref=DR_USER_NOM)
-           in_hole = p0[2] > z_stop
+    #     #Loop to check z-forces during insertion and position
+    #     while not in_hole and (time.time() - t0) < 10:
+    #        p0, sol = get_current_posx(ref=DR_USER_NOM)
+    #        in_hole = p0[2] > z_stop
        
-           f_z = get_tool_forces_in_tool()[2]
-           reached_force = abs(f_z - f_z0) > 0.9 * INSERTION_FORCE
+    #        f_z = get_tool_forces_in_tool()[2]
+    #        reached_force = abs(f_z - f_z0) > 0.9 * INSERTION_FORCE
    
     t0 = time.time()
    
