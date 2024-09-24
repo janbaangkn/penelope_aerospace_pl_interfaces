@@ -6326,14 +6326,14 @@ class cl_agent():
             #TODO check whether the fastener is in
             in_ee = True 
         
-        
         # change to move speed
         change_operation_speed(MOVE_SPEED)
         
-        if is_permf:
-            storage_height = 40
-        else:
+        # extra height that is needed for the permf storage location receiving cylinder
+        if is_tempf:
             storage_height = 0
+        else:
+            storage_height = 40
 
         # move away from storage
         movel(posx(0, 0, -fast.shaft_height() - SAFE_Z_GAP - storage_height, 0, 0, 0), ref=DR_TOOL, r = BLEND_RADIUS_SMALL)
