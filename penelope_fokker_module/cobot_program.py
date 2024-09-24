@@ -5773,7 +5773,7 @@ class cl_agent():
             if succes:
                 a.set_as_done()
  
-        return_str = actions_str_to_server(agent.actions)
+        return_str = actions_str_to_server(self.actions)
  
         send_message("", return_str)
        
