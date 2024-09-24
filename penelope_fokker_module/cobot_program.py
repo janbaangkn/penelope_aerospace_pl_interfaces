@@ -91,9 +91,6 @@ DEFAULT_ENCODER = "UTF-8"
 TCP_SPEED_LIMIT = 250
 TCP_ROT_LIMIT = 120
 JOINT_SPEED_LIMIT = [90, 90, 135, 150, 150, 150]
-
-# the home position in joint space
-HOME_POSJ = posj(90,-30,120,0,0,0)
  
 # Standard gaps used to prevent collision during movements
 SAFE_Z_GAP = 5
@@ -315,6 +312,7 @@ class StatusInputError(Exception):
 
 class CommandsForRobot:
     POPULATE_AGENT = "populate_agent"
+    GOTO_HOME = "goto_home"
     EXECUTE_SINGLE_OPERATION = "execute_single_operation"
     STOP_OPERATIONS = "stop_operations"
     GET_STATUS = "get_status"
@@ -347,6 +345,7 @@ class StatusOptions:
 class WorkflowParameterOptions:
     STATIONARY = "stationary"
     POPULATE_AGENT = "populate_agent"
+    GOTO_HOME = "goto_home"
     EXECUTE_UID = "execute_uid"
     STOP_OPERATIONS = "stop_operations"
     GET_STATUS = "get_status"
@@ -364,6 +363,7 @@ class MessageUID:
 	use of class variables.
 	"""
     value = 0
+    identifier = COBOT_IDENTIFIER
 
     def __repr__(self):
         return "{0}".format(self.__class__.__name__)
@@ -371,7 +371,7 @@ class MessageUID:
     @classmethod
     def get_new_uid(cls):
         cls.value += 1
-        return cls.value
+        return "{0}{1}".format(cls.identifier, cls.value)
 
     @classmethod
     def reset(cls):
@@ -765,6 +765,13 @@ class Operator:
 
             elif self.workflow_parameter == WorkflowParameterOptions.GET_STATUS:
                 if self.workflow_arguments:
+                    send_response(self.workflow_arguments["original_message_uid"], self.status)
+                    self.reset_workflow()
+
+            elif self.workflow_parameter == WorkflowParameterOptions.GOTO_HOME:
+                if self.workflow_arguments:
+                    self.update_status(StatusOptions.EXECUTING)
+                    speed_limited_movej_on_posj(HOME_POSJ, 100)
                     send_response(self.workflow_arguments["original_message_uid"], self.status)
                     self.reset_workflow()
 
@@ -1333,6 +1340,10 @@ def handle_ros_msg():
                 workflow_arguments = {"get_status": message.input_data, "original_message_uid": msg_uid}
                 operator.set_workflow_arguments(workflow_arguments)
                 operator.set_workflow_parameter(WorkflowParameterOptions.GET_STATUS)
+            elif msg_str == CommandsForRobot.GOTO_HOME:
+                workflow_arguments = {"data": message.input_data, "original_message_uid": msg_uid}
+                operator.set_workflow_arguments(workflow_arguments)
+                operator.set_workflow_parameter(WorkflowParameterOptions.GOTO_HOME)
             
             # Any new message type must be added here and in operator class
             # and in CommandsForRobot class
@@ -1803,7 +1814,9 @@ def move_into_hole(fast):
     # Def Reevaluate_deviations()
     # Def get_weighted_pos_dev()
     # Def calc_and_set_corrected_pos()
-
+    
+    task_compliance_ctrl([20000,20000,20000,400,400,400])
+    
     #move to the side of the hole
     movel(posx(10, 0, -SAFE_Z_GAP, 0, 0, 0), ref=DR_USER_NOM)
     
@@ -1938,7 +1951,7 @@ def move_into_hole(fast):
     t0 = time.time()
    
     #Loop to check z-forces during insertion and position
-    while not in_hole and (time.time() - t0) < 5:
+    while not in_hole and (time.time() - t0) < 10:
         p0, sol = get_current_posx(ref=DR_USER_NOM)
         in_hole = p0[2] > z_stop
    
@@ -2042,7 +2055,7 @@ def move_into_hole(fast):
         t0 = time.time()
        
         #Loop to check z-forces during insertion and position
-        while not in_hole and (time.time() - t0) < 5:
+        while not in_hole and (time.time() - t0) < 10:
            p0, sol = get_current_posx(ref=DR_USER_NOM)
            in_hole = p0[2] > z_stop
        
@@ -6311,9 +6324,14 @@ class cl_agent():
         
         # change to move speed
         change_operation_speed(MOVE_SPEED)
-       
+        
+        if is_permf:
+            storage_height = 40
+        else:
+            storage_height = 0
+
         # move away from storage
-        movel(posx(0, 0, -fast.shaft_height() - SAFE_Z_GAP, 0, 0, 0), ref=DR_TOOL, r = BLEND_RADIUS_SMALL)
+        movel(posx(0, 0, -fast.shaft_height() - SAFE_Z_GAP - storage_height, 0, 0, 0), ref=DR_TOOL, r = BLEND_RADIUS_SMALL)
        
         # return the success
         return in_ee
@@ -7325,8 +7343,11 @@ class cl_action(cl_uid):
     
 ###########################################             START             ###################################################
   
-
+# the home position in joint space
+HOME_POSJ = posj(90,-30,120,0,0,0)          # home for tempf
+#HOME_POSJ = posj(90,-10,125,260,-115,155)  # home for permf
 STOP_SERVER = False
+COBOT_IDENTIFIER = "tf"
 
 # create the axis systems used throughout the program
 DR_USER_NOM = create_axis_syst_on_current_position()

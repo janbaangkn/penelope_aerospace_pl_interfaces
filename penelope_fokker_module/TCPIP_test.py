@@ -4,16 +4,35 @@ from tcp_communication.message_service_class import MessageService
 import threading
 import time
 
-ip_address = "10.237.20.101"
-port = 20002
-robot_uid = f"{ip_address}/{port}"
+tf_ip_address = "10.237.20.101"
+tf_port = 20002
+tf_cobot_uid = f"{tf_ip_address}/{tf_port}"
+tf_tcp_client_thread = threading.Thread(target=run_tcp_client, args=(tf_ip_address, tf_port))
+tf_tcp_client_thread.start()
 
-tcp_client_thread = threading.Thread(target=run_tcp_client, args=(ip_address, port))
-tcp_client_thread.start()
+pf_ip_address = "10.237.20.103"
+pf_port = 20002
+pf_cobot_uid = f"{pf_ip_address}/{pf_port}"
+pf_tcp_client_thread = threading.Thread(target=run_tcp_client, args=(pf_ip_address, pf_port))
+pf_tcp_client_thread.start()
+
 message = "get_status"
 
-feedback = send_message(uid=robot_uid, message=message, feedback=True)
+feedback = send_message(uid=tf_cobot_uid, message=message, feedback=True)
 print(f"Feedback: {feedback}")
+
+feedback = send_message(uid=pf_cobot_uid, message=message, feedback=True)
+print(f"Feedback: {feedback}")
+
+# go to home
+feedback = send_message(uid=tf_cobot_uid, message="goto_home", feedback=True)
+if feedback:
+    print(f"Feedback: {feedback}")
+
+# go to home
+feedback = send_message(uid=pf_cobot_uid, message="goto_home", feedback=True)
+if feedback:
+    print(f"Feedback: {feedback}")
 
 # add hole locations, stack thickness and diameter in the permanent fastener storage list 
 msg = "populate_agent<"\
@@ -191,7 +210,7 @@ msg = "populate_agent<"\
     ">"\
 ">"
 
-feedback = send_message(uid=robot_uid, message=msg, feedback=True)
+feedback = send_message(uid=tf_cobot_uid, message=msg, feedback=True)
 if feedback:
     print(f"Feedback: {feedback}")
 
@@ -330,7 +349,7 @@ msg = "populate_agent<"\
     ">"\
 ">"
 
-feedback = send_message(uid=robot_uid, message=msg, feedback=True)
+feedback = send_message(uid=tf_cobot_uid, message=msg, feedback=True)
 if feedback:
     print(f"Feedback: {feedback}")
 
@@ -461,7 +480,7 @@ msg = "populate_agent<"\
     ">"\
 ">"
 
-feedback = send_message(uid=robot_uid, message=msg, feedback=True)
+feedback = send_message(uid=tf_cobot_uid, message=msg, feedback=True)
 if feedback:
     print(f"Feedback: {feedback}")
 
@@ -550,17 +569,22 @@ msg = "populate_agent<"\
     ">"\
 ">"
 
-feedback = send_message(uid=robot_uid, message=msg, feedback=True)
+feedback = send_message(uid=tf_cobot_uid, message=msg, feedback=True)
 if feedback:
     print(f"Feedback: {feedback}")
 
 # execute operation with uid
-feedback = send_message(uid=robot_uid, message="execute_single_operation<A01>", feedback=True)
+feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<A01>", feedback=True)
+if feedback:
+    print(f"Feedback: {feedback}")
+
+# go to home
+feedback = send_message(uid=tf_cobot_uid, message="goto_home", feedback=True)
 if feedback:
     print(f"Feedback: {feedback}")
 
 while True:
-    if MessageService().inboxes.get(robot_uid) and len(MessageService().inboxes.get(robot_uid).messages) > 0:
-        print(f"Message in inbox: {MessageService().get_inbox_message(robot_uid)}")
+    if MessageService().inboxes.get(tf_cobot_uid) and len(MessageService().inboxes.get(tf_cobot_uid).messages) > 0:
+        print(f"Message in inbox: {MessageService().get_inbox_message(tf_cobot_uid)}")
     time.sleep(0.01)
 
