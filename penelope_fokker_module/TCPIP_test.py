@@ -10,29 +10,29 @@ tf_cobot_uid = f"{tf_ip_address}/{tf_port}"
 tf_tcp_client_thread = threading.Thread(target=run_tcp_client, args=(tf_ip_address, tf_port))
 tf_tcp_client_thread.start()
 
-pf_ip_address = "10.237.20.103"
-pf_port = 20002
-pf_cobot_uid = f"{pf_ip_address}/{pf_port}"
-pf_tcp_client_thread = threading.Thread(target=run_tcp_client, args=(pf_ip_address, pf_port))
-pf_tcp_client_thread.start()
+# pf_ip_address = "10.237.20.103"
+# pf_port = 20002
+# pf_cobot_uid = f"{pf_ip_address}/{pf_port}"
+# pf_tcp_client_thread = threading.Thread(target=run_tcp_client, args=(pf_ip_address, pf_port))
+# pf_tcp_client_thread.start()
 
 message = "get_status"
 
 feedback = send_message(uid=tf_cobot_uid, message=message, feedback=True)
 print(f"Feedback: {feedback}")
 
-feedback = send_message(uid=pf_cobot_uid, message=message, feedback=True)
-print(f"Feedback: {feedback}")
+# feedback = send_message(uid=pf_cobot_uid, message=message, feedback=True)
+# print(f"Feedback: {feedback}")
 
 # go to home
 feedback = send_message(uid=tf_cobot_uid, message="goto_home", feedback=True)
 if feedback:
     print(f"Feedback: {feedback}")
 
-# go to home
-feedback = send_message(uid=pf_cobot_uid, message="goto_home", feedback=True)
-if feedback:
-    print(f"Feedback: {feedback}")
+# # go to home
+# feedback = send_message(uid=pf_cobot_uid, message="goto_home", feedback=True)
+# if feedback:
+#     print(f"Feedback: {feedback}")
 
 # add hole locations, stack thickness and diameter in the permanent fastener storage list 
 msg = "populate_agent<"\
