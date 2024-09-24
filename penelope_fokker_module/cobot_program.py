@@ -87,6 +87,11 @@ start_time = time.time()
 BYTES_MSG_LENGTH  = 4
 
 DEFAULT_ENCODER = "UTF-8"
+COBOT_IDENTIFIER = "tf"
+
+# the home position in joint space
+HOME_POSJ = posj(90,-30,120,0,0,0)          # home for tempf
+#HOME_POSJ = posj(90,-10,125,260,-115,155)  # home for permf
 
 TCP_SPEED_LIMIT = 250
 TCP_ROT_LIMIT = 120
@@ -7343,11 +7348,8 @@ class cl_action(cl_uid):
     
 ###########################################             START             ###################################################
   
-# the home position in joint space
-HOME_POSJ = posj(90,-30,120,0,0,0)          # home for tempf
-#HOME_POSJ = posj(90,-10,125,260,-115,155)  # home for permf
+
 STOP_SERVER = False
-COBOT_IDENTIFIER = "tf"
 
 # create the axis systems used throughout the program
 DR_USER_NOM = create_axis_syst_on_current_position()
