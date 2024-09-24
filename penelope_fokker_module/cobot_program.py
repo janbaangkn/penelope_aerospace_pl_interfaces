@@ -7367,13 +7367,7 @@ operator = Operator()
 server_thread = thread_run(th_run_server, loop=False)
 handler_thread = thread_run(handle_ros_msg, loop=False)
 
-# go to home
-speed_limited_movej_on_posj(HOME_POSJ, 100)
-
 operator.run()
-
-# go to home
-speed_limited_movej_on_posj(HOME_POSJ, 100)
 
 thread_stop(server_thread)
 thread_stop(handler_thread)
