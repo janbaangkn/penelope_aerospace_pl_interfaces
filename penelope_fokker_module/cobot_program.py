@@ -715,10 +715,17 @@ class Operator:
         set_accx(120, 20) # The global task acceleration is set to ...(mm/sec2) and ...(deg/sec2).
         change_operation_speed(100)
 
+        temp_pos=posx(0,0,0,0,0,0)
         # create the axis systems used throughout the program
         DR_USER_NOM = create_axis_syst_on_current_position()
+        set_user_cart_coord(temp_pos, ref=DR_BASE)
+
         DR_USER_PROBE = create_axis_syst_on_current_position()
+        set_user_cart_coord(temp_pos, ref=DR_BASE)
+
         DR_USER_NOM_OPP = create_axis_syst_on_current_position()
+        set_user_cart_coord(temp_pos, ref=DR_BASE)
+        
     
     def update_status(self, status):
         self.status = status
