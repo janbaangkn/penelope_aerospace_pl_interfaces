@@ -5487,7 +5487,7 @@ class cl_f_container(cl_uid):
             if ht.has_fast():
                 if ht.fast.uid() == uid:
                     return i
-        send_message("get_loc_lst_id_by_uid____unable to find a fastener or location with uid {}.".format(uid))
+        send_message("get_loc_lst_id_by_uid____unable to find a fastener or location with uid {} in {}.".format(uid, self.uid()))
         return -1
        
     
@@ -5718,7 +5718,7 @@ class cl_agent():
             action_str = _find_substring(actions_str, ACTION_TAG)
             while action_str is not None:
                 handle_action_str(action_str, self)
-                action_str = _find_substring(action_str, ACTIONS_TAG)
+                action_str = _find_substring(action_str, ACTION_TAG)
 
         # holes to be drilled
         # NOT IMPLEMENTED YET
