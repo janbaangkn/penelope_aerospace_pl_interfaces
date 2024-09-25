@@ -3015,7 +3015,7 @@ class cl_temp_fast_ee:
         Maximum time in seconds of the removal per program.
         Note PR2 is slower, so takes more time
         ATTENTION: maximum time allowed in the end effector controller is 10sec"""
-        self.REM_TIME = (5,10,5,5,5,5,5,5)
+        self.REM_TIME = (7,10,5,5,5,5,5,5)
        
         
         """
