@@ -328,6 +328,7 @@ class CommandsFromRobot:
 
 class MessageResponses:
     PROCESSED = "processed"
+    FAILED = "failed"
 
 
 class MessageNames:
@@ -748,7 +749,9 @@ class Operator:
                     self.update_status(StatusOptions.EXECUTING)
                     if not self.agent.execute_uid(uid=self.workflow_arguments["uid"]):
                         self.update_status(StatusOptions.STOPPED)
+                        send_response(self.workflow_arguments["original_message_uid"], MessageResponses.FAILED)
                     else:
+                        send_response(self.workflow_arguments["original_message_uid"], MessageResponses.PROCESSED)
                         self.update_status(StatusOptions.PAUSED)
                     self.reset_workflow()
 
@@ -765,6 +768,7 @@ class Operator:
                 self.update_status(StatusOptions.CANCELING)
                 if self.workflow_arguments:
                     self.agent.stop_cobot()
+                    send_response(self.workflow_arguments["original_message_uid"], MessageResponses.PROCESSED)
                     self.update_status(StatusOptions.STOPPED)
                     self.reset_workflow()
 
@@ -1823,7 +1827,7 @@ def move_into_hole(fast):
     task_compliance_ctrl([20000,20000,20000,400,400,400])
     
     #move to the side of the hole
-    movel(posx(10, 0, -SAFE_Z_GAP, 0, 0, 0), ref=DR_USER_NOM)
+    movel(posx(7, 0, -SAFE_Z_GAP, 0, 0, 0), ref=DR_USER_NOM)
     
     #Compliance mode and force control
     task_compliance_ctrl(PROBE_COMPLIANCE)
@@ -1842,16 +1846,12 @@ def move_into_hole(fast):
 
     z_comp = z0[2]
 
-    movel(posx(10, 0, z_comp-SAFE_Z_GAP, 0, 0, 0), ref=DR_USER_NOM)
+    movel(posx(7, 0, z_comp-SAFE_Z_GAP, 0, 0, 0), ref=DR_USER_NOM)
     movel(posx(0, 0, z_comp-SAFE_Z_GAP, 0, 0, 0), ref=DR_USER_NOM)
     movel(posx(0, 0, z_comp, 0, 0, 0), ref=DR_USER_NOM)
 
     z_stop = fast.tcp_tip_distance() * 0.95 + z_comp
     CSK_stop = fast.tcp_tip_distance() * 0.05 + z_comp
- 
-    #wait a bit to get a good force reading
-    wait(0.15)
-    f_x0, f_y0, f_z0 = get_tool_forces_in_nom()
  
     # set the values to allow the while loop to start
     in_hole = False
@@ -1878,7 +1878,7 @@ def move_into_hole(fast):
         in_CSK = p0[2] > CSK_stop
  
         f_z = get_tool_forces_in_tool()[2]
-        reached_force = abs(f_z - f_z0) > 0.9 * INSERTION_FORCE
+        reached_force = abs(f_z) > 0.9 * INSERTION_FORCE
            
         if reached_force:
             # this could be the impuls from a collision
@@ -1887,12 +1887,12 @@ def move_into_hole(fast):
                    
             # check if the force is still there
             f_z = get_tool_forces_in_tool()[2]
-            reached_force = abs(f_z - f_z0) > 0.9 * INSERTION_FORCE
+            reached_force = abs(f_z) > 0.9 * INSERTION_FORCE
             if reached_force:
                 stop(DR_SSTOP)
                 break
    
-    send_message("move_into_hole____in_CSK={0}, reached_force={1},z_pos = {2}, z_stop={3}".format(in_CSK,reached_force,p0[2],CSK_stop))
+    send_message("move_into_hole____in_CSK={0}, reached_force={1},z_pos = {2}, CSK_stop={3}".format(in_CSK,reached_force,p0[2],CSK_stop))
    
     # Failure, not in CSK
     if not in_CSK:
@@ -1917,7 +1917,7 @@ def move_into_hole(fast):
                        
                 # check if the force is still there
                 f_z = get_tool_forces_in_tool()[2]
-                reached_force = abs(f_z - f_z0) > 0.9 * INSERTION_FORCE
+                reached_force = abs(f_z) > 0.9 * INSERTION_FORCE
                 if reached_force:
                     stop(DR_SSTOP)
                     break
@@ -1951,7 +1951,7 @@ def move_into_hole(fast):
     task_compliance_ctrl(INSERTION_COMPLIANCE)
    
     #send_message("move_into_hole____starting final set_desired_force in CSK")
-    set_desired_force([0, 0, INSERTION_FORCE + f_z0, 0, 0, 0], [0, 0, 1, 0, 0, 0])
+    set_desired_force([0, 0, INSERTION_FORCE, 0, 0, 0], [0, 0, 1, 0, 0, 0])
    
     t0 = time.time()
    
@@ -1961,7 +1961,7 @@ def move_into_hole(fast):
         in_hole = p0[2] > z_stop
    
         f_z = get_tool_forces_in_tool()[2]
-        reached_force = abs(f_z - f_z0) > 0.9 * INSERTION_FORCE
+        reached_force = abs(f_z) > 0.9 * INSERTION_FORCE
     
     send_message("move_into_hole____in_hole={0}, reached_force={1},".format(in_hole,reached_force))
                
@@ -1978,7 +1978,7 @@ def move_into_hole(fast):
     #     movel(posx(0,0,-5,0,0,0), ref=DR_TOOL, mod= DR_MV_MOD_ABS)
        
     #     #Set force control       
-    #     set_desired_force([0, 0, INSERTION_FORCE + f_z0, 0, 0, 0], [0, 0, 1, 0, 0, 0])
+    #     set_desired_force([0, 0, INSERTION_FORCE, 0, 0, 0], [0, 0, 1, 0, 0, 0])
        
     #     #Periodic move to find the correct a & b orientation
     #     amove_periodic(amp = [0,0,0,1,2.12,0], period = [0,0,0,1,1,0], repeat = 4, ref = DR_USER_NOM)
@@ -2006,7 +2006,7 @@ def move_into_hole(fast):
     #     movel(posx(0,0,-5,0,0,0), ref=DR_TOOL, mod= DR_MV_MOD_ABS)
        
     #     #Set force control
-    #     set_desired_force([0, 0, INSERTION_FORCE + f_z0, 0, 0, 0], [0, 0, 1, 0, 0, 0])
+    #     set_desired_force([0, 0, INSERTION_FORCE, 0, 0, 0], [0, 0, 1, 0, 0, 0])
        
     #     #Spiral move
     #     amove_spiral(rev= 4, rmax= 0.1, time= 4, axis= DR_AXIS_Z, ref= DR_USER_NOM)
@@ -2056,7 +2056,7 @@ def move_into_hole(fast):
        
     #     task_compliance_ctrl(INSERTION_COMPLIANCE)
        
-    #     set_desired_force([0, 0, INSERTION_FORCE + f_z0, 0, 0, 0], [0, 0, 1, 0, 0, 0])
+    #     set_desired_force([0, 0, INSERTION_FORCE, 0, 0, 0], [0, 0, 1, 0, 0, 0])
        
     #     t0 = time.time()
        
@@ -2066,14 +2066,14 @@ def move_into_hole(fast):
     #        in_hole = p0[2] > z_stop
        
     #        f_z = get_tool_forces_in_tool()[2]
-    #        reached_force = abs(f_z - f_z0) > 0.9 * INSERTION_FORCE
+    #        reached_force = abs(f_z) > 0.9 * INSERTION_FORCE
    
     t0 = time.time()
    
     #Loop to ensure correct position of fastener
     while not reached_force and (time.time() - t0) < 5:
         f_x, f_y, f_z = get_tool_forces_in_nom()
-        reached_force = abs(f_z) > 0.85 * abs(INSERTION_FORCE + f_z0)           
+        reached_force = abs(f_z) > 0.85 * abs(INSERTION_FORCE)           
                     
     release_force()
  
@@ -5776,7 +5776,9 @@ class cl_agent():
  
         return_str = actions_str_to_server(self.actions)
  
-        send_message("", return_str)
+        send_message(return_str)
+
+        return succes
        
         
     def execute_all(self, check_inventory = True):

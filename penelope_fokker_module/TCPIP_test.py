@@ -16,14 +16,6 @@ tf_tcp_client_thread.start()
 # pf_tcp_client_thread = threading.Thread(target=run_tcp_client, args=(pf_ip_address, pf_port))
 # pf_tcp_client_thread.start()
 
-message = "get_status"
-
-feedback = send_message(uid=tf_cobot_uid, message=message, feedback=True)
-print(f"Feedback: {feedback}")
-
-# feedback = send_message(uid=pf_cobot_uid, message=message, feedback=True)
-# print(f"Feedback: {feedback}")
-
 # go to home
 feedback = send_message(uid=tf_cobot_uid, message="goto_home", feedback=True)
 if feedback:
@@ -228,7 +220,7 @@ msg = "populate_agent<"\
             "pose<"\
                 "pose_p_x<11.0>"\
                 "pose_p_y<838.0>"\
-                "pose_p_z<1117.5>"\
+                "pose_p_z<1113.5>"\
                 "pose_o_x<90.0>"\
                 "pose_o_y<75.0>"\
                 "pose_o_z<0.0>"\
@@ -484,7 +476,7 @@ feedback = send_message(uid=tf_cobot_uid, message=msg, feedback=True)
 if feedback:
     print(f"Feedback: {feedback}")
 
-# add ten actions
+# add ten actions....not yet execute them
 # 01: install a tempf in left_drill_jig_01
 # 02: remove tempf from left_drill_jig_01
 # 03: remove tempf from left_drill_jig_08
@@ -583,6 +575,17 @@ feedback = send_message(uid=tf_cobot_uid, message="goto_home", feedback=True)
 if feedback:
     print(f"Feedback: {feedback}")
 
+# execute operation with uid
+feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<A02>", feedback=True)
+if feedback:
+    print(f"Feedback: {feedback}")
+
+# go to home
+feedback = send_message(uid=tf_cobot_uid, message="goto_home", feedback=True)
+if feedback:
+    print(f"Feedback: {feedback}")
+
+# keep listening
 while True:
     if MessageService().inboxes.get(tf_cobot_uid) and len(MessageService().inboxes.get(tf_cobot_uid).messages) > 0:
         print(f"Message in inbox: {MessageService().get_inbox_message(tf_cobot_uid)}")
