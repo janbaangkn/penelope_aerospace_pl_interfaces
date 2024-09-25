@@ -3337,7 +3337,7 @@ class cl_temp_fast_ee:
             self.reset_output_pins()
             return False 
     
-    def engagement_burst(self, program = BURST_PROGRAM, in_tight_dir = False, duration = 0.8):
+    def engagement_burst(self, program = BURST_PROGRAM, in_tight_dir = False, duration = 1.0):
         """
         function to make a short rotation burst to help engagement of the end
         effector with the fastener.
@@ -6710,9 +6710,6 @@ class cl_agent():
 
         # Set DR_TOOL as ref coordinate to ensure that the desired forces are in the too axis system
         set_ref_coord(DR_TOOL)
-
-        # Get a reference force because a force can already be present (example: hanging cables)
-        f_z0 = get_tool_forces_in_tool()[2]
             
         # The following prevents drifting of the Cobot position
         task_compliance_ctrl([20000,20000,20000,400,400,400])
@@ -6721,7 +6718,7 @@ class cl_agent():
 
         # set the correct complance and speed
         task_compliance_ctrl(comp)
-        set_desired_force([0, 0, force + f_z0, 0, 0, 0], [0, 0, 1, 0, 0, 0])
+        set_desired_force([0, 0, force, 0, 0, 0], [0, 0, 1, 0, 0, 0])
 
         t0 = time.time()
 
@@ -6731,7 +6728,7 @@ class cl_agent():
         while not reached_max_time and not reached_pos:
             
             f_z = get_tool_forces_in_tool()[2]
-            reached_force = abs(f_z - f_z0) > 0.9 * force
+            reached_force = abs(f_z) > 0.9 * force
             
             if reached_force:
                 # this could be the impuls from a collision
@@ -6740,7 +6737,7 @@ class cl_agent():
                 
                 # check if the force is still there
                 f_z = get_tool_forces_in_tool()[2]
-                reached_force = abs(f_z - f_z0) > 0.9 * force
+                reached_force = abs(f_z) > 0.9 * force
                 if reached_force:
                     break
             r_i = fast.get_install_ratio()
@@ -6788,7 +6785,7 @@ class cl_agent():
 
             while not reached_max_time:
                 f_z = get_tool_forces_in_tool()[2]
-                reached_force = abs(f_z - f_z0) > 0.9 * force
+                reached_force = abs(f_z) > 0.9 * force
                 
                 reached_max_time = (time.time() - t0) > 5
                 if reached_force and reached_pos:
@@ -6797,11 +6794,11 @@ class cl_agent():
         if reached_pos:
             if reached_force:
                 send_message("engage_tempf____did reach force and position when engaging fastener {}\n".format(fast.uid()) +
-                            "force in tool z-direction is {} and {} at the start.\n".format(f_z, f_z0) +
+                            "force in tool z-direction is {}.\n".format(f_z) +
                             "install ratio is {}; time is {}.".format(r_i, (time.time() - t0)))
             else:
                 send_message("engage_tempf____did not reach force but reached position when engaging fastener {}\n".format(fast.uid()) +
-                            "force in tool z-direction is {} and {} at the start.\n".format(f_z, f_z0) +
+                            "force in tool z-direction is {}.\n".format(f_z) +
                             "install ratio is {}; time is {}.".format(r_i, (time.time() - t0)))
             
             # let the system know the fastener is in the ee
@@ -6811,11 +6808,11 @@ class cl_agent():
         else:
             if reached_force:
                 send_message("engage_tempf____reached force but not reached position when engaging fastener {}\n".format(fast.uid()) +
-                        "force in tool z-direction is {} and {} at the start.\n".format(f_z, f_z0) +
+                        "force in tool z-direction is {}.\n".format(f_z) +
                         "install ratio is {}; time is {}.".format(r_i, (time.time() - t0)))
             else:
                 send_message("engage_tempf____did not reach force or position when engaging fastener {}\n".format(fast.uid()) +
-                        "force in tool z-direction is {} and {} at the start.\n".format(f_z, f_z0) +
+                        "force in tool z-direction is {}.\n".format(f_z) +
                         "install ratio is {}; time is {}.".format(r_i, (time.time() - t0)))
 
             # discard the fastener and let the system know the fastener is in the ee
