@@ -5752,6 +5752,16 @@ class cl_agent():
         :return: bool, returns True if successful
         """
         a = self._get_from_lst_by_uid(self.actions, uid, "", False)
+
+        # catch the case that there is no action with that uid
+        if a is None:
+            send_message("execute____Action with uid {} could not be found.".format(a.uid()))
+            action_lst = "available actions are: "
+            for a in self.actions:
+                action_lst = action_lst + a.uid() + ", " 
+
+            send_message(action_lst)
+            return False
            
         if a.is_cancelled():
             a.set_as_not_cancelled()
