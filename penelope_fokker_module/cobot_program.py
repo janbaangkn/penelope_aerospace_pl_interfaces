@@ -2330,7 +2330,7 @@ def retract_tempf(tempf, ee, retract = True):
 
         overwrite_user_cart_coord(DR_USER_PROBE, current_pos)
 
-        bp0, bp1, bp2, up0, up1, up2 = probe(start_pos = posx(10, 0, 0, 0, 0, 0), tighten = True, ee = ee)
+        bp0, bp1, bp2, up0, up1, up2 = probe(start_pos = posx(7, 0, 0, 0, 0, 0), tighten = True, ee = ee)
 
         # the ee cannot move forward more than 10mm if there is a fastener
         return up2 < 10 
@@ -6009,7 +6009,7 @@ class cl_agent():
        
         # get the fastener object that needs to be removed
         tempf = self.product.holes_and_fast_lst[prod_lst_id].fast
-       
+
         # find an empty spot with the correct diameter in the storage location
         storage_loc_id = self.tempf_storage.find_empty_spot_of_diam(tempf.diam())
         
