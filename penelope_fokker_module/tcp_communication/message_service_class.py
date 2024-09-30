@@ -139,7 +139,7 @@ class TCPInbox:
         if not isinstance(message, (TCPMessage, TCPResponse)):
             raise MessageTypeError
         
-        print(f"Message {message.uid} added to inbox: {message.message}")
+        print(f"Message {message.uid}: {message.message}")
 
         if isinstance(message, TCPResponse):
             self.responses.append(message)

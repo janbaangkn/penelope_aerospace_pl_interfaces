@@ -87,7 +87,7 @@ start_time = time.time()
 BYTES_MSG_LENGTH  = 4
 
 DEFAULT_ENCODER = "UTF-8"
-COBOT_IDENTIFIER = "pf"
+COBOT_IDENTIFIER = "tf"
 
 # the home position in joint space
 #HOME_POSJ = posj(90,-30,120,0,0,0)          # home for tempf
@@ -441,7 +441,7 @@ class TCPInbox:
     def add_message(cls, message):
         if not isinstance(message, (TCPMessage, TCPResponse)):
             raise MessageTypeError
-        tp_log("Message: {0} added to Inbox <{1}>".format(message.uid, message.message))
+        # tp_log("Message: {0} added to Inbox <{1}>".format(message.uid, message.message))
         # tp_popup("Message: {0} added to Inbox <{1}>".format(message.uid, message.message), DR_PM_MESSAGE)
 
         if isinstance(message, TCPResponse):
@@ -1504,9 +1504,7 @@ def handle_action_str(msg_str, agent):
     # set the passing waypoints
     action.passing_wps = passing_lst
  
-    return_str = actions_str_to_server(agent.actions)
- 
-    send_message(return_str)
+    send_message("action {} received by cobot".format(a_uid))
  
    
 def handle_fastener_str(msg_str, agent, f_tag):
