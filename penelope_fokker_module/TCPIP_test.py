@@ -1297,9 +1297,4 @@ feedback = send_message(uid=tf_cobot_uid, message="goto_home", feedback=True)
 if feedback:
     print(f"Feedback: {feedback}")
 
-# keep listening
-while True:
-    if MessageService().inboxes.get(pf_cobot_uid) and len(MessageService().inboxes.get(pf_cobot_uid).messages) > 0:
-        print(f"Message in inbox: {MessageService().get_inbox_message(pf_cobot_uid)}")
-    time.sleep(0.01)
 

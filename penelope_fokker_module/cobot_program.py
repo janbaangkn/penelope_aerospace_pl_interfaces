@@ -90,8 +90,8 @@ DEFAULT_ENCODER = "UTF-8"
 COBOT_IDENTIFIER = "tf"
 
 # the home position in joint space
-#HOME_POSJ = posj(90,-30,120,0,0,0)          # home for tempf
-HOME_POSJ = posj(90,-10,125,260,-115,155)  # home for permf
+HOME_POSJ = posj(90,-30,120,0,0,0)          # home for tempf
+#HOME_POSJ = posj(90,-10,125,260,-115,155)  # home for permf
 
 TCP_SPEED_LIMIT = 250
 TCP_ROT_LIMIT = 120
