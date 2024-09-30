@@ -89,10 +89,6 @@ BYTES_MSG_LENGTH  = 4
 DEFAULT_ENCODER = "UTF-8"
 COBOT_IDENTIFIER = "tf"
 
-# the home position in joint space
-HOME_POSJ = posj(90,-30,120,0,0,0)          # home for tempf
-#HOME_POSJ = posj(90,-10,125,260,-115,155)  # home for permf
-
 TCP_SPEED_LIMIT = 250
 TCP_ROT_LIMIT = 120
 JOINT_SPEED_LIMIT = [90, 90, 135, 150, 150, 150]
@@ -785,7 +781,7 @@ class Operator:
             elif self.workflow_parameter == WorkflowParameterOptions.GOTO_HOME:
                 if self.workflow_arguments:
                     self.update_status(StatusOptions.EXECUTING)
-                    speed_limited_movej_on_posj(HOME_POSJ, 100)
+                    move_home(DR_HOME_TARGET_USER)
                     send_response(self.workflow_arguments["original_message_uid"], self.status)
                     self.reset_workflow()
 
