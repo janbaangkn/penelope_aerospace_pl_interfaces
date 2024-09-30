@@ -17,7 +17,7 @@ tf_tcp_client_thread.start()
 # pf_tcp_client_thread.start()
 
 # go to home
-feedback = send_message(uid=tf_cobot_uid, message="goto_home", feedback=False)
+feedback = send_message(uid=tf_cobot_uid, message="goto_home", feedback=True)
 if feedback:
     print(f"Feedback: {feedback}")
 
