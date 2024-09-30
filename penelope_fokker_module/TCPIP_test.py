@@ -1041,7 +1041,7 @@ msg = "populate_agent<"\
     ">"\
     "tempf<"\
         "uid<tempf_06>"\
-        "loc_uid<tfst_1_4>"\
+        "loc_uid<inner_vert_jig_01_01>"\
         "fastener_state<3>"\
         "diam<5.0>"\
         "shaft_height<60.0>"\
