@@ -87,11 +87,11 @@ start_time = time.time()
 BYTES_MSG_LENGTH  = 4
 
 DEFAULT_ENCODER = "UTF-8"
-COBOT_IDENTIFIER = "tf"
+COBOT_IDENTIFIER = "pf"
 
 # the home position in joint space
-HOME_POSJ = posj(90,-30,120,0,0,0)          # home for tempf
-#HOME_POSJ = posj(90,-10,125,260,-115,155)  # home for permf
+#HOME_POSJ = posj(90,-30,120,0,0,0)          # home for tempf
+HOME_POSJ = posj(90,-10,125,260,-115,155)  # home for permf
 
 TCP_SPEED_LIMIT = 250
 TCP_ROT_LIMIT = 120
@@ -200,7 +200,12 @@ DIAM_6_AND_GRIP_6_MAX_STACK =  10.34
 DIAM_6_AND_GRIP_6_TCP_TIP_DIST = 19.58   
 DIAM_6_AND_GRIP_6_TCP_TOP_DIST = 4.06
  
- 
+TCP_NAME_DIAM_6_AND_GRIP_3_TIP = "EN6128_06_03_tip" #EN6128
+DIAM_6_AND_GRIP_3_SHAFT_HEIGHT = 23.37  # X + J1 + N = 3.3 + 15.62 + 4.45  = 23.37
+DIAM_6_AND_GRIP_3_MIN_STACK =  3.96
+DIAM_6_AND_GRIP_3_MAX_STACK =  5.59
+DIAM_6_AND_GRIP_3_TCP_TIP_DIST = 14.81   
+DIAM_6_AND_GRIP_3_TCP_TOP_DIST = 4.45 
  
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 # varaibles for cobot - server messaging
@@ -1517,18 +1522,7 @@ def handle_fastener_str(msg_str, agent, f_tag):
     obj = cl_f_container()
  
     f_uid = extract_leaf_content(msg_str, UID_TAG, CLOSE_TAG)
- 
-    if f_tag == TEMPF_TAG:
-        obj = agent.tempf_storage
-        is_tempf = True
-    elif f_tag == FASTENER_TAG:
-        obj = agent.permf_storage
-        is_tempf = False
-    else:
-        raise Exception("Unknown fastener type encountered in handle_fastener_str in container with uid {}.".format(f_uid))
-   
-    f_loc_uid = extract_leaf_content(msg_str, LOC_UID_TAG, CLOSE_TAG)
-    # f_ee_uid not implemeneted yet, but can be retreived with END_EFFECTOR_UID_TAG
+
     f_state = int(extract_leaf_content(msg_str, FASTENER_STATE_TAG, CLOSE_TAG))
  
     f_in_storage = False
@@ -1544,6 +1538,23 @@ def handle_fastener_str(msg_str, agent, f_tag):
         f_in_product=True
     elif f_state == 4:
         f_in_bin=True
+ 
+    if f_tag == TEMPF_TAG:
+        is_tempf = True
+        if f_in_storage:
+            obj = agent.tempf_storage
+        elif f_in_product:
+            obj = agent.product
+        else:
+            send_message("WARNING: Fastener with uid {} not defined in storage or product.".format(f_uid)) 
+    elif f_tag == FASTENER_TAG:
+        obj = agent.permf_storage
+        is_tempf = False
+    else:
+        send_message("WARNING: Unknown fastener type encountered in handle_fastener_str in container with uid {}.".format(f_uid))
+   
+    f_loc_uid = extract_leaf_content(msg_str, LOC_UID_TAG, CLOSE_TAG)
+    # f_ee_uid not implemeneted yet, but can be retreived with END_EFFECTOR_UID_TAG
  
     f_diam = float(extract_leaf_content(msg_str, DIAM_TAG, CLOSE_TAG))
     f_shaft_height = float(extract_leaf_content(msg_str, SHAFT_HEIGHT_TAG, CLOSE_TAG))
@@ -1810,10 +1821,10 @@ def move_into_hole(fast):
    
     :return: bool, whether the insertion is succesful
     """
-  
+    wait(1.5)
     #set the DR_USER_NOM on the corrected position
     overwrite_user_cart_coord(DR_USER_NOM, fast.corrected_pos(), ref=DR_BASE)
- 
+    
     # make sure the coordinate frame is DR_USER_NOM
     set_ref_coord(DR_USER_NOM)
        
@@ -1824,10 +1835,10 @@ def move_into_hole(fast):
     # Def get_weighted_pos_dev()
     # Def calc_and_set_corrected_pos()
     
-    task_compliance_ctrl([20000,20000,20000,400,400,400])
+    #task_compliance_ctrl([20000,20000,20000,400,400,400])
     
     #move to the side of the hole
-    movel(posx(7, 0, -SAFE_Z_GAP, 0, 0, 0), ref=DR_USER_NOM)
+    movel(posx(5, 0, -SAFE_Z_GAP, 0, 0, 0), ref=DR_USER_NOM)
     
     #Compliance mode and force control
     task_compliance_ctrl(PROBE_COMPLIANCE)
@@ -1850,7 +1861,7 @@ def move_into_hole(fast):
     movel(posx(0, 0, z_comp-SAFE_Z_GAP, 0, 0, 0), ref=DR_USER_NOM)
     movel(posx(0, 0, z_comp, 0, 0, 0), ref=DR_USER_NOM)
 
-    z_stop = fast.tcp_tip_distance() * 0.95 + z_comp
+    z_stop = fast.tcp_tip_distance() * 0.90 + z_comp
     CSK_stop = fast.tcp_tip_distance() * 0.05 + z_comp
  
     # set the values to allow the while loop to start
@@ -3636,12 +3647,13 @@ class cl_perm_fast_ee:
         wait(0.5) # Nagel wordt gelijk getrokken als die in positie zit, heel even wachten zodat de nagel goed in positie zit
         #tp_popup("start complaince control")
         #task_compliance_ctrl([20,20,20,400,400,400])
+
        
         set_tool_digital_output(self.I2_TRIGGER, 1)  
  
         wait(1.5) #Checken als trigger aan moet blijven tijdends nagel trekken. Of dat 1x triggeren voldoende is. Moet zoiezo ff wachten totdat nagel getrokken is
        # wait(0.1) #Weet niet zeker als anders het singaal goed door komt
-        #set_tool_digital_output(self.I2_TRIGGER, 0)
+        set_tool_digital_output(self.I2_TRIGGER, 0)
         #tp_popup("start_trigger returned True")
        
         release_compliance_ctrl()
@@ -4456,6 +4468,16 @@ class cl_fastener(cl_fastener_location):
                         send_message("set_tool_center_point____setting TCP to " + TCP_NAME_PERM_HAND_TOOL + " for fastener " + self.uid() + "\nForce and compliance are turned off to enable this.")
                         set_tcp(TCP_NAME_PERM_HAND_TOOL)
                         return True             
+                
+                elif abs(self.grip_length() - 3) < 0.1: #For dia code 6 and grip code 3 EN6128
+                    if self.__in_ee:
+                        send_message("set_tool_center_point____setting TCP to " + TCP_NAME_DIAM_6_AND_GRIP_3_TIP + " for fastener " + self.uid() + "\nForce and compliance are turned off to enable this.")
+                        set_tcp(TCP_NAME_DIAM_6_AND_GRIP_3_TIP)
+                        return True
+                    else:
+                        send_message("set_tool_center_point____setting TCP to " + TCP_NAME_PERM_HAND_TOOL + " for fastener " + self.uid() + "\nForce and compliance are turned off to enable this.")
+                        set_tcp(TCP_NAME_PERM_HAND_TOOL)
+                        return True
         
         send_message("set_tool_center_point____tool center point could not be set for fastener " + self.uid())
        
@@ -5645,7 +5667,7 @@ class cl_f_container(cl_uid):
                 if f.has_diam(diam) and f.has_grip(grip) and not f.fast.in_bin():
                     return i
                
-        send_message("find_fast_id_of_diam____no fastener available with diameter {}.".format(diam)) #add grip to error message
+        send_message("find_fast_id_of_diam_grip____no fastener available with diameter {} and grip {}.".format(diam, grip)) 
         return 0
  
  
@@ -5881,10 +5903,11 @@ class cl_agent():
  
             # set the product location as the permf target
             self.product.set_location_as_fast_target(permf, prod_lst_id)
-           
+            
             # move to the hole apprach position
-            speed_limited_movej_on_posx(permf.tcp_approach_pos(), 100)
- 
+            #speed_limited_movej_on_posx(permf.tcp_approach_pos(), 100)
+            movel(permf.tcp_approach_pos(),ref=DR_BASE,r = BLEND_RADIUS_SMALL)
+
             # calculate the corrected position of the fastener
             # based on all inserted fasteners in the product
             # TODO perform calculation earlier in a seperate stream if this takes a while
@@ -6268,7 +6291,7 @@ class cl_agent():
         if is_tempf:
             is_engaged = self._engage_tempf(fast, PICK_UP_FORCE, PICK_UP_ENGAGEMENT_COMPLIANCE, PICK_UP_ENGAGEMENT_SPEED, True)
         else:
-            is_engaged = self._engage_permf(fast, PICK_UP_FORCE, PICK_UP_ENGAGEMENT_COMPLIANCE, PICK_UP_ENGAGEMENT_SPEED, True)
+            is_engaged = self._engage_permf(fast, PICK_UP_FORCE, PICK_UP_ENGAGEMENT_COMPLIANCE, PICK_UP_ENGAGEMENT_SPEED, False)
 
         if is_engaged:
            
@@ -6541,8 +6564,11 @@ class cl_agent():
        
         change_operation_speed(MOVE_SPEED)
 
-        speed_limited_movej_on_posx(fast.tcp_approach_pos(), 100)
-       
+        if fast.is_tempf():
+            speed_limited_movej_on_posx(fast.tcp_approach_pos(), 100)
+        
+        else:
+            movel(fast.tcp_approach_pos())       
     
     def _engage_permf(self, fast: cl_fastener, force, comp, speed, burst):
         """
@@ -6558,7 +6584,7 @@ class cl_agent():
        
         :return: bool, returns True if successful
         """
-        reqd_ratio = 0.1 #Was 0.2
+        reqd_ratio = 0.2 #Was 0.2
               
         task_compliance_ctrl(comp)
         change_operation_speed(int(speed))
