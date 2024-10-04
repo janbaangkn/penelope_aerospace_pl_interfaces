@@ -704,9 +704,9 @@ msg = "populate_agent<"\
             "diam<5.0>"\
             "stack_thickness_tag<9.0>"\
             "pose<"\
-                "pose_p_x<13.5>"\
+                "pose_p_x<13.0>"\
                 "pose_p_y<902.0>"\
-                "pose_p_z<908.5>"\
+                "pose_p_z<905.0>"\
                 "pose_o_x<90.0>"\
                 "pose_o_y<69.0>"\
                 "pose_o_z<0.0>"\
@@ -1288,7 +1288,7 @@ if feedback:
 #     print(f"Feedback: {feedback}")
 
 # execute operation with uid
-feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<A05>", feedback=True)
+feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<A03>", feedback=True)
 if feedback:
     print(f"Feedback: {feedback}")
 
