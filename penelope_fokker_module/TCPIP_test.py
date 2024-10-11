@@ -760,9 +760,9 @@ msg = "populate_agent<"\
             "diam<5.0>"\
             "stack_thickness_tag<9.0>"\
             "pose<"\
-                "pose_p_x<450.8>"\
-                "pose_p_y<865.0>"\
-                "pose_p_z<1020.0>"\
+                "pose_p_x<451.5>"\
+                "pose_p_y<863.0>"\
+                "pose_p_z<1015.5>"\
                 "pose_o_x<90.0>"\
                 "pose_o_y<72.0>"\
                 "pose_o_z<25.0>"\
@@ -774,9 +774,9 @@ msg = "populate_agent<"\
             "diam<5.0>"\
             "stack_thickness_tag<9.0>"\
             "pose<"\
-                "pose_p_x<452.0>"\
-                "pose_p_y<938.0>"\
-                "pose_p_z<814.0>"\
+                "pose_p_x<453.5>"\
+                "pose_p_y<939.0>"\
+                "pose_p_z<810.0>"\
                 "pose_o_x<90.0>"\
                 "pose_o_y<66.0>"\
                 "pose_o_z<25.0>"\
@@ -788,9 +788,9 @@ msg = "populate_agent<"\
             "diam<5.0>"\
             "stack_thickness_tag<9.0>"\
             "pose<"\
-                "pose_p_x<621.0>"\
-                "pose_p_y<862.0>"\
-                "pose_p_z<1021.5>"\
+                "pose_p_x<622.0>"\
+                "pose_p_y<864.0>"\
+                "pose_p_z<1020.0>"\
                 "pose_o_x<90.0>"\
                 "pose_o_y<72.0>"\
                 "pose_o_z<30.0>"\
@@ -804,7 +804,7 @@ msg = "populate_agent<"\
             "pose<"\
                 "pose_p_x<623.0>"\
                 "pose_p_y<938.0>"\
-                "pose_p_z<817.0>"\
+                "pose_p_z<814.5>"\
                 "pose_o_x<90.0>"\
                 "pose_o_y<66.0>"\
                 "pose_o_z<30.0>"\
