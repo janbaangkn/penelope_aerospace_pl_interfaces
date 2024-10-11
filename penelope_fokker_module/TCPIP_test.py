@@ -240,20 +240,6 @@ msg = "populate_agent<"\
         "uid<tempf_storage>"\
         "locations<"\
             "hole_location<"\
-                "uid<tfst_1_1>"\
-                "max_obstacle_height<40.0>"\
-                "diam<5.0>"\
-                "stack_thickness_tag<10.0>"\
-                "pose<"\
-                    "pose_p_x<68.5>"\
-                    "pose_p_y<493.0>"\
-                    "pose_p_z<38.0>"\
-                    "pose_o_x<71.0>"\
-                    "pose_o_y<180.0>"\
-                    "pose_o_z<0.0>"\
-                ">"\
-            ">"\
-            "hole_location<"\
                 "uid<tfst_1_2>"\
                 "max_obstacle_height<40.0>"\
                 "diam<5.0>"\
@@ -985,17 +971,6 @@ if feedback:
 msg = "populate_agent<"\
 "tempfs<"\
     "tempf<"\
-        "uid<tempf_01>"\
-        "loc_uid<tfst_1_1>"\
-        "fastener_state<1>"\
-        "diam<5.0>"\
-        "shaft_height<60.0>"\
-        "min_stack_thickness<3.0>"\
-        "max_stack_thickness<17.0>"\
-        "tcp_tip_dist<25.0>"\
-        "tcp_top_dist<21.0>"\
-    ">"\
-    "tempf<"\
         "uid<tempf_02>"\
         "loc_uid<tfst_1_2>"\
         "fastener_state<1>"\
@@ -1180,7 +1155,7 @@ msg = "populate_agent<"\
     "action<"\
         "uid<A01>"\
         "action_type<install_tempf>"\
-        "loc_uid<inner_vert_jig_01_01>"\
+        "loc_uid<left_drill_jig_01>"\
         "action_state<1>"\
         "speed<100>"\
     ">"\

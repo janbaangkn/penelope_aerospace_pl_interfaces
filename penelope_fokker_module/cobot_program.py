@@ -3419,7 +3419,7 @@ class cl_temp_fast_ee:
         # do a fast start for two seconds
         self.set_select_program(1)
         self.set_start_on()
-        wait(2)
+        wait(2.5)
         #TODO make this dependent on the stack thickness and time it takes to reach that thickness
         self.reset_cobot_output_pins()
         wait(0.2)
@@ -5977,8 +5977,7 @@ class cl_agent():
         else:   
             # remove the tempf object from the storage location
             self.tempf_storage.remove_fast_from_location(storage_loc_id)
- 
-            #tp_popup("Check fastener")
+
             # set the product location as the tempf target
             self.product.set_location_as_fast_target(tempf, prod_lst_id)
 
