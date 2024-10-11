@@ -1105,6 +1105,7 @@ msg = "populate_agent<"\
         "tcp_tip_dist<25.0>"\
         "tcp_top_dist<21.0>"\
     ">"\
+">"\
 ">"
 
 feedback = send_message(uid=tf_cobot_uid, message=msg, feedback=True)
@@ -1175,78 +1176,78 @@ if feedback:
 # 09: remove tempf from inner_vert_jig_03_01
 # 10: remove tempf from inner_vert_jig_03_08
 msg = "populate_agent<"\
-    "actions<"\
-        "action<"\
-            "uid<A01>"\
-            "action_type<install_tempf>"\
-            "loc_uid<inner_vert_jig_01_01>"\
-            "action_state<1>"\
-            "speed<100>"\
-        ">"\
-        "action<"\
-            "uid<A02>"\
-            "action_type<remove_fastener>"\
-            "loc_uid<left_drill_jig_01>"\
-            "action_state<1>"\
-            "speed<100>"\
-        ">"\
-        "action<"\
-            "uid<A03>"\
-            "action_type<remove_fastener>"\
-            "loc_uid<left_drill_jig_08>"\
-            "action_state<1>"\
-            "speed<100>"\
-        ">"\
-        "action<"\
-            "uid<A04>"\
-            "action_type<remove_fastener>"\
-            "loc_uid<left_drill_jig_15>"\
-            "action_state<1>"\
-            "speed<100>"\
-        ">"\
-        "action<"\
-            "uid<A05>"\
-            "action_type<remove_fastener>"\
-            "loc_uid<inner_vert_jig_01_01>"\
-            "action_state<1>"\
-            "speed<100>"\
-        ">"\
-        "action<"\
-            "uid<A06>"\
-            "action_type<remove_fastener>"\
-            "loc_uid<inner_vert_jig_01_02>"\
-            "action_state<1>"\
-            "speed<100>"\
-        ">"\
-        "action<"\
-            "uid<A07>"\
-            "action_type<remove_fastener>"\
-            "loc_uid<inner_vert_jig_02_01>"\
-            "action_state<1>"\
-            "speed<100>"\
-        ">"\
-        "action<"\
-            "uid<A08>"\
-            "action_type<remove_fastener>"\
-            "loc_uid<inner_vert_jig_02_02>"\
-            "action_state<1>"\
-            "speed<100>"\
-        ">"\
-        "action<"\
-            "uid<A09>"\
-            "action_type<remove_fastener>"\
-            "loc_uid<inner_vert_jig_03_01>"\
-            "action_state<1>"\
-            "speed<100>"\
-        ">"\
-        "action<"\
-            "uid<A10>"\
-            "action_type<remove_fastener>"\
-            "loc_uid<inner_vert_jig_03_02>"\
-            "action_state<1>"\
-            "speed<100>"\
-        ">"\
+"actions<"\
+    "action<"\
+        "uid<A01>"\
+        "action_type<install_tempf>"\
+        "loc_uid<inner_vert_jig_01_01>"\
+        "action_state<1>"\
+        "speed<100>"\
     ">"\
+    "action<"\
+        "uid<A02>"\
+        "action_type<remove_fastener>"\
+        "loc_uid<left_drill_jig_01>"\
+        "action_state<1>"\
+        "speed<100>"\
+    ">"\
+    "action<"\
+        "uid<A03>"\
+        "action_type<remove_fastener>"\
+        "loc_uid<left_drill_jig_08>"\
+        "action_state<1>"\
+        "speed<100>"\
+    ">"\
+    "action<"\
+        "uid<A04>"\
+        "action_type<remove_fastener>"\
+        "loc_uid<left_drill_jig_15>"\
+        "action_state<1>"\
+        "speed<100>"\
+    ">"\
+    "action<"\
+        "uid<A05>"\
+        "action_type<remove_fastener>"\
+        "loc_uid<inner_vert_jig_01_01>"\
+        "action_state<1>"\
+        "speed<100>"\
+    ">"\
+    "action<"\
+        "uid<A06>"\
+        "action_type<remove_fastener>"\
+        "loc_uid<inner_vert_jig_01_02>"\
+        "action_state<1>"\
+        "speed<100>"\
+    ">"\
+    "action<"\
+        "uid<A07>"\
+        "action_type<remove_fastener>"\
+        "loc_uid<inner_vert_jig_02_01>"\
+        "action_state<1>"\
+        "speed<100>"\
+    ">"\
+    "action<"\
+        "uid<A08>"\
+        "action_type<remove_fastener>"\
+        "loc_uid<inner_vert_jig_02_02>"\
+        "action_state<1>"\
+        "speed<100>"\
+    ">"\
+    "action<"\
+        "uid<A09>"\
+        "action_type<remove_fastener>"\
+        "loc_uid<inner_vert_jig_03_01>"\
+        "action_state<1>"\
+        "speed<100>"\
+    ">"\
+    "action<"\
+        "uid<A10>"\
+        "action_type<remove_fastener>"\
+        "loc_uid<inner_vert_jig_03_02>"\
+        "action_state<1>"\
+        "speed<100>"\
+    ">"\
+">"\
 ">"
 
 feedback = send_message(uid=tf_cobot_uid, message=msg, feedback=True)
@@ -1288,7 +1289,52 @@ if feedback:
 #     print(f"Feedback: {feedback}")
 
 # execute operation with uid
+feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<A01>", feedback=True)
+if feedback:
+    print(f"Feedback: {feedback}")
+
+# execute operation with uid
+feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<A02>", feedback=True)
+if feedback:
+    print(f"Feedback: {feedback}")
+
+# execute operation with uid
 feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<A03>", feedback=True)
+if feedback:
+    print(f"Feedback: {feedback}")
+
+# execute operation with uid
+feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<A04>", feedback=True)
+if feedback:
+    print(f"Feedback: {feedback}")
+
+# execute operation with uid
+feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<A05>", feedback=True)
+if feedback:
+    print(f"Feedback: {feedback}")
+
+# execute operation with uid
+feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<A06>", feedback=True)
+if feedback:
+    print(f"Feedback: {feedback}")
+
+# execute operation with uid
+feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<A07>", feedback=True)
+if feedback:
+    print(f"Feedback: {feedback}")
+
+# execute operation with uid
+feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<A08>", feedback=True)
+if feedback:
+    print(f"Feedback: {feedback}")
+
+# execute operation with uid
+feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<A09>", feedback=True)
+if feedback:
+    print(f"Feedback: {feedback}")
+
+# execute operation with uid
+feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<A10>", feedback=True)
 if feedback:
     print(f"Feedback: {feedback}")
 
