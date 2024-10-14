@@ -2316,7 +2316,6 @@ def retract_tempf(tempf, ee, retract = True):
        
     :return: bool, Whether there is a fastener in the end effector
     """
-   
     release_force()
     release_compliance_ctrl()
    
@@ -6286,6 +6285,8 @@ class cl_agent():
         else:
             is_engaged = self._engage_permf(fast, PICK_UP_FORCE, PICK_UP_ENGAGEMENT_COMPLIANCE, PICK_UP_ENGAGEMENT_SPEED, False)
 
+        send_message("At line 6290")
+
         if is_engaged:
            
             # wait to properly settle
@@ -6298,7 +6299,6 @@ class cl_agent():
             if is_tempf:
                 self.tf_ee.tempf_in_end_effector = True
                 if was_in_product:
-                    send_message("start untightening")
                     # clamp and tighten the fastener
                     is_untightened = self.tf_ee.untighten_temp(UNTIGHTEN_PROGRAM)
                 else:
@@ -6325,7 +6325,7 @@ class cl_agent():
                 self.tf_ee.stop_ejection()  
             
             return False
-       
+
         if is_untightened:
             # let the fast know its new location, will also change the TCP
             fast.set_as_in_ee()
@@ -6338,11 +6338,14 @@ class cl_agent():
             movel(posx(0, 0, -(fast.shaft_height() + fast.tcp_tip_distance() + SAFE_Z_GAP + SAFE_Z_GAP), 0, 0, 0), ref=DR_TOOL)
            
             return False
-           
+        
+        # A message here is the last sign of life if force is to big when pickking up fastener
+        # Refine the pick-up location if there is an error when picking up a tempf.
+ 
         # check if the fast is really in the ee
         if is_tempf:
             if is_untightened:   
-                if was_in_product:        
+                if was_in_product:      
                     in_ee = retract_tempf(fast, self.tf_ee)
                     if not in_ee:
                         if was_in_product:

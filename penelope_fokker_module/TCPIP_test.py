@@ -245,8 +245,8 @@ msg = "populate_agent<"\
                 "diam<5.0>"\
                 "stack_thickness_tag<10.0>"\
                 "pose<"\
-                    "pose_p_x<104.5>"\
-                    "pose_p_y<493.0>"\
+                    "pose_p_x<104.0>"\
+                    "pose_p_y<491.5>"\
                     "pose_p_z<38.0>"\
                     "pose_o_x<71.0>"\
                     "pose_o_y<180.0>"\
@@ -259,8 +259,8 @@ msg = "populate_agent<"\
                 "diam<5.0>"\
                 "stack_thickness_tag<10.0>"\
                 "pose<"\
-                    "pose_p_x<140.5>"\
-                    "pose_p_y<493.0>"\
+                    "pose_p_x<140.0>"\
+                    "pose_p_y<492.0>"\
                     "pose_p_z<38.0>"\
                     "pose_o_x<71.0>"\
                     "pose_o_y<180.0>"\
@@ -1224,6 +1224,7 @@ msg = "populate_agent<"\
     ">"\
 ">"\
 ">"
+
 
 feedback = send_message(uid=tf_cobot_uid, message=msg, feedback=True)
 if feedback:
