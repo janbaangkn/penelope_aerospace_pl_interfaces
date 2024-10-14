@@ -678,7 +678,7 @@ msg = "populate_agent<"\
             "pose<"\
                 "pose_p_x<11.0>"\
                 "pose_p_y<838.0>"\
-                "pose_p_z<1113.5>"\
+                "pose_p_z<1114>"\
                 "pose_o_x<90.0>"\
                 "pose_o_y<75.0>"\
                 "pose_o_z<0.0>"\
