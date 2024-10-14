@@ -1190,7 +1190,7 @@ msg = "populate_agent<"\
     "action<"\
         "uid<A06>"\
         "action_type<remove_fastener>"\
-        "loc_uid<inner_vert_jig_01_02>"\
+        "loc_uid<inner_vert_jig_01_08>"\
         "action_state<1>"\
         "speed<100>"\
     ">"\
@@ -1204,7 +1204,7 @@ msg = "populate_agent<"\
     "action<"\
         "uid<A08>"\
         "action_type<remove_fastener>"\
-        "loc_uid<inner_vert_jig_02_02>"\
+        "loc_uid<inner_vert_jig_02_08>"\
         "action_state<1>"\
         "speed<100>"\
     ">"\
@@ -1218,7 +1218,7 @@ msg = "populate_agent<"\
     "action<"\
         "uid<A10>"\
         "action_type<remove_fastener>"\
-        "loc_uid<inner_vert_jig_03_02>"\
+        "loc_uid<inner_vert_jig_03_08>"\
         "action_state<1>"\
         "speed<100>"\
     ">"\
