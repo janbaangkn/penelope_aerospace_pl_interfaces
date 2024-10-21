@@ -5,9 +5,17 @@ import rclpy
 from rclpy.action import ActionServer
 from rclpy.node import Node
 
-from .cobot_tcp_server import CobotTCPServer
+import threading
+from tcp_communication.tcp_client import run_tcp_client
+from tcp_communication.communication_functions import send_message
+
 from .get_str_function import *
-from .create_action_obj import *
+from .create_action_obj import _find_substring
+from .create_action_obj import _create_actions_from_cobot_output
+from .create_action_obj import _create_drill_tasks_from_cobot_output
+from .create_action_obj import _create_tempfs_from_cobot_output
+from .create_action_obj import _create_fasteners_from_cobot_output
+from .create_action_obj import _create_ee_from_cobot_output
 
 from penelope_aerospace_pl_msgs.action import CobotOp
 from penelope_aerospace_pl_msgs.msg import AssemblyActionState
@@ -23,9 +31,17 @@ class FokkerActionServer(Node):
         super().__init__("fokker_action_server")
         self._action_server = ActionServer(self, CobotOp, self.action_name, self.execute_callback)
 
-        self.message_queue = queue.Queue()
-        self.cobot_server = CobotTCPServer(self.handle_cobot_message, self.message_queue)
-        self.cobot_server.start()    # Or run()?
+        self.tf_ip_address = "10.237.20.101"
+        self.tf_port = 20002
+        self.tf_cobot_uid = f"{self.tf_ip_address}/{self.tf_port}"
+        self.tf_tcp_client_thread = threading.Thread(target=run_tcp_client, args=(self.tf_ip_address, self.tf_port))
+        self.tf_tcp_client_thread.start()
+
+        self.pf_ip_address = "10.237.20.103"
+        self.pf_port = 20002
+        self.pf_cobot_uid = f"{self.pf_ip_address}/{self.pf_port}"
+        self.pf_tcp_client_thread = threading.Thread(target=run_tcp_client, args=(self.pf_ip_address, self.pf_port))
+        self.pf_tcp_client_thread.start()
 
     def execute_callback(self, goal_handle):
         self.get_logger().info("Executing FokkerActionServer...")
@@ -37,15 +53,19 @@ class FokkerActionServer(Node):
 
         # start sending the uid of the actions to the cobot 
         # to execute these actions
-        action_number = 0
         for uid in goal_handle.request.execute:
-            action_number = action_number + 1
-            self.get_logger().info(f"Sending action number {action_number} with uid: " + uid + " to Cobot.")
-            self.send_execution_action_uid_to_cobot(uid)
-            #TODO blocking?
-            #TODO check whether it went ok
+
+            if uid[:2] == "tf":
+                cobot_uid = self.tf_cobot_uid
+            elif uid[:2] == "pf":
+                cobot_uid = self.pf_cobot_uid
+            else:
+                return "error: action uid must be tf... or pf..."
             
-        self.get_logger().info(f"Finished passing action file to cobot.")
+            self.get_logger().info(f"Sending action number with uid: " + uid + " to Cobot " + cobot_uid + ".")
+            self.send_execution_action_uid_to_cobot(uid, cobot_uid)
+            
+        self.get_logger().info(f"Finished passing execution requests to cobot.")
 
         while not self.is_ready:
             sleep(0.1)
@@ -54,36 +74,22 @@ class FokkerActionServer(Node):
         goal_handle.succeed()
 
         return self.result_msg
-    
-    # pick up incoming messages from the Cobot and send the result response.
-    def handle_cobot_message(self, cobot_msg):
-        bytes_msg_length = 4
-
-        cobot_str = cobot_msg[bytes_msg_length:]
-        
-        feedback_msg = self._create_feedback_message_from_cobot_output(cobot_str)
-
-        # Send as feedback in all cases
-        self._action_server._goal_handles[-1].publish_feedback(feedback_msg)
-
-        self.result_msg = feedback_msg
-        
-        # trigger sending result if ready
-        if self.result_msg.result_code == ResultCodes.RC_SUCCES:
-            self.is_ready = True
 
     # Function to send execution commands to the cobot controller
     # Excution commands are given by sending the uid of the action
     # to be executed.
-    def send_execution_action_uid_to_cobot(self, uid_in):  
-        str = EXECUTE_TAG
+    def send_execution_action_uid_to_cobot(self, cobot_uid, uid_in):  
+        msg_str = EXECUTE_TAG + uid_in + CLOSE_TAG
 
-        # uid of the action to be executed
-        str = str + UID_TAG + uid_in + CLOSE_TAG
+        feedback = send_message(uid=cobot_uid, message=msg_str, feedback=True)
 
-        str = str + CLOSE_TAG
+        if feedback:
+            feedback_msg = self._create_feedback_message_from_cobot_output(feedback)
 
-        return self.send_msg_to_cobot(str)  
+            # Send as feedback in all cases
+            self._action_server._goal_handles[-1].publish_feedback(feedback_msg)
+
+    #TODO we need a function to pass all other messages from the cobot to the ros as well
     
     # Function to send goal_handle contents to the cobot controller
     # Sends everything to the Cobot except for the uids to execute
@@ -150,16 +156,6 @@ class FokkerActionServer(Node):
             return -1
 
         return 1     
-
-    # function to send a message to the cobot
-    # the message will be received by the cobot controller
-    # the message will be used to instantiate/popuate classes
-    # in the cobot conroller
-    def send_msg_to_cobot(self, str_in):
-        self.message_queue.put(str_in)
-
-        # TODO return 1 only if success
-        return 1
 
     # Function to populate feedback message based on information from the cobot controller
     def _create_feedback_message_from_cobot_output(self, c_str):

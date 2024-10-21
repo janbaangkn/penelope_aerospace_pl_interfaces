@@ -59,7 +59,7 @@ END_EFFECTORS_TAG = "end_effectors" + OPEN_TAG
 END_EFFECTOR_TAG = "end_effector" + OPEN_TAG
 END_EFFECTOR_STATE_TAG = "end_effector_state" + OPEN_TAG
 END_EFFECTOR_UID_TAG = "end_effector_uid" + OPEN_TAG
-EXECUTE_TAG = "execute" + OPEN_TAG
+EXECUTE_TAG = "execute_single_operation" + OPEN_TAG
 
 ACTION_TYPE_MOVE_WAYPOINT_STR = "move_to_waypoint" 
 ACTION_TYPE_INSTALL_PERMF_STR = "install_permf"     
