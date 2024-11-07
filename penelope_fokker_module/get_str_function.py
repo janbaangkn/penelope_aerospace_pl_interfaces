@@ -144,6 +144,26 @@ def R_matrix_to_DRL_angles(R):
 
 
 # Function to send a permf container with holes to the cobot controller
+# msg = "populate_agent<"\
+# "permf_storage_loc<"\
+#     "uid<permf_storage>"\
+#     "locations<"\
+#         "hole_location<"\
+#             "uid<pf_st_01>"\
+#             "max_obstacle_height<40.0>"\
+#             "diam<5.055>"\
+#             "stack_thickness_tag<5.0>"\
+#             "pose<"\
+#                 "pose_p_x<-91.82>"\
+#                 "pose_p_y<307.27>"\
+#                 "pose_p_z<35.46>"\
+#                 "pose_o_x<50.11>"\
+#                 "pose_o_y<178.79>"\
+#                 "pose_o_z<30.39>"\
+#             ">"\
+#         ">"\
+#     ">"\
+# ">"
 # AssemblyHoleLocationContainer
 def permf_storage_str_to_cobot(storage_in):
     str_ = PERMF_STORAGE_LOC_TAG + _get_hole_location_container_to_cobot_str(storage_in) + CLOSE_TAG
