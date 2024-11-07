@@ -165,6 +165,7 @@ def R_matrix_to_DRL_angles(R):
 #     ">"\
 # ">"
 # AssemblyHoleLocationContainer
+#TODO must return none if nothing is found
 def permf_storage_str_to_cobot(storage_in):
     str_ = PERMF_STORAGE_LOC_TAG + _get_hole_location_container_to_cobot_str(storage_in) + CLOSE_TAG
 
@@ -172,12 +173,14 @@ def permf_storage_str_to_cobot(storage_in):
 
 # Function to send a tempf container with holes to the cobot controller
 # AssemblyHoleLocationContainer
+#TODO must return none if nothing is found
 def tempf_storage_str_to_cobot(storage_in):
     str_ = TEMPF_STORAGE_LOC_TAG + _get_hole_location_container_to_cobot_str(storage_in) + CLOSE_TAG
 
     return str_
 
 # Function to send a product container with holes to the cobot controller
+#TODO must return none if nothing is found
 def product_str_to_cobot(product_in):
     str_ = PRODUCT_TAG + _get_hole_location_container_to_cobot_str(product_in) + CLOSE_TAG
 
