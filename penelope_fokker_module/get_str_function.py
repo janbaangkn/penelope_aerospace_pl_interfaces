@@ -61,6 +61,8 @@ END_EFFECTOR_STATE_TAG = "end_effector_state" + OPEN_TAG
 END_EFFECTOR_UID_TAG = "end_effector_uid" + OPEN_TAG
 EXECUTE_TAG = "execute_single_operation" + OPEN_TAG
 
+START_POPULATE_TAG = "populate_agent" + OPEN_TAG
+
 ACTION_TYPE_MOVE_WAYPOINT_STR = "move_to_waypoint" 
 ACTION_TYPE_INSTALL_PERMF_STR = "install_permf"     
 ACTION_TYPE_INSTALL_TEMPF_STR = "install_tempf"     
@@ -165,104 +167,122 @@ def R_matrix_to_DRL_angles(R):
 #     ">"\
 # ">"
 # AssemblyHoleLocationContainer
-#TODO must return none if nothing is found
 def permf_storage_str_to_cobot(storage_in):
-    str_ = PERMF_STORAGE_LOC_TAG + _get_hole_location_container_to_cobot_str(storage_in) + CLOSE_TAG
-
-    return str_
+    if storage_in:
+        str_out = _get_hole_location_container_to_cobot_str(storage_in)
+        if str_out:
+            return START_POPULATE_TAG + PERMF_STORAGE_LOC_TAG + str_out + CLOSE_TAG + CLOSE_TAG
+    return None
 
 # Function to send a tempf container with holes to the cobot controller
 # AssemblyHoleLocationContainer
-#TODO must return none if nothing is found
 def tempf_storage_str_to_cobot(storage_in):
-    str_ = TEMPF_STORAGE_LOC_TAG + _get_hole_location_container_to_cobot_str(storage_in) + CLOSE_TAG
-
-    return str_
+    if storage_in:
+        str_out = _get_hole_location_container_to_cobot_str(storage_in)
+        if str_out:
+            return START_POPULATE_TAG + TEMPF_STORAGE_LOC_TAG + str_out + CLOSE_TAG + CLOSE_TAG
+    return None
 
 # Function to send a product container with holes to the cobot controller
-#TODO must return none if nothing is found
 def product_str_to_cobot(product_in):
-    str_ = PRODUCT_TAG + _get_hole_location_container_to_cobot_str(product_in) + CLOSE_TAG
+    if product_in:
+        str_out = _get_hole_location_container_to_cobot_str(product_in)
+        if str_out:
+            return START_POPULATE_TAG + PRODUCT_TAG + str_out + CLOSE_TAG + CLOSE_TAG
 
-    return str_
+    return None
 
 # Function to send list of defined waypoints to the cobot controller
 def waypoints_str_to_cobot(waypoints_in):
-    str_ = WAYPOINTS_TAG
+    if waypoints_in:
+        if len(waypoints_in) > 0:
+            str_out = START_POPULATE_TAG + WAYPOINTS_TAG
 
-    for waypoint in waypoints_in:
-        str_ = str_ + _get_waypoint_to_cobot_str(waypoint)
+            for waypoint in waypoints_in:
+                str_out = str_out + _get_waypoint_to_cobot_str(waypoint)
 
-    str_ = str_ + CLOSE_TAG
+            return str_out + CLOSE_TAG + CLOSE_TAG
 
-    return str_
+    return None
 
 
 # Function to send list of defined actions to the cobot controller
 def actions_str_to_cobot(actions_in): 
-    str_ = ACTIONS_TAG
+    if actions_in:
+        if len(actions_in) > 0:
+            str_out = START_POPULATE_TAG + ACTIONS_TAG
 
-    for action in actions_in:
-        str_ = str_ + _get_action_to_cobot_str(action)
+            for action in actions_in:
+                str_out = str_out + _get_action_to_cobot_str(action)
 
-    str_ = str_ + CLOSE_TAG
+            return str_out + CLOSE_TAG + CLOSE_TAG
 
-    return str_
+    return None
 
 # Function to send list of holes to be drilled to the cobot controller
 def drill_tasks_str_to_cobot(drill_tasks_in): 
-    str_ = DRILL_TASKS_TAG
+    if drill_tasks_in:
+        if len(drill_tasks_in) > 0:
+            str_out = START_POPULATE_TAG + DRILL_TASKS_TAG
 
-    for drill_task in drill_tasks_in:
-        str_ = str_ + _get_drill_task_to_cobot_str(drill_task)
+            for drill_task in drill_tasks_in:
+                str_out = str_out + _get_drill_task_to_cobot_str(drill_task)
 
-    str_ = str_ + CLOSE_TAG
+            return str_out + CLOSE_TAG + CLOSE_TAG
 
-    return str_ 
+    return None 
 
 # Function to send list of available fasteners to the cobot controller
-def fasteners_str_to_cobot(fasteners_in):  
-    str_ = FASTENERS_TAG
+def fasteners_str_to_cobot(fasteners_in):
+    if fasteners_in:
+        if len(fasteners_in) > 0:
+            str_out = START_POPULATE_TAG + FASTENERS_TAG
 
-    for fastener in fasteners_in:
-        str_ = str_ + FASTENER_TAG + _get_fastener_to_cobot_str(fastener) + CLOSE_TAG
+            for fastener in fasteners_in:
+                str_out = str_out + FASTENER_TAG + _get_fastener_to_cobot_str(fastener) + CLOSE_TAG
 
-    str_ = str_ + CLOSE_TAG
+            return str_out + CLOSE_TAG + CLOSE_TAG
 
-    return str_ 
+    return None 
 
 # Function to send list of available temporary fasteners to the cobot controller
 def tempfs_str_to_cobot(tempfs_in): 
-    str_ = TEMPFS_TAG
+    if tempfs_in:
+        if len(tempfs_in) > 0:
+            str_out = START_POPULATE_TAG + TEMPFS_TAG
 
-    for tempf in tempfs_in:
-        str_ = str_ + TEMPF_TAG + _get_fastener_to_cobot_str(tempf) + CLOSE_TAG
+            for tempf in tempfs_in:
+                str_out = str_out + TEMPF_TAG + _get_fastener_to_cobot_str(tempf) + CLOSE_TAG
 
-    str_ = str_ + CLOSE_TAG
+            return str_out + CLOSE_TAG + CLOSE_TAG
 
-    return str_ 
+    return None 
 
 # Function to send list of available docking positions for End Effectors to the cobot controller
 def docking_pos_str_to_cobot(docking_pos_in): 
-    str_ = DOCKING_POSS_TAG
+    if docking_pos_in:
+        if len(docking_pos_in) > 0:
+            str_out = START_POPULATE_TAG + DOCKING_POSS_TAG
 
-    for docking_pos in docking_pos_in:
-        str_ = str_ + _get_docking_pos_to_cobot_str(docking_pos)
+            for docking_pos in docking_pos_in:
+                str_out = str_out + _get_docking_pos_to_cobot_str(docking_pos)
 
-    str_ = str_ + CLOSE_TAG
+            return str_out + CLOSE_TAG + CLOSE_TAG
 
-    return str_ 
+    return None 
     
 # Function to send list of available End Effectors to the cobot controller
-def ee_str_to_cobot(ee_in):  
-    str_ = END_EFFECTORS_TAG
+def ee_str_to_cobot(ee_in): 
+    if ee_in:
+        if len(ee_in) > 0:
+            str_out = START_POPULATE_TAG + END_EFFECTORS_TAG
 
-    for ee in ee_in:
-        str_ = str_ + _get_end_effector_to_cobot_str(ee)
+            for ee in ee_in:
+                str_out = str_out + _get_end_effector_to_cobot_str(ee)
 
-    str_ = str_ + CLOSE_TAG
+                return str_out + CLOSE_TAG + CLOSE_TAG
 
-    return str_ 
+    return None 
 
 # get message string for AssemblyHoleLocationContainer
 def _get_hole_location_container_to_cobot_str(cont_in):
@@ -479,7 +499,7 @@ def _get_fastener_to_cobot_str(fastener_in):
                                                 # the top is where the tcp is when engaging the tempf
     str_ = str_ + TCP_TOP_DIST_TAG + str(fastener_in.tcp_tip_distace) + CLOSE_TAG
 
-    return str_ 
+    return str_
 
 # get message string for AssemblyEeDockingPos
 def _get_docking_pos_to_cobot_str(docking_pos_in):
