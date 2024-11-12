@@ -1,5 +1,5 @@
 from __future__ import annotations
-from tcp_communication.message_classes import TCPMessage, TCPResponse
+from .message_classes import TCPMessage, TCPResponse
 
 
 class MessageTypeError(Exception):

@@ -6,8 +6,8 @@ from rclpy.action import ActionServer
 from rclpy.node import Node
 
 import threading
-from tcp_communication.tcp_client import run_tcp_client
-from tcp_communication.communication_functions import send_message
+from .tcp_communication.tcp_client import run_tcp_client
+from .tcp_communication.communication_functions import send_message
 
 from .get_str_function import *
 from .create_action_obj import _find_substring

@@ -1,6 +1,6 @@
-from tcp_communication.defaults import DEFAULT_ENCODER
-from tcp_communication.message_processor import TCPInputProcessor
-from tcp_communication.message_service_class import MessageService
+from .defaults import DEFAULT_ENCODER
+from .message_processor import TCPInputProcessor
+from .message_service_class import MessageService
 import socket
 import time
 import traceback

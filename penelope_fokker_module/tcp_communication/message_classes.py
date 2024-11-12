@@ -1,5 +1,5 @@
-from tcp_communication.enums import MessageNames
-from tcp_communication.defaults import DEFAULT_ENCODER
+from .enums import MessageNames
+from .defaults import DEFAULT_ENCODER
 
 
 class MessageUID:

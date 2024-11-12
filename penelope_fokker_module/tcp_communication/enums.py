@@ -1,4 +1,4 @@
-from utils.enum_utility import Enum
+from ..utils.enum_utility import Enum
 
 
 class MessageNames(Enum):

@@ -2,7 +2,7 @@
 import re  
 import math
 import numpy as np
-import get_str_function
+from . import get_str_function
 
 from geometry_msgs.msg import Pose
 

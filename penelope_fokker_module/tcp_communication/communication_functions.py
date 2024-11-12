@@ -1,8 +1,8 @@
 from __future__ import annotations
-from tcp_communication.defaults import DEFAULT_ENCODER
-from tcp_communication.message_service_class import MessageService
-from tcp_communication.message_classes import TCPMessage, TCPResponse, MessageUID
-from utils.not_applicatble_classes import NoFeedbackReceived
+from .defaults import DEFAULT_ENCODER
+from .message_service_class import MessageService
+from .message_classes import TCPMessage, TCPResponse, MessageUID
+from ..utils.not_applicatble_classes import NoFeedbackReceived
 import time
 
 

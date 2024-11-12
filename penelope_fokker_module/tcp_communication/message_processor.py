@@ -1,7 +1,7 @@
-from tcp_communication.defaults import DEFAULT_ENCODER
-from tcp_communication.enums import MessageNames
-from tcp_communication.message_service_class import MessageService
-from tcp_communication.message_classes import TCPMessage, TCPResponse
+from .defaults import DEFAULT_ENCODER
+from .enums import MessageNames
+from .message_service_class import MessageService
+from .message_classes import TCPMessage, TCPResponse
 
 
 class TCPInputProcessor:
