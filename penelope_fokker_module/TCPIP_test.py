@@ -4,6 +4,9 @@ from penelope_fokker_module.tcp_communication.message_service_class import Messa
 import threading
 import time
 
+### uid of product, waypoints and actions must have pf.... or tf.... to indicate for which cobot it is....
+
+
 tf_ip_address = "10.237.20.101"
 tf_port = 20002
 tf_cobot_uid = f"{tf_ip_address}/{tf_port}"
