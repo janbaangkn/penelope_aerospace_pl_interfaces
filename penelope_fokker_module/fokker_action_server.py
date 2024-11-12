@@ -72,14 +72,18 @@ class FokkerActionServer(Node):
         return self.result_msg
 
     def get_uid(self, str_in):
-        if str_in[:2] == "tf":
+        if str_in[:3] == "tf_":
             return self.tf_cobot_uid
-        elif str_in[:2] == "pf":
+        elif str_in[:3] == "pf_":
             return self.pf_cobot_uid
         else:
-            if "tf" in str_in and "pf" not in str_in:
+            if "tf_" in str_in[:20] and "pf_" not in str_in[:20]:
                 return self.tf_cobot_uid
-            elif "pf" in str_in and "tf" not in str_in:
+            elif "pf_" in str_in[:20] and "tf_" not in str_in[:20]:
+                return self.pf_cobot_uid
+            if "tf_" in str_in[:40] and "pf_" not in str_in[:40]:
+                return self.tf_cobot_uid
+            elif "pf_" in str_in[:40] and "tf_" not in str_in[:40]:
                 return self.pf_cobot_uid
             else:
                 return "cannot determine which cobot"

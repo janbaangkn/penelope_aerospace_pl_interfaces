@@ -243,7 +243,7 @@ msg = "populate_agent<"\
         "uid<tempf_storage>"\
         "locations<"\
             "hole_location<"\
-                "uid<tfst_1_2>"\
+                "uid<tf_st_1_2>"\
                 "max_obstacle_height<40.0>"\
                 "diam<5.0>"\
                 "stack_thickness_tag<10.0>"\
@@ -257,7 +257,7 @@ msg = "populate_agent<"\
                 ">"\
             ">"\
             "hole_location<"\
-                "uid<tfst_1_3>"\
+                "uid<tf_st_1_3>"\
                 "max_obstacle_height<40.0>"\
                 "diam<5.0>"\
                 "stack_thickness_tag<10.0>"\
@@ -271,7 +271,7 @@ msg = "populate_agent<"\
                 ">"\
             ">"\
             "hole_location<"\
-                "uid<tfst_1_4>"\
+                "uid<tf_st_1_4>"\
                 "max_obstacle_height<40.0>"\
                 "diam<5.0>"\
                 "stack_thickness_tag<10.0>"\
@@ -285,7 +285,7 @@ msg = "populate_agent<"\
                 ">"\
             ">"\
             "hole_location<"\
-                "uid<tfst_2_1>"\
+                "uid<tf_st_2_1>"\
                 "max_obstacle_height<40.0>"\
                 "diam<5.0>"\
                 "stack_thickness_tag<10.0>"\
@@ -299,7 +299,7 @@ msg = "populate_agent<"\
                 ">"\
             ">"\
             "hole_location<"\
-                "uid<tfst_2_2>"\
+                "uid<tf_st_2_2>"\
                 "max_obstacle_height<40.0>"\
                 "diam<5.0>"\
                 "stack_thickness_tag<10.0>"\
@@ -313,7 +313,7 @@ msg = "populate_agent<"\
                 ">"\
             ">"\
             "hole_location<"\
-                "uid<tfst_2_3>"\
+                "uid<tf_st_2_3>"\
                 "max_obstacle_height<40.0>"\
                 "diam<5.0>"\
                 "stack_thickness_tag<10.0>"\
@@ -327,7 +327,7 @@ msg = "populate_agent<"\
                 ">"\
             ">"\
             "hole_location<"\
-                "uid<tfst_2_4>"\
+                "uid<tf_st_2_4>"\
                 "max_obstacle_height<40.0>"\
                 "diam<5.0>"\
                 "stack_thickness_tag<10.0>"\
@@ -341,7 +341,7 @@ msg = "populate_agent<"\
                 ">"\
             ">"\
             "hole_location<"\
-                "uid<tfst_3_1>"\
+                "uid<tf_st_3_1>"\
                 "max_obstacle_height<40.0>"\
                 "diam<5.0>"\
                 "stack_thickness_tag<10.0>"\
@@ -355,7 +355,7 @@ msg = "populate_agent<"\
                 ">"\
             ">"\
             "hole_location<"\
-                "uid<tfst_3_2>"\
+                "uid<tf_st_3_2>"\
                 "max_obstacle_height<40.0>"\
                 "diam<5.0>"\
                 "stack_thickness_tag<10.0>"\
@@ -369,7 +369,7 @@ msg = "populate_agent<"\
                 ">"\
             ">"\
             "hole_location<"\
-                "uid<tfst_3_3>"\
+                "uid<tf_st_3_3>"\
                 "max_obstacle_height<40.0>"\
                 "diam<5.0>"\
                 "stack_thickness_tag<10.0>"\
@@ -383,7 +383,7 @@ msg = "populate_agent<"\
                 ">"\
             ">"\
             "hole_location<"\
-                "uid<tfst_3_4>"\
+                "uid<tf_st_3_4>"\
                 "max_obstacle_height<40.0>"\
                 "diam<5.0>"\
                 "stack_thickness_tag<10.0>"\
@@ -674,7 +674,7 @@ msg = "populate_agent<"\
     "uid<product>"\
     "locations<"\
         "hole_location<"\
-            "uid<left_drill_jig_01>"\
+            "uid<tf_left_drill_jig_01>"\
             "max_obstacle_height<40.0>"\
             "diam<5.0>"\
             "stack_thickness_tag<9.0>"\
@@ -688,7 +688,7 @@ msg = "populate_agent<"\
             ">"\
         ">"\
         "hole_location<"\
-            "uid<left_drill_jig_08>"\
+            "uid<tf_left_drill_jig_08>"\
             "max_obstacle_height<40.0>"\
             "diam<5.0>"\
             "stack_thickness_tag<9.0>"\
@@ -702,7 +702,7 @@ msg = "populate_agent<"\
             ">"\
         ">"\
         "hole_location<"\
-            "uid<left_drill_jig_15>"\
+            "uid<tf_left_drill_jig_15>"\
             "max_obstacle_height<40.0>"\
             "diam<5.0>"\
             "stack_thickness_tag<9.0>"\
@@ -716,7 +716,7 @@ msg = "populate_agent<"\
             ">"\
         ">"\
         "hole_location<"\
-            "uid<inner_vert_jig_01_01>"\
+            "uid<tf_inner_vert_jig_01_01>"\
             "max_obstacle_height<40.0>"\
             "diam<5.0>"\
             "stack_thickness_tag<9.0>"\
@@ -730,7 +730,7 @@ msg = "populate_agent<"\
             ">"\
         ">"\
         "hole_location<"\
-            "uid<inner_vert_jig_01_08>"\
+            "uid<tf_inner_vert_jig_01_08>"\
             "max_obstacle_height<40.0>"\
             "diam<5.0>"\
             "stack_thickness_tag<9.0>"\
@@ -744,7 +744,7 @@ msg = "populate_agent<"\
             ">"\
         ">"\
         "hole_location<"\
-            "uid<inner_vert_jig_02_01>"\
+            "uid<tf_inner_vert_jig_02_01>"\
             "max_obstacle_height<40.0>"\
             "diam<5.0>"\
             "stack_thickness_tag<9.0>"\
@@ -758,7 +758,7 @@ msg = "populate_agent<"\
             ">"\
         ">"\
         "hole_location<"\
-            "uid<inner_vert_jig_02_08>"\
+            "uid<tf_inner_vert_jig_02_08>"\
             "max_obstacle_height<40.0>"\
             "diam<5.0>"\
             "stack_thickness_tag<9.0>"\
@@ -772,7 +772,7 @@ msg = "populate_agent<"\
             ">"\
         ">"\
         "hole_location<"\
-            "uid<inner_vert_jig_03_01>"\
+            "uid<tf_inner_vert_jig_03_01>"\
             "max_obstacle_height<40.0>"\
             "diam<5.0>"\
             "stack_thickness_tag<9.0>"\
@@ -786,7 +786,7 @@ msg = "populate_agent<"\
             ">"\
         ">"\
         "hole_location<"\
-            "uid<inner_vert_jig_03_08>"\
+            "uid<tf_inner_vert_jig_03_08>"\
             "max_obstacle_height<40.0>"\
             "diam<5.0>"\
             "stack_thickness_tag<9.0>"\
@@ -975,7 +975,7 @@ msg = "populate_agent<"\
 "tempfs<"\
     "tempf<"\
         "uid<tempf_02>"\
-        "loc_uid<tfst_1_2>"\
+        "loc_uid<tf_st_1_2>"\
         "fastener_state<1>"\
         "diam<5.0>"\
         "shaft_height<60.0>"\
@@ -986,7 +986,7 @@ msg = "populate_agent<"\
     ">"\
     "tempf<"\
         "uid<tempf_03>"\
-        "loc_uid<tfst_1_3>"\
+        "loc_uid<tf_st_1_3>"\
         "fastener_state<1>"\
         "diam<5.0>"\
         "shaft_height<60.0>"\
@@ -997,7 +997,7 @@ msg = "populate_agent<"\
     ">"\
     "tempf<"\
         "uid<tempf_04>"\
-        "loc_uid<left_drill_jig_08>"\
+        "loc_uid<tf_left_drill_jig_08>"\
         "fastener_state<3>"\
         "diam<5.0>"\
         "shaft_height<60.0>"\
@@ -1008,7 +1008,7 @@ msg = "populate_agent<"\
     ">"\
     "tempf<"\
         "uid<tempf_05>"\
-        "loc_uid<left_drill_jig_15>"\
+        "loc_uid<tf_left_drill_jig_15>"\
         "fastener_state<3>"\
         "diam<5.0>"\
         "shaft_height<60.0>"\
@@ -1019,7 +1019,7 @@ msg = "populate_agent<"\
     ">"\
     "tempf<"\
         "uid<tempf_06>"\
-        "loc_uid<inner_vert_jig_01_01>"\
+        "loc_uid<tf_inner_vert_jig_01_01>"\
         "fastener_state<3>"\
         "diam<5.0>"\
         "shaft_height<60.0>"\
@@ -1030,7 +1030,7 @@ msg = "populate_agent<"\
     ">"\
     "tempf<"\
         "uid<tempf_07>"\
-        "loc_uid<inner_vert_jig_01_08>"\
+        "loc_uid<tf_inner_vert_jig_01_08>"\
         "fastener_state<3>"\
         "diam<5.0>"\
         "shaft_height<60.0>"\
@@ -1041,7 +1041,7 @@ msg = "populate_agent<"\
     ">"\
     "tempf<"\
         "uid<tempf_08>"\
-        "loc_uid<inner_vert_jig_02_01>"\
+        "loc_uid<tf_inner_vert_jig_02_01>"\
         "fastener_state<3>"\
         "diam<5.0>"\
         "shaft_height<60.0>"\
@@ -1052,7 +1052,7 @@ msg = "populate_agent<"\
     ">"\
     "tempf<"\
         "uid<tempf_09>"\
-        "loc_uid<inner_vert_jig_02_08>"\
+        "loc_uid<tf_inner_vert_jig_02_08>"\
         "fastener_state<3>"\
         "diam<5.0>"\
         "shaft_height<60.0>"\
@@ -1063,7 +1063,7 @@ msg = "populate_agent<"\
     ">"\
     "tempf<"\
         "uid<tempf_10>"\
-        "loc_uid<inner_vert_jig_03_01>"\
+        "loc_uid<tf_inner_vert_jig_03_01>"\
         "fastener_state<3>"\
         "diam<5.0>"\
         "shaft_height<60.0>"\
@@ -1074,7 +1074,7 @@ msg = "populate_agent<"\
     ">"\
     "tempf<"\
         "uid<tempf_11>"\
-        "loc_uid<inner_vert_jig_03_08>"\
+        "loc_uid<tf_inner_vert_jig_03_08>"\
         "fastener_state<3>"\
         "diam<5.0>"\
         "shaft_height<60.0>"\
@@ -1094,42 +1094,42 @@ if feedback:
 # msg = "populate_agent<"\
 # "actions<"\
 #     "action<"\
-#         "uid<A01>"\
+#         "uid<pf_A01>"\
 #         "action_type<install_permf>"\
 #         "loc_uid<pf_pr_14>"\
 #         "action_state<1>"\
 #         "speed<100>"\
 #     ">"\
 #     "action<"\
-#         "uid<A02>"\
+#         "uid<pf_A01>"\
 #         "action_type<install_permf>"\
 #         "loc_uid<pf_pr_13>"\
 #         "action_state<1>"\
 #         "speed<100>"\
 #     ">"\
 #     "action<"\
-#         "uid<A03>"\
+#         "uid<pf_A03>"\
 #         "action_type<install_permf>"\
 #         "loc_uid<pf_pr_12>"\
 #         "action_state<1>"\
 #         "speed<100>"\
 #     ">"\
 #     "action<"\
-#         "uid<A04>"\
+#         "uid<pf_A04>"\
 #         "action_type<install_permf>"\
 #         "loc_uid<pf_pr_11>"\
 #         "action_state<1>"\
 #         "speed<100>"\
 #     ">"\
 #     "action<"\
-#         "uid<A05>"\
+#         "uid<pf_A05>"\
 #         "action_type<install_permf>"\
 #         "loc_uid<pf_pr_10>"\
 #         "action_state<1>"\
 #         "speed<100>"\
 #     ">"\
 #     "action<"\
-#         "uid<A06>"\
+#         "uid<pf_A06>"\
 #         "action_type<install_permf>"\
 #         "loc_uid<pf_pr_09>"\
 #         "action_state<1>"\
@@ -1143,85 +1143,85 @@ if feedback:
 
 
 # add ten actions....not yet execute them
-# 01: install a tempf in left_drill_jig_01
-# 02: remove tempf from left_drill_jig_01
-# 03: remove tempf from left_drill_jig_08
-# 04: remove tempf from left_drill_jig_15
-# 05: remove tempf from inner_vert_jig_01_01
-# 06: remove tempf from inner_vert_jig_01_08
-# 07: remove tempf from inner_vert_jig_02_01
-# 08: remove tempf from inner_vert_jig_02_08
-# 09: remove tempf from inner_vert_jig_03_01
-# 10: remove tempf from inner_vert_jig_03_08
+# 01: install a tempf in tf_left_drill_jig_01
+# 02: remove tempf from tf_left_drill_jig_01
+# 03: remove tempf from tf_left_drill_jig_08
+# 04: remove tempf from tf_left_drill_jig_15
+# 05: remove tempf from tf_inner_vert_jig_01_01
+# 06: remove tempf from tf_inner_vert_jig_01_08
+# 07: remove tempf from tf_inner_vert_jig_02_01
+# 08: remove tempf from tf_inner_vert_jig_02_08
+# 09: remove tempf from tf_inner_vert_jig_03_01
+# 10: remove tempf from tf_inner_vert_jig_03_08
 msg = "populate_agent<"\
 "actions<"\
     "action<"\
-        "uid<A01>"\
+        "uid<tf_A01>"\
         "action_type<install_tempf>"\
-        "loc_uid<left_drill_jig_01>"\
+        "loc_uid<tf_left_drill_jig_01>"\
         "action_state<1>"\
         "speed<100>"\
     ">"\
     "action<"\
-        "uid<A02>"\
+        "uid<tf_A01>"\
         "action_type<remove_fastener>"\
-        "loc_uid<left_drill_jig_01>"\
+        "loc_uid<tf_left_drill_jig_01>"\
         "action_state<1>"\
         "speed<100>"\
     ">"\
     "action<"\
-        "uid<A03>"\
+        "uid<tf_A03>"\
         "action_type<remove_fastener>"\
-        "loc_uid<left_drill_jig_08>"\
+        "loc_uid<tf_left_drill_jig_08>"\
         "action_state<1>"\
         "speed<100>"\
     ">"\
     "action<"\
-        "uid<A04>"\
+        "uid<tf_A04>"\
         "action_type<remove_fastener>"\
-        "loc_uid<left_drill_jig_15>"\
+        "loc_uid<tf_left_drill_jig_15>"\
         "action_state<1>"\
         "speed<100>"\
     ">"\
     "action<"\
-        "uid<A05>"\
+        "uid<tf_A05>"\
         "action_type<remove_fastener>"\
-        "loc_uid<inner_vert_jig_01_01>"\
+        "loc_uid<tf_inner_vert_jig_01_01>"\
         "action_state<1>"\
         "speed<100>"\
     ">"\
     "action<"\
-        "uid<A06>"\
+        "uid<tf_A06>"\
         "action_type<remove_fastener>"\
-        "loc_uid<inner_vert_jig_01_08>"\
+        "loc_uid<tf_inner_vert_jig_01_08>"\
         "action_state<1>"\
         "speed<100>"\
     ">"\
     "action<"\
-        "uid<A07>"\
+        "uid<tf_A07>"\
         "action_type<remove_fastener>"\
-        "loc_uid<inner_vert_jig_02_01>"\
+        "loc_uid<tf_inner_vert_jig_02_01>"\
         "action_state<1>"\
         "speed<100>"\
     ">"\
     "action<"\
-        "uid<A08>"\
+        "uid<tf_A08>"\
         "action_type<remove_fastener>"\
-        "loc_uid<inner_vert_jig_02_08>"\
+        "loc_uid<tf_inner_vert_jig_02_08>"\
         "action_state<1>"\
         "speed<100>"\
     ">"\
     "action<"\
-        "uid<A09>"\
+        "uid<tf_A09>"\
         "action_type<remove_fastener>"\
-        "loc_uid<inner_vert_jig_03_01>"\
+        "loc_uid<tf_inner_vert_jig_03_01>"\
         "action_state<1>"\
         "speed<100>"\
     ">"\
     "action<"\
-        "uid<A10>"\
+        "uid<tf_A10>"\
         "action_type<remove_fastener>"\
-        "loc_uid<inner_vert_jig_03_08>"\
+        "loc_uid<tf_inner_vert_jig_03_08>"\
         "action_state<1>"\
         "speed<100>"\
     ">"\
@@ -1238,82 +1238,82 @@ if feedback:
 #######################################################################################################################
 
 # # execute operation with uid
-# feedback = send_message(uid=pf_cobot_uid, message="execute_single_operation<A01>", feedback=True)
+# feedback = send_message(uid=pf_cobot_uid, message="execute_single_operation<pf_A01>", feedback=True)
 # if feedback:
 #     print(f"Feedback: {feedback}")
 
 # # execute operation with uid
-# feedback = send_message(uid=pf_cobot_uid, message="execute_single_operation<A02>", feedback=True)
+# feedback = send_message(uid=pf_cobot_uid, message="execute_single_operation<pf_A01>", feedback=True)
 # if feedback:
 #     print(f"Feedback: {feedback}")
 
 # # execute operation with uid
-# feedback = send_message(uid=pf_cobot_uid, message="execute_single_operation<A03>", feedback=True)
+# feedback = send_message(uid=pf_cobot_uid, message="execute_single_operation<pf_A03>", feedback=True)
 # if feedback:
 #     print(f"Feedback: {feedback}")
 
 # # execute operation with uid
-# feedback = send_message(uid=pf_cobot_uid, message="execute_single_operation<A04>", feedback=True)
+# feedback = send_message(uid=pf_cobot_uid, message="execute_single_operation<pf_A04>", feedback=True)
 # if feedback:
 #     print(f"Feedback: {feedback}")
 
 # # execute operation with uid
-# feedback = send_message(uid=pf_cobot_uid, message="execute_single_operation<A05>", feedback=True)
+# feedback = send_message(uid=pf_cobot_uid, message="execute_single_operation<pf_A05>", feedback=True)
 # if feedback:
 #     print(f"Feedback: {feedback}")
 
 # # execute operation with uid
-# feedback = send_message(uid=pf_cobot_uid, message="execute_single_operation<A03>", feedback=True)
+# feedback = send_message(uid=pf_cobot_uid, message="execute_single_operation<pf_A03>", feedback=True)
 # if feedback:
 #     print(f"Feedback: {feedback}")
 
 # execute operation with uid
-feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<A01>", feedback=True)
+feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<tf_A01>", feedback=True)
 if feedback:
     print(f"Feedback: {feedback}")
 
 # execute operation with uid
-feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<A02>", feedback=True)
+feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<tf_A01>", feedback=True)
 if feedback:
     print(f"Feedback: {feedback}")
 
 # execute operation with uid
-feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<A03>", feedback=True)
+feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<tf_A03>", feedback=True)
 if feedback:
     print(f"Feedback: {feedback}")
 
 # execute operation with uid
-feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<A04>", feedback=True)
+feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<tf_A04>", feedback=True)
 if feedback:
     print(f"Feedback: {feedback}")
 
 # execute operation with uid
-feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<A05>", feedback=True)
+feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<tf_A05>", feedback=True)
 if feedback:
     print(f"Feedback: {feedback}")
 
 # execute operation with uid
-feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<A06>", feedback=True)
+feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<tf_A06>", feedback=True)
 if feedback:
     print(f"Feedback: {feedback}")
 
 # execute operation with uid
-feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<A07>", feedback=True)
+feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<tf_A07>", feedback=True)
 if feedback:
     print(f"Feedback: {feedback}")
 
 # execute operation with uid
-feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<A08>", feedback=True)
+feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<tf_A08>", feedback=True)
 if feedback:
     print(f"Feedback: {feedback}")
 
 # execute operation with uid
-feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<A09>", feedback=True)
+feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<tf_A09>", feedback=True)
 if feedback:
     print(f"Feedback: {feedback}")
 
 # execute operation with uid
-feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<A10>", feedback=True)
+feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<tf_A10>", feedback=True)
 if feedback:
     print(f"Feedback: {feedback}")
 
