@@ -1,8 +1,7 @@
 from penelope_fokker_module.tcp_communication.tcp_client import run_tcp_client
 from penelope_fokker_module.tcp_communication.communication_functions import send_message
-from penelope_fokker_module.tcp_communication.message_service_class import MessageService
 import threading
-import time
+
 
 ### uid of product, waypoints and actions must have pf.... or tf.... to indicate for which cobot it is....
 
