@@ -49,6 +49,9 @@ class TCPMessage:
         expanded_message = "{0:0>4d}{1}".format(len(expanded_message) + 4, expanded_message)
         return expanded_message.encode(self.encoder)
 
+    def get_str(self) -> str:
+        return self.encoded.decode(self.encoder)
+
 
 class TCPResponse(TCPMessage):
     def __init__(self, uid, response_uid, response="processed", encoder=DEFAULT_ENCODER, response_required=False):

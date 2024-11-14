@@ -1,4 +1,3 @@
-import queue
 from time import sleep
 
 import rclpy
@@ -8,6 +7,7 @@ from rclpy.node import Node
 import threading
 from .tcp_communication.tcp_client import run_tcp_client
 from .tcp_communication.communication_functions import send_message
+from .tcp_communication.message_service_class import TCPInbox
 
 from .get_str_function import *
 from .create_action_obj import _find_substring
@@ -31,10 +31,12 @@ class FokkerActionServer(Node):
         super().__init__("fokker_action_server")
         self._action_server = ActionServer(self, CobotOp, self.action_name, self.execute_callback)
 
+        self.continue_threads = True
+
         self.tf_ip_address = "10.237.20.101"
         self.tf_port = 20002
         self.tf_cobot_uid = f"{self.tf_ip_address}/{self.tf_port}"
-        self.tf_tcp_client_thread = threading.Thread(target=run_tcp_client, args=(self.tf_ip_address, self.tf_port))
+        self.tf_tcp_client_thread = threading.Thread(target=run_tcp_client, args=(self.tf_ip_address, self.tf_port, self))
         self.tf_tcp_client_thread.start()
 
         self.send_goto_home(self.tf_cobot_uid)
@@ -42,12 +44,35 @@ class FokkerActionServer(Node):
         self.pf_ip_address = "10.237.20.103"
         self.pf_port = 20002
         self.pf_cobot_uid = f"{self.pf_ip_address}/{self.pf_port}"
-        self.pf_tcp_client_thread = threading.Thread(target=run_tcp_client, args=(self.pf_ip_address, self.pf_port))
+        self.pf_tcp_client_thread = threading.Thread(target=run_tcp_client, args=(self.pf_ip_address, self.pf_port, self))
         self.pf_tcp_client_thread.start()
 
         self.send_goto_home(self.pf_cobot_uid)
 
+        self.inbox_thread = threading.Thread(target=self.process_inbox_messages)
+        self.inbox_thread.start()
+
+    def __del__(self):
+        """
+        Destructor of the FokkerActionServer.
+        Will terminate the threads before destructing itself.
+        """
+        self.terminate_threads()
+        sleep(0.5)  # give it time to kill the threads
+
+        # call the base class destructor
+        super(FokkerActionServer, self).__del__()
+
+    def terminate_threads(self):
+        """
+        Set the continue_threads attribute to False to trigger thread termination
+        """
+        self.continue_threads = False
+        
     def execute_callback(self, goal_handle):
+        """
+        Handle the ros message
+        """
         self.get_logger().info("Processing goal handle")
 
         # Accessing the request data and send to cobot
@@ -88,10 +113,12 @@ class FokkerActionServer(Node):
             else:
                 return "cannot determine which cobot"
 
-    # Function to send execution commands to the cobot controller
-    # Excution commands are given by sending the uid of the action
-    # to be executed.
     def send_execution_action_uid_to_cobot(self, cobot_uid, uid_in):  
+        """
+        Function to send execution commands to the cobot controller
+        Excution commands are given by sending the uid of the action
+        to be executed.
+        """
         msg_str = EXECUTE_TAG + uid_in + CLOSE_TAG
 
         feedback = send_message(uid=cobot_uid, message=msg_str, feedback=True)
@@ -102,22 +129,38 @@ class FokkerActionServer(Node):
             # Send as feedback in all cases
             self._action_server._goal_handles[-1].publish_feedback(self.result_msg)
 
-    # Function to start moving towards the home position.
-    # Home position must be known in each cobot in DR_HOME_TARGET_USER
     def send_goto_home(self, cobot_uid):
+        """
+        Function to start moving towards the home position.
+        Home position must be known in each cobot in DR_HOME_TARGET_USER
+        """
         send_message(uid=cobot_uid, message="goto_home", feedback=False)
 
-    #TODO we need a function to pass all other messages from the cobot to the ros as well
-    
-    # Function to send goal_handle contents to the cobot controller
-    # Sends everything to the Cobot except for the uids to execute
+    def process_inbox_messages(self) -> None:
+        """
+        """
+        while self.continue_threads:
+            # collect message from inbox
+            message = TCPInbox().get_message()
+
+            # send message to ROS
+            if message:
+                self.result_msg = self._create_feedback_message_from_cobot_output(message.input_data)
+
+                # Send to ROS
+                self._action_server._goal_handles[-1].publish_feedback(self.result_msg)
+
     def send_goal_handle_to_cobot(self, goal_handle_in):
+        """
+        Function to send goal_handle contents to the cobot controller
+        Sends everything to the Cobot except for the uids to execute
+        """
         # storage location container
         msg_out = permf_storage_str_to_cobot(goal_handle_in.request.permf_storage)
         if msg_out:
-            feedback = send_message(uid=self.pf_cobot_uid, message=msg_out, feedback=True)          
+            feedback = send_message(uid=self.pf_cobot_uid, message=msg_out, feedback=True)
             if feedback:
-                self.result_msg = self._create_feedback_message_from_cobot_output(feedback)
+                self.result_msg = self._create_feedback_message_from_cobot_output(feedback.input_data)
 
                 # Send as feedback in all cases
                 self._action_server._goal_handles[-1].publish_feedback(self.result_msg)
@@ -127,7 +170,7 @@ class FokkerActionServer(Node):
         if msg_out:
             feedback = send_message(uid=self.tf_cobot_uid, message=msg_out, feedback=True)          
             if feedback:
-                self.result_msg = self._create_feedback_message_from_cobot_output(feedback)
+                self.result_msg = self._create_feedback_message_from_cobot_output(feedback.input_data)
 
                 # Send as feedback in all cases
                 self._action_server._goal_handles[-1].publish_feedback(self.result_msg)
@@ -138,7 +181,7 @@ class FokkerActionServer(Node):
             uid_out = self.get_uid(msg_out)
             feedback = send_message(uid=uid_out, message=msg_out, feedback=True)        
             if feedback:
-                self.result_msg = self._create_feedback_message_from_cobot_output(feedback)
+                self.result_msg = self._create_feedback_message_from_cobot_output(feedback.input_data)
 
                 # Send as feedback in all cases
                 self._action_server._goal_handles[-1].publish_feedback(self.result_msg)
@@ -149,7 +192,7 @@ class FokkerActionServer(Node):
             uid_out = self.get_uid(msg_out)
             feedback = send_message(uid=uid_out, message=msg_out, feedback=True)     
             if feedback:
-                self.result_msg = self._create_feedback_message_from_cobot_output(feedback)
+                self.result_msg = self._create_feedback_message_from_cobot_output(feedback.input_data)
 
                 # Send as feedback in all cases
                 self._action_server._goal_handles[-1].publish_feedback(self.result_msg)
@@ -157,7 +200,7 @@ class FokkerActionServer(Node):
         # list of holes to be drilled
         # feedback = send_message(uid=self.cobot_uid, message=drill_tasks_str_to_cobot(goal_handle_in.request.drill_tasks), feedback=True) 
         # if feedback:
-        #     self.result_msg = self._create_feedback_message_from_cobot_output(feedback)
+        #     self.result_msg = self._create_feedback_message_from_cobot_output(feedback.input_data)
 
         #     # Send as feedback in all cases
         #     self._action_server._goal_handles[-1].publish_feedback(self.result_msg)
@@ -167,7 +210,7 @@ class FokkerActionServer(Node):
         if msg_out:
             feedback = send_message(uid=self.pf_cobot_uid, message=msg_out, feedback=True)    
             if feedback:
-                self.result_msg = self._create_feedback_message_from_cobot_output(feedback)
+                self.result_msg = self._create_feedback_message_from_cobot_output(feedback.input_data)
 
                 # Send as feedback in all cases
                 self._action_server._goal_handles[-1].publish_feedback(self.result_msg)
@@ -177,7 +220,7 @@ class FokkerActionServer(Node):
         if msg_out:
             feedback = send_message(uid=self.tf_cobot_uid, message=msg_out, feedback=True)          
             if feedback:
-                self.result_msg = self._create_feedback_message_from_cobot_output(feedback)
+                self.result_msg = self._create_feedback_message_from_cobot_output(feedback.input_data)
 
                 # Send as feedback in all cases
                 self._action_server._goal_handles[-1].publish_feedback(self.result_msg)
@@ -185,7 +228,7 @@ class FokkerActionServer(Node):
         # list of available docking positions for End Effectors
         # feedback = send_message(uid=self.cobot_uid, message=docking_pos_str_to_cobot(goal_handle_in.request.docking_pos), feedback=True)
         # if feedback:
-        #     feedback_msg = self._create_feedback_message_from_cobot_output(feedback)
+        #     feedback_msg = self._create_feedback_message_from_cobot_output(feedback.input_data)
 
         #     # Send as feedback in all cases
         #     self._action_server._goal_handles[-1].publish_feedback(feedback_msg)
@@ -193,7 +236,7 @@ class FokkerActionServer(Node):
         # list of available End Effectors
         # feedback = send_message(uid=self.cobot_uid, message=ee_str_to_cobot(goal_handle_in.request.ee), feedback=True)              
         # if feedback:
-        #     feedback_msg = self._create_feedback_message_from_cobot_output(feedback)
+        #     feedback_msg = self._create_feedback_message_from_cobot_output(feedback.input_data)
 
         #     # Send as feedback in all cases
         #     self._action_server._goal_handles[-1].publish_feedback(feedback_msg)
@@ -206,15 +249,17 @@ class FokkerActionServer(Node):
             uid_out = self.get_uid(msg_out)
             feedback = send_message(uid=uid_out, message=msg_out, feedback=True)         
             if feedback:
-                self.result_msg = self._create_feedback_message_from_cobot_output(feedback)
+                self.result_msg = self._create_feedback_message_from_cobot_output(feedback.input_data)
 
                 # Send as feedback in all cases
                 self._action_server._goal_handles[-1].publish_feedback(self.result_msg)
 
         return 1     
 
-    # Function to populate feedback message based on information from the cobot controller
     def _create_feedback_message_from_cobot_output(self, c_str):
+        """
+        Function to populate feedback message based on information from the cobot controller
+        """
         
         # Create a feedback message
         feedback_msg = CobotOp.Feedback()
@@ -267,8 +312,10 @@ class FokkerActionServer(Node):
 
         return feedback_msg
     
-    # Function to populate feedback message based on information from the cobot controller
     def _create_result_message_from_cobot_output(self, c_str):
+        """
+        Function to populate feedback message based on information from the cobot controller
+        """
     
         # Create a feedback message
         result_msg = CobotOp.Result()

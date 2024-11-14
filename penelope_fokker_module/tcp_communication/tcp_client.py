@@ -68,17 +68,17 @@ class TCPClient:
         return 0
 
     def run(self):
-        while True:
-            # print("Start listening")
-            self._listen()
-            # print("Start sending")
-            self._send_messages()
-            time.sleep(0.01)
+        # print("Start listening")
+        self._listen()
+        # print("Start sending")
+        self._send_messages()
+        time.sleep(0.01)
 
 
-def run_tcp_client(ip_address: str, port: int) -> None:
+def run_tcp_client(ip_address: str, port: int, obj) -> None:
     client = TCPClient(
         host=ip_address,
         port=port,
     )
-    client.run()
+    while obj.continue_threads:
+        client.run()
