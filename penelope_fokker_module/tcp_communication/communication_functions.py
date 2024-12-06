@@ -2,7 +2,7 @@ from __future__ import annotations
 from .defaults import DEFAULT_ENCODER
 from .message_service_class import MessageService
 from .message_classes import TCPMessage, TCPResponse, MessageUID
-from ..utils.not_applicatble_classes import NoFeedbackReceived
+from ..utils.not_applicatble_classes import MessageToLong, NoFeedbackReceived
 import time
 
 
@@ -27,6 +27,12 @@ def construct_tcp_response(response_uid, response="processed", encoder=DEFAULT_E
 
 
 def send_message(uid, message, input_data=None, feedback=True):
+
+	# The maximum message length is 1024
+    # for safety the langth must remain below 1000
+	if len(message) > 1000:
+		raise MessageToLong
+
 	tcp_message = construct_tcp_message(message=message, input_data=input_data, response_required=feedback)
 	MessageService().add_outbox_message(uid=uid, message=tcp_message)
 	if feedback:

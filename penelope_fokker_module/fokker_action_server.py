@@ -157,6 +157,7 @@ class FokkerActionServer(Node):
         """
         # storage location container
         msg_out = permf_storage_str_to_cobot(goal_handle_in.request.permf_storage)
+
         if msg_out:
             feedback = send_message(uid=self.pf_cobot_uid, message=msg_out, feedback=True)
             if feedback:

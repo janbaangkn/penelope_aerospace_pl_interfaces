@@ -5,6 +5,11 @@ class NotYetComputed:
     def __repr__(self):
         return self.__class__.__name__
 
+class MessageToLong:
+    def __repr__(self):
+        # The maximum message length is 1024
+        # for safety the langth must remain below 1000
+        return self.__class__.__name__ + " max message length is 1000 characters"
 
 class NoRobotModelSpecified:
     def __repr__(self):

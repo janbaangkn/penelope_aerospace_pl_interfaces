@@ -196,6 +196,10 @@ def product_str_to_cobot(product_in):
 def waypoints_str_to_cobot(waypoints_in):
     if waypoints_in:
         if len(waypoints_in) > 0:
+            # At least the first waypoint uid must be a valid string
+            if len(waypoints_in[0].uid) > 0:
+                return None
+
             str_out = START_POPULATE_TAG + WAYPOINTS_TAG
 
             for waypoint in waypoints_in:
@@ -210,6 +214,10 @@ def waypoints_str_to_cobot(waypoints_in):
 def actions_str_to_cobot(actions_in): 
     if actions_in:
         if len(actions_in) > 0:
+            # At least the first action uid must be a valid string
+            if len(actions_in[0].uid) > 0:
+                return None
+            
             str_out = START_POPULATE_TAG + ACTIONS_TAG
 
             for action in actions_in:
@@ -223,6 +231,10 @@ def actions_str_to_cobot(actions_in):
 def drill_tasks_str_to_cobot(drill_tasks_in): 
     if drill_tasks_in:
         if len(drill_tasks_in) > 0:
+            # At least the first drill_task uid must be a valid string
+            if len(drill_tasks_in[0].uid) > 0:
+                return None
+            
             str_out = START_POPULATE_TAG + DRILL_TASKS_TAG
 
             for drill_task in drill_tasks_in:
@@ -236,6 +248,10 @@ def drill_tasks_str_to_cobot(drill_tasks_in):
 def fasteners_str_to_cobot(fasteners_in):
     if fasteners_in:
         if len(fasteners_in) > 0:
+            # At least the first fastener uid must be a valid string
+            if len(fasteners_in[0].uid) > 0:
+                return None
+            
             str_out = START_POPULATE_TAG + FASTENERS_TAG
 
             for fastener in fasteners_in:
@@ -249,6 +265,10 @@ def fasteners_str_to_cobot(fasteners_in):
 def tempfs_str_to_cobot(tempfs_in): 
     if tempfs_in:
         if len(tempfs_in) > 0:
+            # At least the first temp fastener uid must be a valid string
+            if len(tempfs_in[0].uid) > 0:
+                return None
+            
             str_out = START_POPULATE_TAG + TEMPFS_TAG
 
             for tempf in tempfs_in:
@@ -262,6 +282,10 @@ def tempfs_str_to_cobot(tempfs_in):
 def docking_pos_str_to_cobot(docking_pos_in): 
     if docking_pos_in:
         if len(docking_pos_in) > 0:
+            # At least the first docking_pos uid must be a valid string
+            if len(docking_pos_in[0].uid) > 0:
+                return None
+            
             str_out = START_POPULATE_TAG + DOCKING_POSS_TAG
 
             for docking_pos in docking_pos_in:
@@ -275,6 +299,10 @@ def docking_pos_str_to_cobot(docking_pos_in):
 def ee_str_to_cobot(ee_in): 
     if ee_in:
         if len(ee_in) > 0:
+            # At least the first ee uid must be a valid string
+            if len(ee_in[0].uid) > 0:
+                return None
+            
             str_out = START_POPULATE_TAG + END_EFFECTORS_TAG
 
             for ee in ee_in:
@@ -286,6 +314,10 @@ def ee_str_to_cobot(ee_in):
 
 # get message string for AssemblyHoleLocationContainer
 def _get_hole_location_container_to_cobot_str(cont_in):
+    # The cont_in is an empty object if the uid string has no length
+    if len(cont_in.uid) == 0:
+        return None
+        
     # uid of the container
     str_ = UID_TAG + cont_in.uid + CLOSE_TAG
 
