@@ -75,10 +75,15 @@ class TCPClient:
         time.sleep(0.01)
 
 
-def run_tcp_client(ip_address: str, port: int, obj) -> None:
+def run_tcp_client(ip_address: str, port: int, obj=None) -> None:
     client = TCPClient(
         host=ip_address,
         port=port,
     )
-    while obj.continue_threads:
-        client.run()
+    
+    if (obj is not None):
+        while obj.continue_threads:
+            client.run()
+    else:
+        while True:
+            client.run()

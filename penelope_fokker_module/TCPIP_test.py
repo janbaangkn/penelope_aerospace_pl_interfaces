@@ -1,5 +1,5 @@
-from penelope_fokker_module.tcp_communication.tcp_client import run_tcp_client
-from penelope_fokker_module.tcp_communication.communication_functions import send_message
+from tcp_communication.tcp_client import run_tcp_client
+from tcp_communication.communication_functions import send_message
 import threading
 
 

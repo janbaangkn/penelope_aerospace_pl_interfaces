@@ -2,7 +2,7 @@ from __future__ import annotations
 from .defaults import DEFAULT_ENCODER
 from .message_service_class import MessageService
 from .message_classes import TCPMessage, TCPResponse, MessageUID
-from ..utils.not_applicatble_classes import MessageToLong, NoFeedbackReceived
+from utils.not_applicatble_classes import MessageToLong, NoFeedbackReceived
 import time
 
 
