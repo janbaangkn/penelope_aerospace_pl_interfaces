@@ -24,9 +24,9 @@ if feedback:
     print(f"Feedback: {feedback}")
 
 # go to home
-# feedback = send_message(uid=pf_cobot_uid, message="goto_home", feedback=True)
-# if feedback:
-#     print(f"Feedback: {feedback}")
+feedback = send_message(uid=pf_cobot_uid, message="goto_home", feedback=True)
+if feedback:
+    print(f"Feedback: {feedback}")
 
 # add hole locations, stack thickness and diameter in the permanent fastener storage list 
 # msg = "populate_agent<"\
@@ -236,172 +236,9 @@ if feedback:
 # if feedback:
 #     print(f"Feedback: {feedback}")
 # 
-# # add hole locations, stack thickness and diameter in the temp fastener storage list 
-msg = "populate_agent<"\
-    "tempf_storage_loc<"\
-        "uid<tempf_storage>"\
-        "locations<"\
-            "hole_location<"\
-                "uid<tf_st_1_2>"\
-                "max_obstacle_height<40.0>"\
-                "diam<5.0>"\
-                "stack_thickness_tag<10.0>"\
-                "pose<"\
-                    "pose_p_x<104.0>"\
-                    "pose_p_y<491.5>"\
-                    "pose_p_z<38.0>"\
-                    "pose_o_x<71.0>"\
-                    "pose_o_y<180.0>"\
-                    "pose_o_z<0.0>"\
-                ">"\
-            ">"\
-            "hole_location<"\
-                "uid<tf_st_1_3>"\
-                "max_obstacle_height<40.0>"\
-                "diam<5.0>"\
-                "stack_thickness_tag<10.0>"\
-                "pose<"\
-                    "pose_p_x<140.0>"\
-                    "pose_p_y<492.0>"\
-                    "pose_p_z<38.0>"\
-                    "pose_o_x<71.0>"\
-                    "pose_o_y<180.0>"\
-                    "pose_o_z<0.0>"\
-                ">"\
-            ">"\
-            "hole_location<"\
-                "uid<tf_st_1_4>"\
-                "max_obstacle_height<40.0>"\
-                "diam<5.0>"\
-                "stack_thickness_tag<10.0>"\
-                "pose<"\
-                    "pose_p_x<177.0>"\
-                    "pose_p_y<493.0>"\
-                    "pose_p_z<38.0>"\
-                    "pose_o_x<71.0>"\
-                    "pose_o_y<180.0>"\
-                    "pose_o_z<0.0>"\
-                ">"\
-            ">"\
-            "hole_location<"\
-                "uid<tf_st_2_1>"\
-                "max_obstacle_height<40.0>"\
-                "diam<5.0>"\
-                "stack_thickness_tag<10.0>"\
-                "pose<"\
-                    "pose_p_x<68.5>"\
-                    "pose_p_y<457.0>"\
-                    "pose_p_z<38.0>"\
-                    "pose_o_x<71.0>"\
-                    "pose_o_y<180.0>"\
-                    "pose_o_z<0.0>"\
-                ">"\
-            ">"\
-            "hole_location<"\
-                "uid<tf_st_2_2>"\
-                "max_obstacle_height<40.0>"\
-                "diam<5.0>"\
-                "stack_thickness_tag<10.0>"\
-                "pose<"\
-                    "pose_p_x<104.5>"\
-                    "pose_p_y<457.0>"\
-                    "pose_p_z<38.0>"\
-                    "pose_o_x<71.0>"\
-                    "pose_o_y<180.0>"\
-                    "pose_o_z<0.0>"\
-                ">"\
-            ">"\
-            "hole_location<"\
-                "uid<tf_st_2_3>"\
-                "max_obstacle_height<40.0>"\
-                "diam<5.0>"\
-                "stack_thickness_tag<10.0>"\
-                "pose<"\
-                    "pose_p_x<140.5>"\
-                    "pose_p_y<457.0>"\
-                    "pose_p_z<38.0>"\
-                    "pose_o_x<71.0>"\
-                    "pose_o_y<180.0>"\
-                    "pose_o_z<0.0>"\
-                ">"\
-            ">"\
-            "hole_location<"\
-                "uid<tf_st_2_4>"\
-                "max_obstacle_height<40.0>"\
-                "diam<5.0>"\
-                "stack_thickness_tag<10.0>"\
-                "pose<"\
-                    "pose_p_x<177.0>"\
-                    "pose_p_y<457.0>"\
-                    "pose_p_z<38.0>"\
-                    "pose_o_x<71.0>"\
-                    "pose_o_y<180.0>"\
-                    "pose_o_z<0.0>"\
-                ">"\
-            ">"\
-            "hole_location<"\
-                "uid<tf_st_3_1>"\
-                "max_obstacle_height<40.0>"\
-                "diam<5.0>"\
-                "stack_thickness_tag<10.0>"\
-                "pose<"\
-                    "pose_p_x<68.5>"\
-                    "pose_p_y<421.0>"\
-                    "pose_p_z<38.0>"\
-                    "pose_o_x<71.0>"\
-                    "pose_o_y<180.0>"\
-                    "pose_o_z<0.0>"\
-                ">"\
-            ">"\
-            "hole_location<"\
-                "uid<tf_st_3_2>"\
-                "max_obstacle_height<40.0>"\
-                "diam<5.0>"\
-                "stack_thickness_tag<10.0>"\
-                "pose<"\
-                    "pose_p_x<104.5>"\
-                    "pose_p_y<421.0>"\
-                    "pose_p_z<38.0>"\
-                    "pose_o_x<71.0>"\
-                    "pose_o_y<180.0>"\
-                    "pose_o_z<0.0>"\
-                ">"\
-            ">"\
-            "hole_location<"\
-                "uid<tf_st_3_3>"\
-                "max_obstacle_height<40.0>"\
-                "diam<5.0>"\
-                "stack_thickness_tag<10.0>"\
-                "pose<"\
-                    "pose_p_x<140.5>"\
-                    "pose_p_y<421.0>"\
-                    "pose_p_z<38.0>"\
-                    "pose_o_x<71.0>"\
-                    "pose_o_y<180.0>"\
-                    "pose_o_z<0.0>"\
-                ">"\
-            ">"\
-            "hole_location<"\
-                "uid<tf_st_3_4>"\
-                "max_obstacle_height<40.0>"\
-                "diam<5.0>"\
-                "stack_thickness_tag<10.0>"\
-                "pose<"\
-                    "pose_p_x<177.0>"\
-                    "pose_p_y<421.0>"\
-                    "pose_p_z<38.0>"\
-                    "pose_o_x<71.0>"\
-                    "pose_o_y<180.0>"\
-                    "pose_o_z<0.0>"\
-                ">"\
-            ">"\
-        ">"\
-    ">"\
-">"
 
-feedback = send_message(uid=tf_cobot_uid, message=msg, feedback=True)
-if feedback:
-    print(f"Feedback: {feedback}")
+feedback = add_tempf_storage_locations()
+
 
 # add hole locations, stack thickness and diameter in the permf product list
 # msg = "populate_agent<"\
@@ -1322,3 +1159,178 @@ if feedback:
     print(f"Feedback: {feedback}")
 
 
+# add hole locations, stack thickness and diameter in the temp fastener storage list 
+def add_tempf_storage_locations():
+
+    # storage location 1-1 not used because it is broken and
+
+    msg = "populate_agent<"\
+        "tempf_storage_loc<"\
+            "uid<tempf_storage>"\
+            "locations<"\
+                "hole_location<"\
+                    "uid<tf_st_1_2>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<10.0>"\
+                    "pose<"\
+                        "pose_p_x<104.0>"\
+                        "pose_p_y<491.5>"\
+                        "pose_p_z<38.0>"\
+                        "pose_o_x<71.0>"\
+                        "pose_o_y<180.0>"\
+                        "pose_o_z<0.0>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<tf_st_1_3>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<10.0>"\
+                    "pose<"\
+                        "pose_p_x<140.0>"\
+                        "pose_p_y<492.0>"\
+                        "pose_p_z<38.0>"\
+                        "pose_o_x<71.0>"\
+                        "pose_o_y<180.0>"\
+                        "pose_o_z<0.0>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<tf_st_1_4>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<10.0>"\
+                    "pose<"\
+                        "pose_p_x<177.0>"\
+                        "pose_p_y<493.0>"\
+                        "pose_p_z<38.0>"\
+                        "pose_o_x<71.0>"\
+                        "pose_o_y<180.0>"\
+                        "pose_o_z<0.0>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<tf_st_2_1>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<10.0>"\
+                    "pose<"\
+                        "pose_p_x<68.5>"\
+                        "pose_p_y<457.0>"\
+                        "pose_p_z<38.0>"\
+                        "pose_o_x<71.0>"\
+                        "pose_o_y<180.0>"\
+                        "pose_o_z<0.0>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<tf_st_2_2>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<10.0>"\
+                    "pose<"\
+                        "pose_p_x<104.5>"\
+                        "pose_p_y<457.0>"\
+                        "pose_p_z<38.0>"\
+                        "pose_o_x<71.0>"\
+                        "pose_o_y<180.0>"\
+                        "pose_o_z<0.0>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<tf_st_2_3>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<10.0>"\
+                    "pose<"\
+                        "pose_p_x<140.5>"\
+                        "pose_p_y<457.0>"\
+                        "pose_p_z<38.0>"\
+                        "pose_o_x<71.0>"\
+                        "pose_o_y<180.0>"\
+                        "pose_o_z<0.0>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<tf_st_2_4>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<10.0>"\
+                    "pose<"\
+                        "pose_p_x<177.0>"\
+                        "pose_p_y<457.0>"\
+                        "pose_p_z<38.0>"\
+                        "pose_o_x<71.0>"\
+                        "pose_o_y<180.0>"\
+                        "pose_o_z<0.0>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<tf_st_3_1>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<10.0>"\
+                    "pose<"\
+                        "pose_p_x<68.5>"\
+                        "pose_p_y<421.0>"\
+                        "pose_p_z<38.0>"\
+                        "pose_o_x<71.0>"\
+                        "pose_o_y<180.0>"\
+                        "pose_o_z<0.0>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<tf_st_3_2>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<10.0>"\
+                    "pose<"\
+                        "pose_p_x<104.5>"\
+                        "pose_p_y<421.0>"\
+                        "pose_p_z<38.0>"\
+                        "pose_o_x<71.0>"\
+                        "pose_o_y<180.0>"\
+                        "pose_o_z<0.0>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<tf_st_3_3>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<10.0>"\
+                    "pose<"\
+                        "pose_p_x<140.5>"\
+                        "pose_p_y<421.0>"\
+                        "pose_p_z<38.0>"\
+                        "pose_o_x<71.0>"\
+                        "pose_o_y<180.0>"\
+                        "pose_o_z<0.0>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<tf_st_3_4>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<10.0>"\
+                    "pose<"\
+                        "pose_p_x<177.0>"\
+                        "pose_p_y<421.0>"\
+                        "pose_p_z<38.0>"\
+                        "pose_o_x<71.0>"\
+                        "pose_o_y<180.0>"\
+                        "pose_o_z<0.0>"\
+                    ">"\
+                ">"\
+            ">"\
+        ">"\
+    ">"
+
+    feedback = send_message(uid=tf_cobot_uid, message=msg, feedback=True)
+
+    if feedback:
+        print(f"Feedback: {feedback}")
+        return feedback
+
+    print(f"No feedback in add_tempf_storage_locations")
+    return "No feedback in add_tempf_storage_locations"
