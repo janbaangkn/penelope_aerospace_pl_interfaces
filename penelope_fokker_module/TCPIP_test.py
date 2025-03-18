@@ -6,16 +6,24 @@ import threading
 # NOTICE: uid of product, waypoints and actions must have pf.... or tf.... 
 #         to indicate for which cobot it is....
 
+# send the message to the cobot
+# catch messages that are too long (>1000)
+def safe_send_message(cobot_uid, msg, parent_function):
+    if (len(msg) > 1000):
+        print(f"add_{parent_function} message to long. len = {len(msg)}")
+        return
+
+    feedback = send_message(uid=cobot_uid, message=msg, feedback=True)
+
+    if feedback:
+        print(f"Feedback: {feedback}")
+    else:
+        print(f"No feedback in {parent_function}")
+        return
 
 # go to home for cobot with uid_in
 def cobot_goto_home(uid_in):
-    feedback = send_message(uid=uid_in, message="goto_home", feedback=True)
-    if feedback:
-        print(f"Feedback: {feedback}")
-        return feedback
-    
-    print(f"No feedback in cobot_goto_home")
-    return "No feedback in cobot_goto_home"
+    safe_send_message(uid_in, "goto_home", "cobot_goto_home")
 
 # add hole locations, stack thickness and diameter in the temp fastener storage list 
 def add_tempf_storage_locations():
@@ -82,6 +90,16 @@ def add_tempf_storage_locations():
                         "pose_o_z<0.0>"\
                     ">"\
                 ">"\
+            ">"\
+        ">"\
+    ">"
+
+    safe_send_message(tf_cobot_uid, msg, "add_tempf_storage_locations")
+
+    msg = "populate_agent<"\
+        "tempf_storage_loc<"\
+            "uid<tempf_storage>"\
+            "locations<"\
                 "hole_location<"\
                     "uid<tf_st_2_2>"\
                     "max_obstacle_height<40.0>"\
@@ -138,6 +156,16 @@ def add_tempf_storage_locations():
                         "pose_o_z<0.0>"\
                     ">"\
                 ">"\
+            ">"\
+        ">"\
+    ">"
+
+    safe_send_message(tf_cobot_uid, msg, "add_tempf_storage_locations")
+
+    msg = "populate_agent<"\
+        "tempf_storage_loc<"\
+            "uid<tempf_storage>"\
+            "locations<"\
                 "hole_location<"\
                     "uid<tf_st_3_2>"\
                     "max_obstacle_height<40.0>"\
@@ -184,14 +212,7 @@ def add_tempf_storage_locations():
         ">"\
     ">"
 
-    feedback = send_message(uid=tf_cobot_uid, message=msg, feedback=True)
-
-    if feedback:
-        print(f"Feedback: {feedback}")
-        return feedback
-
-    print(f"No feedback in add_tempf_storage_locations")
-    return "No feedback in add_tempf_storage_locations"
+    safe_send_message(tf_cobot_uid, msg, "add_tempf_storage_locations")
 
 # add hole locations, stack thickness and diameter in the permanent fastener storage list
 def add_permf_storage_locations():
@@ -402,14 +423,7 @@ def add_permf_storage_locations():
         ">"\
     ">"
 
-    feedback = send_message(uid=pf_cobot_uid, message=msg, feedback=True)
-
-    if feedback:
-        print(f"Feedback: {feedback}")
-        return feedback
-
-    print(f"No feedback in add_permf_storage_locations")
-    return "No feedback in add_permf_storage_locations"
+    safe_send_message(pf_cobot_uid, msg, "add_permf_storage_locations")
 
 # add hole locations, stack thickness and diameter in the permf product list
 def add_permf_product_locations():
@@ -673,14 +687,7 @@ def add_permf_product_locations():
         ">"\
     ">"
 
-    feedback = send_message(uid=pf_cobot_uid, message=msg, feedback=True)
-
-    if feedback:
-        print(f"Feedback: {feedback}")
-        return feedback
-
-    print(f"No feedback in add_permf_product_locations")
-    return "No feedback in add_permf_product_locations"
+    safe_send_message(pf_cobot_uid, msg, "add_permf_product_locations")
 
 # add hole locations, stack thickness and diameter in the tempf product list
 def add_tempf_product_locations():
@@ -730,6 +737,16 @@ def add_tempf_product_locations():
                         "pose_o_z<0.0>"\
                     ">"\
                 ">"\
+            ">"\
+        ">"\
+    ">"
+    
+    safe_send_message(tf_cobot_uid, msg, "add_tempf_product_locations")
+
+    msg = "populate_agent<"\
+        "product<"\
+            "uid<product>"\
+            "locations<"\
                 "hole_location<"\
                     "uid<tf_inner_vert_jig_01_01>"\
                     "max_obstacle_height<40.0>"\
@@ -772,6 +789,16 @@ def add_tempf_product_locations():
                         "pose_o_z<25.0>"\
                     ">"\
                 ">"\
+            ">"\
+        ">"\
+    ">"
+    
+    safe_send_message(tf_cobot_uid, msg, "add_tempf_product_locations")
+
+    msg = "populate_agent<"\
+        "product<"\
+            "uid<product>"\
+            "locations<"\
                 "hole_location<"\
                     "uid<tf_inner_vert_jig_02_08>"\
                     "max_obstacle_height<40.0>"\
@@ -818,14 +845,7 @@ def add_tempf_product_locations():
         ">"\
     ">"
     
-    feedback = send_message(uid=tf_cobot_uid, message=msg, feedback=True)
-
-    if feedback:
-        print(f"Feedback: {feedback}")
-        return feedback
-
-    print(f"No feedback in add_tempf_product_locations")
-    return "No feedback in add_tempf_product_locations"
+    safe_send_message(tf_cobot_uid, msg, "add_tempf_product_locations")
 
 # add permanent fasteners in storage
 def add_permf_in_storage():
@@ -988,14 +1008,7 @@ def add_permf_in_storage():
         ">"\
     ">"
 
-    feedback = send_message(uid=pf_cobot_uid, message=msg, feedback=True)
-
-    if feedback:
-        print(f"Feedback: {feedback}")
-        return feedback
-
-    print(f"No feedback in add_permf_in_storage")
-    return "No feedback in add_permf_in_storage"
+    safe_send_message(pf_cobot_uid, msg, "add_permf_in_storage")
 
 # add 9 temporary fasteners in storage  
 # fastener in stroage: state 1
@@ -1036,6 +1049,13 @@ def add_tempf_in_storage():
                 "tcp_tip_dist<25.0>"\
                 "tcp_top_dist<21.0>"\
             ">"\
+        ">"\
+    ">"
+
+    safe_send_message(tf_cobot_uid, msg, "add_tempf_in_storage")
+
+    msg = "populate_agent<"\
+        "tempfs<"\
             "tempf<"\
                 "uid<tempf_05>"\
                 "loc_uid<tf_st_2_1>"\
@@ -1069,6 +1089,13 @@ def add_tempf_in_storage():
                 "tcp_tip_dist<25.0>"\
                 "tcp_top_dist<21.0>"\
             ">"\
+        ">"\
+    ">"
+
+    safe_send_message(tf_cobot_uid, msg, "add_tempf_in_storage")
+
+    msg = "populate_agent<"\
+        "tempfs<"\
             "tempf<"\
                 "uid<tempf_08>"\
                 "loc_uid<tf_st_2_4>"\
@@ -1105,14 +1132,7 @@ def add_tempf_in_storage():
         ">"\
     ">"
 
-    feedback = send_message(uid=tf_cobot_uid, message=msg, feedback=True)
-
-    if feedback:
-        print(f"Feedback: {feedback}")
-        return feedback
-
-    print(f"No feedback in add_tempf_in_storage")
-    return "No feedback in add_tempf_in_storage"
+    safe_send_message(tf_cobot_uid, msg, "add_tempf_in_storage")
 
 # Add the permanent fastener actions to the agent
 # Defined actions will be executed later
@@ -1164,14 +1184,7 @@ def add_permf_actions():
         ">"\
     ">"
 
-    feedback = send_message(uid=pf_cobot_uid, message=msg, feedback=True)
-
-    if feedback:
-        print(f"Feedback: {feedback}")
-        return feedback
-
-    print(f"No feedback in add_permf_actions")
-    return "No feedback in add_permf_actions"
+    safe_send_message(pf_cobot_uid, msg, "add_permf_actions")
 
 # add nine actions....not yet execute them
 # tf_i_A01: install tempf from tf_left_drill_jig_01
@@ -1225,6 +1238,14 @@ def add_tempf_install_actions():
                 "action_state<1>"\
                 "speed<100>"\
             ">"\
+        ">"\
+    ">"
+
+    safe_send_message(tf_cobot_uid, msg, "add_tempf_install_actions")
+
+    
+    msg = "populate_agent<"\
+        "actions<"\
             "action<"\
                 "uid<tf_i_A06>"\
                 "action_type<install_tempf>"\
@@ -1256,14 +1277,7 @@ def add_tempf_install_actions():
         ">"\
     ">"
 
-    feedback = send_message(uid=tf_cobot_uid, message=msg, feedback=True)
-
-    if feedback:
-        print(f"Feedback: {feedback}")
-        return feedback
-
-    print(f"No feedback in add_tempf_install_actions")
-    return "No feedback in add_tempf_install_actions"
+    safe_send_message(tf_cobot_uid, msg, "add_tempf_install_actions")
 
 # add nine actions....not yet execute them
 # tf_u_A01: uninstall tempf from tf_left_drill_jig_01
@@ -1317,6 +1331,13 @@ def add_tempf_uninstall_actions():
                 "action_state<1>"\
                 "speed<100>"\
             ">"\
+        ">"\
+    ">"
+
+    safe_send_message(tf_cobot_uid, msg, "add_tempf_install_actions")
+
+    msg = "populate_agent<"\
+        "actions<"\
             "action<"\
                 "uid<tf_u_A06>"\
                 "action_type<remove_fastener>"\
@@ -1348,44 +1369,34 @@ def add_tempf_uninstall_actions():
         ">"\
     ">"
 
-    feedback = send_message(uid=tf_cobot_uid, message=msg, feedback=True)
-
-    if feedback:
-        print(f"Feedback: {feedback}")
-        return feedback
-
-    print(f"No feedback in add_tempf_install_actions")
-    return "No feedback in add_tempf_install_actions"
+    safe_send_message(tf_cobot_uid, msg, "add_tempf_install_actions")
 
 # execute action with uid on cobot with uid
 def execute_action(cobot_uid_in, action_uid_in):
     msg = "execute_single_operation<" + action_uid_in + ">"
-    # execute operation with uid
-    feedback = send_message(uid=cobot_uid_in, message=msg, feedback=True)
-    
-    if feedback:
-        print(f"Feedback: {feedback}")
-        return feedback
 
-    print(f"No feedback in execute_action: " + action_uid_in)
-    return "No feedback in execute_action: " + action_uid_in
+    safe_send_message(cobot_uid_in, msg, "execute_action")
 
 
+##################################################################################################
+##################################################################################################
+##################################################################################################
 
+# Set up a TCPIP client of each cobot
 tf_ip_address = "10.237.20.101"
 tf_port = 20002
 tf_cobot_uid = f"{tf_ip_address}/{tf_port}"
 tf_tcp_client_thread = threading.Thread(target=run_tcp_client, args=(tf_ip_address, tf_port))
 tf_tcp_client_thread.start()
 
-pf_ip_address = "10.237.20.103"
-pf_port = 20002
-pf_cobot_uid = f"{pf_ip_address}/{pf_port}"
-pf_tcp_client_thread = threading.Thread(target=run_tcp_client, args=(pf_ip_address, pf_port))
-pf_tcp_client_thread.start()
+# pf_ip_address = "10.237.20.103"
+# pf_port = 20002
+# pf_cobot_uid = f"{pf_ip_address}/{pf_port}"
+# pf_tcp_client_thread = threading.Thread(target=run_tcp_client, args=(pf_ip_address, pf_port))
+# pf_tcp_client_thread.start()
 
 cobot_goto_home(tf_cobot_uid)
-cobot_goto_home(pf_cobot_uid)
+# cobot_goto_home(pf_cobot_uid)
 
 add_tempf_storage_locations()
 add_tempf_product_locations()
@@ -1393,10 +1404,10 @@ add_tempf_in_storage()
 add_tempf_install_actions()
 add_tempf_uninstall_actions()
 
-add_permf_storage_locations()
-add_permf_product_locations()
-add_permf_in_storage()
-add_permf_actions()
+# add_permf_storage_locations()
+# add_permf_product_locations()
+# add_permf_in_storage()
+# add_permf_actions()
 
 # install the temporary fasteners
 execute_action(tf_cobot_uid, "tf_i_A01")
@@ -1411,10 +1422,10 @@ execute_action(tf_cobot_uid, "tf_i_A09")
 cobot_goto_home(tf_cobot_uid)
 
 # install the permanent fasteners
-execute_action(pf_cobot_uid, "pf_A01")
+# execute_action(pf_cobot_uid, "pf_A01")
 # etcetera
 # etcetera
-cobot_goto_home(pf_cobot_uid)
+# cobot_goto_home(pf_cobot_uid)
 
 # uninstall the temporary fasteners
 execute_action(tf_cobot_uid, "tf_u_A01")
@@ -1429,5 +1440,6 @@ execute_action(tf_cobot_uid, "tf_u_A09")
 cobot_goto_home(tf_cobot_uid)
 
 ##################################################################################################
-
+##################################################################################################
+##################################################################################################
 
