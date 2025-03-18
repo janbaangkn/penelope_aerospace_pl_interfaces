@@ -3,68 +3,11 @@ from tcp_communication.communication_functions import send_message
 import threading
 
 
-### uid of product, waypoints and actions must have pf.... or tf.... to indicate for which cobot it is....
+# NOTICE: uid of product, waypoints and actions must have pf.... or tf.... 
+#         to indicate for which cobot it is....
 
 
-tf_ip_address = "10.237.20.101"
-tf_port = 20002
-tf_cobot_uid = f"{tf_ip_address}/{tf_port}"
-tf_tcp_client_thread = threading.Thread(target=run_tcp_client, args=(tf_ip_address, tf_port))
-tf_tcp_client_thread.start()
-
-pf_ip_address = "10.237.20.103"
-pf_port = 20002
-pf_cobot_uid = f"{pf_ip_address}/{pf_port}"
-pf_tcp_client_thread = threading.Thread(target=run_tcp_client, args=(pf_ip_address, pf_port))
-pf_tcp_client_thread.start()
-
-
-cobot_goto_home(tf_cobot_uid)
-cobot_goto_home(pf_cobot_uid)
-
-add_tempf_storage_locations()
-add_tempf_product_locations()
-add_tempf_in_storage()
-add_tempf_install_actions()
-add_tempf_uninstall_actions()
-
-add_permf_storage_locations()
-add_permf_product_locations()
-add_permf_in_storage()
-add_permf_actions()
-
-# install the temporary fasteners
-execute_action(tf_cobot_uid, "tf_i_A01")
-execute_action(tf_cobot_uid, "tf_i_A02")
-execute_action(tf_cobot_uid, "tf_i_A03")
-execute_action(tf_cobot_uid, "tf_i_A04")
-execute_action(tf_cobot_uid, "tf_i_A05")
-execute_action(tf_cobot_uid, "tf_i_A06")
-execute_action(tf_cobot_uid, "tf_i_A07")
-execute_action(tf_cobot_uid, "tf_i_A08")
-execute_action(tf_cobot_uid, "tf_i_A09")
-cobot_goto_home(tf_cobot_uid)
-
-# install the permanent fasteners
-execute_action(pf_cobot_uid, "pf_A01")
-# etcetera
-# etcetera
-cobot_goto_home(pf_cobot_uid)
-
-# uninstall the temporary fasteners
-execute_action(tf_cobot_uid, "tf_u_A01")
-execute_action(tf_cobot_uid, "tf_u_A02")
-execute_action(tf_cobot_uid, "tf_u_A03")
-execute_action(tf_cobot_uid, "tf_u_A04")
-execute_action(tf_cobot_uid, "tf_u_A05")
-execute_action(tf_cobot_uid, "tf_u_A06")
-execute_action(tf_cobot_uid, "tf_u_A07")
-execute_action(tf_cobot_uid, "tf_u_A08")
-execute_action(tf_cobot_uid, "tf_u_A09")
-cobot_goto_home(tf_cobot_uid)
-
-
-# go to home
+# go to home for cobot with uid_in
 def cobot_goto_home(uid_in):
     feedback = send_message(uid=uid_in, message="goto_home", feedback=True)
     if feedback:
@@ -1248,64 +1191,156 @@ def add_tempf_install_actions():
     msg = "populate_agent<"\
         "actions<"\
             "action<"\
-                "uid<tf_A01>"\
+                "uid<tf_i_A01>"\
                 "action_type<install_tempf>"\
                 "loc_uid<tf_left_drill_jig_01>"\
                 "action_state<1>"\
                 "speed<100>"\
             ">"\
             "action<"\
-                "uid<tf_A02>"\
+                "uid<tf_i_A02>"\
                 "action_type<install_tempf>"\
                 "loc_uid<tf_left_drill_jig_08>"\
                 "action_state<1>"\
                 "speed<100>"\
             ">"\
             "action<"\
-                "uid<tf_A03>"\
+                "uid<tf_i_A03>"\
                 "action_type<install_tempf>"\
                 "loc_uid<tf_left_drill_jig_15>"\
                 "action_state<1>"\
                 "speed<100>"\
             ">"\
             "action<"\
-                "uid<tf_A04>"\
+                "uid<tf_i_A04>"\
                 "action_type<install_tempf>"\
                 "loc_uid<tf_inner_vert_jig_01_01>"\
                 "action_state<1>"\
                 "speed<100>"\
             ">"\
             "action<"\
-                "uid<tf_A05>"\
+                "uid<tf_i_A05>"\
                 "action_type<install_tempf>"\
                 "loc_uid<tf_inner_vert_jig_01_08>"\
                 "action_state<1>"\
                 "speed<100>"\
             ">"\
             "action<"\
-                "uid<tf_A06>"\
+                "uid<tf_i_A06>"\
                 "action_type<install_tempf>"\
                 "loc_uid<tf_inner_vert_jig_02_01>"\
                 "action_state<1>"\
                 "speed<100>"\
             ">"\
             "action<"\
-                "uid<tf_A07>"\
+                "uid<tf_i_A07>"\
                 "action_type<install_tempf>"\
                 "loc_uid<tf_inner_vert_jig_02_08>"\
                 "action_state<1>"\
                 "speed<100>"\
             ">"\
             "action<"\
-                "uid<tf_A08>"\
+                "uid<tf_i_A08>"\
                 "action_type<install_tempf>"\
                 "loc_uid<tf_inner_vert_jig_03_01>"\
                 "action_state<1>"\
                 "speed<100>"\
             ">"\
             "action<"\
-                "uid<tf_A09>"\
+                "uid<tf_i_A09>"\
                 "action_type<install_tempf>"\
+                "loc_uid<tf_inner_vert_jig_03_08>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+        ">"\
+    ">"
+
+    feedback = send_message(uid=tf_cobot_uid, message=msg, feedback=True)
+
+    if feedback:
+        print(f"Feedback: {feedback}")
+        return feedback
+
+    print(f"No feedback in add_tempf_install_actions")
+    return "No feedback in add_tempf_install_actions"
+
+# add nine actions....not yet execute them
+# tf_u_A01: uninstall tempf from tf_left_drill_jig_01
+# tf_u_A02: uninstall tempf from tf_left_drill_jig_08
+# tf_u_A03: uninstall tempf from tf_left_drill_jig_15
+# tf_u_A04: uninstall tempf from tf_inner_vert_jig_01_01
+# tf_u_A05: uninstall tempf from tf_inner_vert_jig_01_08
+# tf_u_A06: uninstall tempf from tf_inner_vert_jig_02_01
+# tf_u_A07: uninstall tempf from tf_inner_vert_jig_02_08
+# tf_u_A08: uninstall tempf from tf_inner_vert_jig_03_01
+# tf_u_A09: uninstall tempf from tf_inner_vert_jig_03_08
+def add_tempf_uninstall_actions():
+
+    # "action_type<remove_fastener>" is for remove
+    # "action_type<install_tempf>" is for install
+
+    msg = "populate_agent<"\
+        "actions<"\
+            "action<"\
+                "uid<tf_u_A01>"\
+                "action_type<remove_fastener>"\
+                "loc_uid<tf_left_drill_jig_01>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<tf_u_A02>"\
+                "action_type<remove_fastener>"\
+                "loc_uid<tf_left_drill_jig_08>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<tf_u_A03>"\
+                "action_type<remove_fastener>"\
+                "loc_uid<tf_left_drill_jig_15>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<tf_u_A04>"\
+                "action_type<remove_fastener>"\
+                "loc_uid<tf_inner_vert_jig_01_01>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<tf_u_A05>"\
+                "action_type<remove_fastener>"\
+                "loc_uid<tf_inner_vert_jig_01_08>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<tf_u_A06>"\
+                "action_type<remove_fastener>"\
+                "loc_uid<tf_inner_vert_jig_02_01>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<tf_u_A07>"\
+                "action_type<remove_fastener>"\
+                "loc_uid<tf_inner_vert_jig_02_08>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<tf_u_A08>"\
+                "action_type<remove_fastener>"\
+                "loc_uid<tf_inner_vert_jig_03_01>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<tf_u_A09>"\
+                "action_type<remove_fastener>"\
                 "loc_uid<tf_inner_vert_jig_03_08>"\
                 "action_state<1>"\
                 "speed<100>"\
@@ -1335,5 +1370,64 @@ def execute_action(cobot_uid_in, action_uid_in):
     print(f"No feedback in execute_action: " + action_uid_in)
     return "No feedback in execute_action: " + action_uid_in
 
+
+
+tf_ip_address = "10.237.20.101"
+tf_port = 20002
+tf_cobot_uid = f"{tf_ip_address}/{tf_port}"
+tf_tcp_client_thread = threading.Thread(target=run_tcp_client, args=(tf_ip_address, tf_port))
+tf_tcp_client_thread.start()
+
+pf_ip_address = "10.237.20.103"
+pf_port = 20002
+pf_cobot_uid = f"{pf_ip_address}/{pf_port}"
+pf_tcp_client_thread = threading.Thread(target=run_tcp_client, args=(pf_ip_address, pf_port))
+pf_tcp_client_thread.start()
+
+cobot_goto_home(tf_cobot_uid)
+cobot_goto_home(pf_cobot_uid)
+
+add_tempf_storage_locations()
+add_tempf_product_locations()
+add_tempf_in_storage()
+add_tempf_install_actions()
+add_tempf_uninstall_actions()
+
+add_permf_storage_locations()
+add_permf_product_locations()
+add_permf_in_storage()
+add_permf_actions()
+
+# install the temporary fasteners
+execute_action(tf_cobot_uid, "tf_i_A01")
+execute_action(tf_cobot_uid, "tf_i_A02")
+execute_action(tf_cobot_uid, "tf_i_A03")
+execute_action(tf_cobot_uid, "tf_i_A04")
+execute_action(tf_cobot_uid, "tf_i_A05")
+execute_action(tf_cobot_uid, "tf_i_A06")
+execute_action(tf_cobot_uid, "tf_i_A07")
+execute_action(tf_cobot_uid, "tf_i_A08")
+execute_action(tf_cobot_uid, "tf_i_A09")
+cobot_goto_home(tf_cobot_uid)
+
+# install the permanent fasteners
+execute_action(pf_cobot_uid, "pf_A01")
+# etcetera
+# etcetera
+cobot_goto_home(pf_cobot_uid)
+
+# uninstall the temporary fasteners
+execute_action(tf_cobot_uid, "tf_u_A01")
+execute_action(tf_cobot_uid, "tf_u_A02")
+execute_action(tf_cobot_uid, "tf_u_A03")
+execute_action(tf_cobot_uid, "tf_u_A04")
+execute_action(tf_cobot_uid, "tf_u_A05")
+execute_action(tf_cobot_uid, "tf_u_A06")
+execute_action(tf_cobot_uid, "tf_u_A07")
+execute_action(tf_cobot_uid, "tf_u_A08")
+execute_action(tf_cobot_uid, "tf_u_A09")
+cobot_goto_home(tf_cobot_uid)
+
+##################################################################################################
 
 
