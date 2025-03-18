@@ -25,246 +25,44 @@ cobot_goto_home(pf_cobot_uid)
 add_tempf_storage_locations()
 add_tempf_product_locations()
 add_tempf_in_storage()
+add_tempf_install_actions()
+add_tempf_uninstall_actions()
 
 add_permf_storage_locations()
 add_permf_product_locations()
 add_permf_in_storage()
+add_permf_actions()
 
+# install the temporary fasteners
+execute_action(tf_cobot_uid, "tf_i_A01")
+execute_action(tf_cobot_uid, "tf_i_A02")
+execute_action(tf_cobot_uid, "tf_i_A03")
+execute_action(tf_cobot_uid, "tf_i_A04")
+execute_action(tf_cobot_uid, "tf_i_A05")
+execute_action(tf_cobot_uid, "tf_i_A06")
+execute_action(tf_cobot_uid, "tf_i_A07")
+execute_action(tf_cobot_uid, "tf_i_A08")
+execute_action(tf_cobot_uid, "tf_i_A09")
+cobot_goto_home(tf_cobot_uid)
 
+# install the permanent fasteners
+execute_action(pf_cobot_uid, "pf_A01")
+# etcetera
+# etcetera
+cobot_goto_home(pf_cobot_uid)
 
+# uninstall the temporary fasteners
+execute_action(tf_cobot_uid, "tf_u_A01")
+execute_action(tf_cobot_uid, "tf_u_A02")
+execute_action(tf_cobot_uid, "tf_u_A03")
+execute_action(tf_cobot_uid, "tf_u_A04")
+execute_action(tf_cobot_uid, "tf_u_A05")
+execute_action(tf_cobot_uid, "tf_u_A06")
+execute_action(tf_cobot_uid, "tf_u_A07")
+execute_action(tf_cobot_uid, "tf_u_A08")
+execute_action(tf_cobot_uid, "tf_u_A09")
+cobot_goto_home(tf_cobot_uid)
 
-
-
-# msg = "populate_agent<"\
-# "actions<"\
-#     "action<"\
-#         "uid<pf_A01>"\
-#         "action_type<install_permf>"\
-#         "loc_uid<pf_pr_14>"\
-#         "action_state<1>"\
-#         "speed<100>"\
-#     ">"\
-#     "action<"\
-#         "uid<pf_A01>"\
-#         "action_type<install_permf>"\
-#         "loc_uid<pf_pr_13>"\
-#         "action_state<1>"\
-#         "speed<100>"\
-#     ">"\
-#     "action<"\
-#         "uid<pf_A03>"\
-#         "action_type<install_permf>"\
-#         "loc_uid<pf_pr_12>"\
-#         "action_state<1>"\
-#         "speed<100>"\
-#     ">"\
-#     "action<"\
-#         "uid<pf_A04>"\
-#         "action_type<install_permf>"\
-#         "loc_uid<pf_pr_11>"\
-#         "action_state<1>"\
-#         "speed<100>"\
-#     ">"\
-#     "action<"\
-#         "uid<pf_A05>"\
-#         "action_type<install_permf>"\
-#         "loc_uid<pf_pr_10>"\
-#         "action_state<1>"\
-#         "speed<100>"\
-#     ">"\
-#     "action<"\
-#         "uid<pf_A06>"\
-#         "action_type<install_permf>"\
-#         "loc_uid<pf_pr_09>"\
-#         "action_state<1>"\
-#         "speed<100>"\
-#     ">"\
-# ">"\
-
-# feedback = send_message(uid=pf_cobot_uid, message=msg, feedback=True)
-# if feedback:
-#     print(f"Feedback: {feedback}")
-
-
-# add ten actions....not yet execute them
-# 01: install a tempf in tf_left_drill_jig_01
-# 02: remove tempf from tf_left_drill_jig_01
-# 03: remove tempf from tf_left_drill_jig_08
-# 04: remove tempf from tf_left_drill_jig_15
-# 05: remove tempf from tf_inner_vert_jig_01_01
-# 06: remove tempf from tf_inner_vert_jig_01_08
-# 07: remove tempf from tf_inner_vert_jig_02_01
-# 08: remove tempf from tf_inner_vert_jig_02_08
-# 09: remove tempf from tf_inner_vert_jig_03_01
-# 10: remove tempf from tf_inner_vert_jig_03_08
-msg = "populate_agent<"\
-"actions<"\
-    "action<"\
-        "uid<tf_A01>"\
-        "action_type<install_tempf>"\
-        "loc_uid<tf_left_drill_jig_01>"\
-        "action_state<1>"\
-        "speed<100>"\
-    ">"\
-    "action<"\
-        "uid<tf_A01>"\
-        "action_type<remove_fastener>"\
-        "loc_uid<tf_left_drill_jig_01>"\
-        "action_state<1>"\
-        "speed<100>"\
-    ">"\
-    "action<"\
-        "uid<tf_A03>"\
-        "action_type<remove_fastener>"\
-        "loc_uid<tf_left_drill_jig_08>"\
-        "action_state<1>"\
-        "speed<100>"\
-    ">"\
-    "action<"\
-        "uid<tf_A04>"\
-        "action_type<remove_fastener>"\
-        "loc_uid<tf_left_drill_jig_15>"\
-        "action_state<1>"\
-        "speed<100>"\
-    ">"\
-    "action<"\
-        "uid<tf_A05>"\
-        "action_type<remove_fastener>"\
-        "loc_uid<tf_inner_vert_jig_01_01>"\
-        "action_state<1>"\
-        "speed<100>"\
-    ">"\
-    "action<"\
-        "uid<tf_A06>"\
-        "action_type<remove_fastener>"\
-        "loc_uid<tf_inner_vert_jig_01_08>"\
-        "action_state<1>"\
-        "speed<100>"\
-    ">"\
-    "action<"\
-        "uid<tf_A07>"\
-        "action_type<remove_fastener>"\
-        "loc_uid<tf_inner_vert_jig_02_01>"\
-        "action_state<1>"\
-        "speed<100>"\
-    ">"\
-    "action<"\
-        "uid<tf_A08>"\
-        "action_type<remove_fastener>"\
-        "loc_uid<tf_inner_vert_jig_02_08>"\
-        "action_state<1>"\
-        "speed<100>"\
-    ">"\
-    "action<"\
-        "uid<tf_A09>"\
-        "action_type<remove_fastener>"\
-        "loc_uid<tf_inner_vert_jig_03_01>"\
-        "action_state<1>"\
-        "speed<100>"\
-    ">"\
-    "action<"\
-        "uid<tf_A10>"\
-        "action_type<remove_fastener>"\
-        "loc_uid<tf_inner_vert_jig_03_08>"\
-        "action_state<1>"\
-        "speed<100>"\
-    ">"\
-">"\
-">"
-
-
-feedback = send_message(uid=tf_cobot_uid, message=msg, feedback=True)
-if feedback:
-    print(f"Feedback: {feedback}")
-
-
-
-#######################################################################################################################
-
-# # execute operation with uid
-# feedback = send_message(uid=pf_cobot_uid, message="execute_single_operation<pf_A01>", feedback=True)
-# if feedback:
-#     print(f"Feedback: {feedback}")
-
-# # execute operation with uid
-# feedback = send_message(uid=pf_cobot_uid, message="execute_single_operation<pf_A01>", feedback=True)
-# if feedback:
-#     print(f"Feedback: {feedback}")
-
-# # execute operation with uid
-# feedback = send_message(uid=pf_cobot_uid, message="execute_single_operation<pf_A03>", feedback=True)
-# if feedback:
-#     print(f"Feedback: {feedback}")
-
-# # execute operation with uid
-# feedback = send_message(uid=pf_cobot_uid, message="execute_single_operation<pf_A04>", feedback=True)
-# if feedback:
-#     print(f"Feedback: {feedback}")
-
-# # execute operation with uid
-# feedback = send_message(uid=pf_cobot_uid, message="execute_single_operation<pf_A05>", feedback=True)
-# if feedback:
-#     print(f"Feedback: {feedback}")
-
-# # execute operation with uid
-# feedback = send_message(uid=pf_cobot_uid, message="execute_single_operation<pf_A03>", feedback=True)
-# if feedback:
-#     print(f"Feedback: {feedback}")
-
-# execute operation with uid
-feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<tf_A01>", feedback=True)
-if feedback:
-    print(f"Feedback: {feedback}")
-
-# execute operation with uid
-feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<tf_A01>", feedback=True)
-if feedback:
-    print(f"Feedback: {feedback}")
-
-# execute operation with uid
-feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<tf_A03>", feedback=True)
-if feedback:
-    print(f"Feedback: {feedback}")
-
-# execute operation with uid
-feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<tf_A04>", feedback=True)
-if feedback:
-    print(f"Feedback: {feedback}")
-
-# execute operation with uid
-feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<tf_A05>", feedback=True)
-if feedback:
-    print(f"Feedback: {feedback}")
-
-# execute operation with uid
-feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<tf_A06>", feedback=True)
-if feedback:
-    print(f"Feedback: {feedback}")
-
-# execute operation with uid
-feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<tf_A07>", feedback=True)
-if feedback:
-    print(f"Feedback: {feedback}")
-
-# execute operation with uid
-feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<tf_A08>", feedback=True)
-if feedback:
-    print(f"Feedback: {feedback}")
-
-# execute operation with uid
-feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<tf_A09>", feedback=True)
-if feedback:
-    print(f"Feedback: {feedback}")
-
-# execute operation with uid
-feedback = send_message(uid=tf_cobot_uid, message="execute_single_operation<tf_A10>", feedback=True)
-if feedback:
-    print(f"Feedback: {feedback}")
-
-# go to home
-feedback = send_message(uid=tf_cobot_uid, message="goto_home", feedback=True)
-if feedback:
-    print(f"Feedback: {feedback}")
 
 # go to home
 def cobot_goto_home(uid_in):
@@ -1372,4 +1170,170 @@ def add_tempf_in_storage():
 
     print(f"No feedback in add_tempf_in_storage")
     return "No feedback in add_tempf_in_storage"
+
+# Add the permanent fastener actions to the agent
+# Defined actions will be executed later
+def add_permf_actions():
+    msg = "populate_agent<"\
+        "actions<"\
+            "action<"\
+                "uid<pf_A01>"\
+                "action_type<install_permf>"\
+                "loc_uid<pf_pr_14>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<pf_A01>"\
+                "action_type<install_permf>"\
+                "loc_uid<pf_pr_13>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<pf_A03>"\
+                "action_type<install_permf>"\
+                "loc_uid<pf_pr_12>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<pf_A04>"\
+                "action_type<install_permf>"\
+                "loc_uid<pf_pr_11>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<pf_A05>"\
+                "action_type<install_permf>"\
+                "loc_uid<pf_pr_10>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<pf_A06>"\
+                "action_type<install_permf>"\
+                "loc_uid<pf_pr_09>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+        ">"\
+    ">"
+
+    feedback = send_message(uid=pf_cobot_uid, message=msg, feedback=True)
+
+    if feedback:
+        print(f"Feedback: {feedback}")
+        return feedback
+
+    print(f"No feedback in add_permf_actions")
+    return "No feedback in add_permf_actions"
+
+# add nine actions....not yet execute them
+# tf_i_A01: install tempf from tf_left_drill_jig_01
+# tf_i_A02: install tempf from tf_left_drill_jig_08
+# tf_i_A03: install tempf from tf_left_drill_jig_15
+# tf_i_A04: install tempf from tf_inner_vert_jig_01_01
+# tf_i_A05: install tempf from tf_inner_vert_jig_01_08
+# tf_i_A06: install tempf from tf_inner_vert_jig_02_01
+# tf_i_A07: install tempf from tf_inner_vert_jig_02_08
+# tf_i_A08: install tempf from tf_inner_vert_jig_03_01
+# tf_i_A09: install tempf from tf_inner_vert_jig_03_08
+def add_tempf_install_actions():
+
+    # "action_type<remove_fastener>" is for remove
+    # "action_type<install_tempf>" is for install
+
+    msg = "populate_agent<"\
+        "actions<"\
+            "action<"\
+                "uid<tf_A01>"\
+                "action_type<install_tempf>"\
+                "loc_uid<tf_left_drill_jig_01>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<tf_A02>"\
+                "action_type<install_tempf>"\
+                "loc_uid<tf_left_drill_jig_08>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<tf_A03>"\
+                "action_type<install_tempf>"\
+                "loc_uid<tf_left_drill_jig_15>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<tf_A04>"\
+                "action_type<install_tempf>"\
+                "loc_uid<tf_inner_vert_jig_01_01>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<tf_A05>"\
+                "action_type<install_tempf>"\
+                "loc_uid<tf_inner_vert_jig_01_08>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<tf_A06>"\
+                "action_type<install_tempf>"\
+                "loc_uid<tf_inner_vert_jig_02_01>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<tf_A07>"\
+                "action_type<install_tempf>"\
+                "loc_uid<tf_inner_vert_jig_02_08>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<tf_A08>"\
+                "action_type<install_tempf>"\
+                "loc_uid<tf_inner_vert_jig_03_01>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<tf_A09>"\
+                "action_type<install_tempf>"\
+                "loc_uid<tf_inner_vert_jig_03_08>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+        ">"\
+    ">"
+
+    feedback = send_message(uid=tf_cobot_uid, message=msg, feedback=True)
+
+    if feedback:
+        print(f"Feedback: {feedback}")
+        return feedback
+
+    print(f"No feedback in add_tempf_install_actions")
+    return "No feedback in add_tempf_install_actions"
+
+# execute action with uid on cobot with uid
+def execute_action(cobot_uid_in, action_uid_in):
+    msg = "execute_single_operation<" + action_uid_in + ">"
+    # execute operation with uid
+    feedback = send_message(uid=cobot_uid_in, message=msg, feedback=True)
+    
+    if feedback:
+        print(f"Feedback: {feedback}")
+        return feedback
+
+    print(f"No feedback in execute_action: " + action_uid_in)
+    return "No feedback in execute_action: " + action_uid_in
+
+
 
