@@ -92,7 +92,8 @@ COBOT_IDENTIFIER = "tf"
 TCP_SPEED_LIMIT = 250
 TCP_ROT_LIMIT = 120
 JOINT_SPEED_LIMIT = [90, 90, 135, 150, 150, 150]
- 
+JOINT_ACC_LIMIT = [20]
+
 # Standard gaps used to prevent collision during movements
 SAFE_Z_GAP = 5
 GLOBAL_CLEARANCE_DURING_MOVEMENTS = 65 #Max TCP TOP DIST or any other object + delta 60 + 20
@@ -715,8 +716,12 @@ class Operator:
         self.workflow_parameter = WorkflowParameterOptions.STATIONARY
         self.workflow_arguments = None
 
+        # In the set value, vel1 and vel2 define the linear velocity and rotating velocity, relatively, of TCP.
         set_velx(TCP_SPEED_LIMIT, TCP_ROT_LIMIT)  # The global task velocity is set to ...(mm/sec) and ...(deg/sec).
         set_accx(120, 20) # The global task acceleration is set to ...(mm/sec2) and ...(deg/sec2).
+        
+        set_velj(JOINT_SPEED_LIMIT)
+        set_accj(JOINT_ACC_LIMIT)
         change_operation_speed(100)
       
     

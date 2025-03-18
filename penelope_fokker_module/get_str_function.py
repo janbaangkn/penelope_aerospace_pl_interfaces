@@ -83,7 +83,7 @@ def quaternion_to_R_matrix(quaternion):
     """
     _EPS = np.finfo(float).eps * 4.0 # epsilon for testing whether a number is close to zero
 
-    q = np.array(quaternion, dtype=np.float64, copy=True)
+    q = np.array([quaternion.w, quaternion.x, quaternion.y, quaternion.z], dtype=np.float64, copy=True)
     n = np.dot(q, q)
     if n < _EPS:
         return np.identity(3)
