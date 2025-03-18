@@ -92,7 +92,7 @@ COBOT_IDENTIFIER = "tf"
 TCP_SPEED_LIMIT = 250
 TCP_ROT_LIMIT = 120
 JOINT_SPEED_LIMIT = [90, 90, 135, 150, 150, 150]
-JOINT_ACC_LIMIT = [20]
+JOINT_ACC_LIMIT = [20, 20, 20, 20, 20, 20]
 
 # Standard gaps used to prevent collision during movements
 SAFE_Z_GAP = 5
