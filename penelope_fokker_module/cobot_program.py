@@ -1386,14 +1386,21 @@ def handle_container_str(msg_str, agent, cont_type):
     max_obstacle_heigth = float(extract_leaf_content(msg_str, MAX_OBST_HEIGHT_TAG, CLOSE_TAG))
     obj = cl_f_container(uid, max_obstacle_heigth)
 
-    if cont_type == TEMPF_STORAGE_LOC_TAG:
+    #Bram => Maakt nu niet elke keer een nieuwe storage / product aan als je meer dan 1 message stuurt.
+    if cont_type == TEMPF_STORAGE_LOC_TAG and agent.tempf_storage.holes_and_fast_lst == None:
         agent.tempf_storage = obj
-    elif cont_type == PERMF_STORAGE_LOC_TAG:
+    elif cont_type == PERMF_STORAGE_LOC_TAG and agent.permf_storage.holes_and_fast_lst == None:
         agent.permf_storage = obj
-    elif cont_type == PRODUCT_TAG:
+    elif cont_type == PRODUCT_TAG and agent.product.holes_and_fast_lst == None:
         agent.product = obj
-    else:
+    elif cont_type != PRODUCT_TAG and cont_type != PERMF_STORAGE_LOC_TAG and cont_type != TEMPF_STORAGE_LOC_TAG:
         raise Exception("Unknown storage type encountered in handle_container_str in container with uid {}.".format(uid))
+    elif cont_type == TEMPF_STORAGE_LOC_TAG:
+        obj = agent.tempf_storage
+    elif cont_type == PERMF_STORAGE_LOC_TAG:
+        obj = agent.permf_storage
+    elif cont_type == PRODUCT_TAG:
+        obj = agent.product
 
     # add the locations
     locs_str = _find_substring(msg_str, LOCATIONS_TAG)
@@ -5508,6 +5515,7 @@ class cl_f_container(cl_uid):
                 if ht.fast.uid() == uid:
                     return i
         send_message("get_loc_lst_id_by_uid____unable to find a fastener or location with uid {} in {}.".format(uid, self.uid()))
+        
         return -1
        
     
