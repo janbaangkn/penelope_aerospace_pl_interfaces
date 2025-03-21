@@ -169,26 +169,47 @@ def R_matrix_to_DRL_angles(R):
 # AssemblyHoleLocationContainer
 def permf_storage_str_to_cobot(storage_in):
     if storage_in:
-        str_out = _get_hole_location_container_to_cobot_str(storage_in)
-        if str_out:
-            return START_POPULATE_TAG + PERMF_STORAGE_LOC_TAG + str_out + CLOSE_TAG + CLOSE_TAG
+        str_lst_out = _get_hole_location_container_to_cobot_str(storage_in)
+
+        mod_lst_out = []
+
+        for str_out in str_lst_out:
+            
+            if str_out:
+                mod_lst_out.append(START_POPULATE_TAG + PERMF_STORAGE_LOC_TAG + str_out + CLOSE_TAG + CLOSE_TAG)
+            
+        return mod_lst_out
+        
     return None
 
 # Function to send a tempf container with holes to the cobot controller
 # AssemblyHoleLocationContainer
 def tempf_storage_str_to_cobot(storage_in):
     if storage_in:
-        str_out = _get_hole_location_container_to_cobot_str(storage_in)
-        if str_out:
-            return START_POPULATE_TAG + TEMPF_STORAGE_LOC_TAG + str_out + CLOSE_TAG + CLOSE_TAG
+        str_lst_out = _get_hole_location_container_to_cobot_str(storage_in)
+
+        mod_lst_out = []
+
+        for str_out in str_lst_out:
+            if str_out:
+                mod_lst_out.append(START_POPULATE_TAG + TEMPF_STORAGE_LOC_TAG + str_out + CLOSE_TAG + CLOSE_TAG)
+
+        return mod_lst_out
+    
     return None
 
 # Function to send a product container with holes to the cobot controller
 def product_str_to_cobot(product_in):
     if product_in:
-        str_out = _get_hole_location_container_to_cobot_str(product_in)
-        if str_out:
-            return START_POPULATE_TAG + PRODUCT_TAG + str_out + CLOSE_TAG + CLOSE_TAG
+        str_lst_out = _get_hole_location_container_to_cobot_str(product_in)
+        
+        mod_lst_out = []
+
+        for str_out in str_lst_out:
+            if str_out:
+                mod_lst_out.append(START_POPULATE_TAG + PRODUCT_TAG + str_out + CLOSE_TAG + CLOSE_TAG)
+
+        return mod_lst_out
 
     return None
 
@@ -198,14 +219,13 @@ def waypoints_str_to_cobot(waypoints_in):
         if len(waypoints_in) > 0:
             # At least the first waypoint uid must be a valid string
             if len(waypoints_in[0].uid) > 0:
-                return None
 
-            str_out = START_POPULATE_TAG + WAYPOINTS_TAG
+                str_out = START_POPULATE_TAG + WAYPOINTS_TAG
 
-            for waypoint in waypoints_in:
-                str_out = str_out + _get_waypoint_to_cobot_str(waypoint)
+                for waypoint in waypoints_in:
+                    str_out = str_out + _get_waypoint_to_cobot_str(waypoint)
 
-            return str_out + CLOSE_TAG + CLOSE_TAG
+                return str_out + CLOSE_TAG + CLOSE_TAG
 
     return None
 
@@ -216,14 +236,13 @@ def actions_str_to_cobot(actions_in):
         if len(actions_in) > 0:
             # At least the first action uid must be a valid string
             if len(actions_in[0].uid) > 0:
-                return None
             
-            str_out = START_POPULATE_TAG + ACTIONS_TAG
+                str_out = START_POPULATE_TAG + ACTIONS_TAG
 
-            for action in actions_in:
-                str_out = str_out + _get_action_to_cobot_str(action)
+                for action in actions_in:
+                    str_out = str_out + _get_action_to_cobot_str(action)
 
-            return str_out + CLOSE_TAG + CLOSE_TAG
+                return str_out + CLOSE_TAG + CLOSE_TAG
 
     return None
 
@@ -233,14 +252,13 @@ def drill_tasks_str_to_cobot(drill_tasks_in):
         if len(drill_tasks_in) > 0:
             # At least the first drill_task uid must be a valid string
             if len(drill_tasks_in[0].uid) > 0:
-                return None
             
-            str_out = START_POPULATE_TAG + DRILL_TASKS_TAG
+                str_out = START_POPULATE_TAG + DRILL_TASKS_TAG
 
-            for drill_task in drill_tasks_in:
-                str_out = str_out + _get_drill_task_to_cobot_str(drill_task)
+                for drill_task in drill_tasks_in:
+                    str_out = str_out + _get_drill_task_to_cobot_str(drill_task)
 
-            return str_out + CLOSE_TAG + CLOSE_TAG
+                return str_out + CLOSE_TAG + CLOSE_TAG
 
     return None 
 
@@ -250,14 +268,18 @@ def fasteners_str_to_cobot(fasteners_in):
         if len(fasteners_in) > 0:
             # At least the first fastener uid must be a valid string
             if len(fasteners_in[0].uid) > 0:
-                return None
-            
-            str_out = START_POPULATE_TAG + FASTENERS_TAG
+                str_out_lst = []
 
-            for fastener in fasteners_in:
-                str_out = str_out + FASTENER_TAG + _get_fastener_to_cobot_str(fastener) + CLOSE_TAG
+                for fastener in fasteners_in:
+                    str_out = START_POPULATE_TAG + FASTENERS_TAG
 
-            return str_out + CLOSE_TAG + CLOSE_TAG
+                    str_out = str_out + FASTENER_TAG + _get_fastener_to_cobot_str(fastener) + CLOSE_TAG
+
+                    str_out = str_out + CLOSE_TAG + CLOSE_TAG
+
+                    str_out_lst.append(str_out)
+                
+                return str_out_lst
 
     return None 
 
@@ -267,14 +289,18 @@ def tempfs_str_to_cobot(tempfs_in):
         if len(tempfs_in) > 0:
             # At least the first temp fastener uid must be a valid string
             if len(tempfs_in[0].uid) > 0:
-                return None
-            
-            str_out = START_POPULATE_TAG + TEMPFS_TAG
+                str_out_lst = []
 
-            for tempf in tempfs_in:
-                str_out = str_out + TEMPF_TAG + _get_fastener_to_cobot_str(tempf) + CLOSE_TAG
+                for tempf in tempfs_in:
+                    str_out = START_POPULATE_TAG + TEMPFS_TAG
 
-            return str_out + CLOSE_TAG + CLOSE_TAG
+                    str_out = str_out + TEMPF_TAG + _get_fastener_to_cobot_str(tempf) + CLOSE_TAG
+
+                    str_out + CLOSE_TAG + CLOSE_TAG
+
+                    str_out_lst.append(str_out)
+                
+                return str_out_lst
 
     return None 
 
@@ -318,19 +344,25 @@ def _get_hole_location_container_to_cobot_str(cont_in):
     if len(cont_in.uid) == 0:
         return None
         
-    # uid of the container
-    str_ = UID_TAG + cont_in.uid + CLOSE_TAG
+    str_lst = []
 
-    # list of hole locations
-    str_ = str_ + LOCATIONS_TAG
     for ahl in cont_in.locations:
+        # list of hole locations
+        str_ = str_ + LOCATIONS_TAG
+
+        # uid of the container
+        str_ = UID_TAG + cont_in.uid + CLOSE_TAG
+
         str_ = str_ + _get_hole_location_to_cobot_str(ahl)
-    str_ = str_ + CLOSE_TAG
+    
+        str_ = str_ + CLOSE_TAG
 
-    # max_obstacle_height
-    str_ = str_ + MAX_OBST_HEIGHT_TAG + str(cont_in.max_obstacle_height) + CLOSE_TAG
+        # max_obstacle_height
+        str_ = str_ + MAX_OBST_HEIGHT_TAG + str(cont_in.max_obstacle_height) + CLOSE_TAG
 
-    return str_
+        str_lst.append(str_)
+
+    return str_lst
 
 # get message string for AssemblyHoleLocation
 def _get_hole_location_to_cobot_str(loc_in):
