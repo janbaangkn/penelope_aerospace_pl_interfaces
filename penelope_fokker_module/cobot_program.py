@@ -3654,11 +3654,11 @@ class cl_perm_fast_ee:
         #task_compliance_ctrl([20,20,20,400,400,400])
 
        
-        set_tool_digital_output(self.I2_TRIGGER, 1)  
+        # set_tool_digital_output(self.I2_TRIGGER, 1)  
  
         wait(1.5) #Checken als trigger aan moet blijven tijdends nagel trekken. Of dat 1x triggeren voldoende is. Moet zoiezo ff wachten totdat nagel getrokken is
        # wait(0.1) #Weet niet zeker als anders het singaal goed door komt
-        set_tool_digital_output(self.I2_TRIGGER, 0)
+        # set_tool_digital_output(self.I2_TRIGGER, 0)
         #tp_popup("start_trigger returned True")
        
         release_compliance_ctrl()
@@ -5911,7 +5911,7 @@ class cl_agent():
             self.product.set_location_as_fast_target(permf, prod_lst_id)
             
             # move to the hole apprach position
-            #speed_limited_movej_on_posx(permf.tcp_approach_pos(), 100)
+            #speed_limited_movej_on_posx(permf.tcp_approach_pos(), 50)
             movel(permf.tcp_approach_pos(),ref=DR_BASE,r = BLEND_RADIUS_SMALL)
 
             # calculate the corrected position of the fastener
@@ -6601,8 +6601,8 @@ class cl_agent():
         
         wait(0.5)
         # Get a reference force because a force can already be present (example: hanging cables)
-        f_z0 = get_tool_forces_in_tool()[2]
-       
+        f_z0 = abs(get_tool_forces_in_tool()[2])
+
         release_compliance_ctrl()
 
         # Set DR_TOOL as ref coordinate to ensure that the desired forces are in the too axis system

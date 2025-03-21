@@ -26,197 +26,197 @@ def cobot_goto_home(uid_in):
     safe_send_message(uid_in, "goto_home", "cobot_goto_home")
 
 # add hole locations, stack thickness and diameter in the temp fastener storage list 
-# def add_tempf_storage_locations():
+def add_tempf_storage_locations():
 
-#     # storage location 1-1 not used because it is broken and
+    # storage location 1-1 not used because it is broken and
 
-#     msg = "populate_agent<"\
-#         "tempf_storage_loc<"\
-#             "uid<tempf_storage>"\
-#             "locations<"\
-#                 "hole_location<"\
-#                     "uid<tf_st_1_2>"\
-#                     "max_obstacle_height<40.0>"\
-#                     "diam<5.0>"\
-#                     "stack_thickness_tag<10.0>"\
-#                     "pose<"\
-#                         "pose_p_x<104.0>"\
-#                         "pose_p_y<491.5>"\
-#                         "pose_p_z<38.0>"\
-#                         "pose_o_x<71.0>"\
-#                         "pose_o_y<180.0>"\
-#                         "pose_o_z<0.0>"\
-#                     ">"\
-#                 ">"\
-#                 "hole_location<"\
-#                     "uid<tf_st_1_3>"\
-#                     "max_obstacle_height<40.0>"\
-#                     "diam<5.0>"\
-#                     "stack_thickness_tag<10.0>"\
-#                     "pose<"\
-#                         "pose_p_x<140.0>"\
-#                         "pose_p_y<492.0>"\
-#                         "pose_p_z<38.0>"\
-#                         "pose_o_x<71.0>"\
-#                         "pose_o_y<180.0>"\
-#                         "pose_o_z<0.0>"\
-#                     ">"\
-#                 ">"\
-#                 "hole_location<"\
-#                     "uid<tf_st_1_4>"\
-#                     "max_obstacle_height<40.0>"\
-#                     "diam<5.0>"\
-#                     "stack_thickness_tag<10.0>"\
-#                     "pose<"\
-#                         "pose_p_x<177.0>"\
-#                         "pose_p_y<493.0>"\
-#                         "pose_p_z<38.0>"\
-#                         "pose_o_x<71.0>"\
-#                         "pose_o_y<180.0>"\
-#                         "pose_o_z<0.0>"\
-#                     ">"\
-#                 ">"\
-#                 "hole_location<"\
-#                     "uid<tf_st_2_1>"\
-#                     "max_obstacle_height<40.0>"\
-#                     "diam<5.0>"\
-#                     "stack_thickness_tag<10.0>"\
-#                     "pose<"\
-#                         "pose_p_x<68.5>"\
-#                         "pose_p_y<457.0>"\
-#                         "pose_p_z<38.0>"\
-#                         "pose_o_x<71.0>"\
-#                         "pose_o_y<180.0>"\
-#                         "pose_o_z<0.0>"\
-#                     ">"\
-#                 ">"\
-#             ">"\
-#         ">"\
-#     ">"
+    msg = "populate_agent<"\
+        "tempf_storage_loc<"\
+            "uid<tempf_storage>"\
+            "locations<"\
+                "hole_location<"\
+                    "uid<tf_st_1_2>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<10.0>"\
+                    "pose<"\
+                        "pose_p_x<104.0>"\
+                        "pose_p_y<491.5>"\
+                        "pose_p_z<38.0>"\
+                        "pose_o_x<71.0>"\
+                        "pose_o_y<180.0>"\
+                        "pose_o_z<0.0>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<tf_st_1_3>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<10.0>"\
+                    "pose<"\
+                        "pose_p_x<140.0>"\
+                        "pose_p_y<492.0>"\
+                        "pose_p_z<38.0>"\
+                        "pose_o_x<71.0>"\
+                        "pose_o_y<180.0>"\
+                        "pose_o_z<0.0>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<tf_st_1_4>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<10.0>"\
+                    "pose<"\
+                        "pose_p_x<177.0>"\
+                        "pose_p_y<493.0>"\
+                        "pose_p_z<38.0>"\
+                        "pose_o_x<71.0>"\
+                        "pose_o_y<180.0>"\
+                        "pose_o_z<0.0>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<tf_st_2_1>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<10.0>"\
+                    "pose<"\
+                        "pose_p_x<68.5>"\
+                        "pose_p_y<457.0>"\
+                        "pose_p_z<38.0>"\
+                        "pose_o_x<71.0>"\
+                        "pose_o_y<180.0>"\
+                        "pose_o_z<0.0>"\
+                    ">"\
+                ">"\
+            ">"\
+        ">"\
+    ">"
 
-#     safe_send_message(tf_cobot_uid, msg, "add_tempf_storage_locations")
+    safe_send_message(tf_cobot_uid, msg, "add_tempf_storage_locations")
 
-#     msg = "populate_agent<"\
-#         "tempf_storage_loc<"\
-#             "uid<tempf_storage>"\
-#             "locations<"\
-#                 "hole_location<"\
-#                     "uid<tf_st_2_2>"\
-#                     "max_obstacle_height<40.0>"\
-#                     "diam<5.0>"\
-#                     "stack_thickness_tag<10.0>"\
-#                     "pose<"\
-#                         "pose_p_x<104.5>"\
-#                         "pose_p_y<457.0>"\
-#                         "pose_p_z<38.0>"\
-#                         "pose_o_x<71.0>"\
-#                         "pose_o_y<180.0>"\
-#                         "pose_o_z<0.0>"\
-#                     ">"\
-#                 ">"\
-#                 "hole_location<"\
-#                     "uid<tf_st_2_3>"\
-#                     "max_obstacle_height<40.0>"\
-#                     "diam<5.0>"\
-#                     "stack_thickness_tag<10.0>"\
-#                     "pose<"\
-#                         "pose_p_x<140.5>"\
-#                         "pose_p_y<457.0>"\
-#                         "pose_p_z<38.0>"\
-#                         "pose_o_x<71.0>"\
-#                         "pose_o_y<180.0>"\
-#                         "pose_o_z<0.0>"\
-#                     ">"\
-#                 ">"\
-#                 "hole_location<"\
-#                     "uid<tf_st_2_4>"\
-#                     "max_obstacle_height<40.0>"\
-#                     "diam<5.0>"\
-#                     "stack_thickness_tag<10.0>"\
-#                     "pose<"\
-#                         "pose_p_x<177.0>"\
-#                         "pose_p_y<457.0>"\
-#                         "pose_p_z<38.0>"\
-#                         "pose_o_x<71.0>"\
-#                         "pose_o_y<180.0>"\
-#                         "pose_o_z<0.0>"\
-#                     ">"\
-#                 ">"\
-#                 "hole_location<"\
-#                     "uid<tf_st_3_1>"\
-#                     "max_obstacle_height<40.0>"\
-#                     "diam<5.0>"\
-#                     "stack_thickness_tag<10.0>"\
-#                     "pose<"\
-#                         "pose_p_x<68.5>"\
-#                         "pose_p_y<421.0>"\
-#                         "pose_p_z<38.0>"\
-#                         "pose_o_x<71.0>"\
-#                         "pose_o_y<180.0>"\
-#                         "pose_o_z<0.0>"\
-#                     ">"\
-#                 ">"\
-#             ">"\
-#         ">"\
-#     ">"
+    msg = "populate_agent<"\
+        "tempf_storage_loc<"\
+            "uid<tempf_storage>"\
+            "locations<"\
+                "hole_location<"\
+                    "uid<tf_st_2_2>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<10.0>"\
+                    "pose<"\
+                        "pose_p_x<104.5>"\
+                        "pose_p_y<457.0>"\
+                        "pose_p_z<38.0>"\
+                        "pose_o_x<71.0>"\
+                        "pose_o_y<180.0>"\
+                        "pose_o_z<0.0>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<tf_st_2_3>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<10.0>"\
+                    "pose<"\
+                        "pose_p_x<140.5>"\
+                        "pose_p_y<457.0>"\
+                        "pose_p_z<38.0>"\
+                        "pose_o_x<71.0>"\
+                        "pose_o_y<180.0>"\
+                        "pose_o_z<0.0>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<tf_st_2_4>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<10.0>"\
+                    "pose<"\
+                        "pose_p_x<177.0>"\
+                        "pose_p_y<457.0>"\
+                        "pose_p_z<38.0>"\
+                        "pose_o_x<71.0>"\
+                        "pose_o_y<180.0>"\
+                        "pose_o_z<0.0>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<tf_st_3_1>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<10.0>"\
+                    "pose<"\
+                        "pose_p_x<68.5>"\
+                        "pose_p_y<421.0>"\
+                        "pose_p_z<38.0>"\
+                        "pose_o_x<71.0>"\
+                        "pose_o_y<180.0>"\
+                        "pose_o_z<0.0>"\
+                    ">"\
+                ">"\
+            ">"\
+        ">"\
+    ">"
 
-#     safe_send_message(tf_cobot_uid, msg, "add_tempf_storage_locations")
+    safe_send_message(tf_cobot_uid, msg, "add_tempf_storage_locations")
 
-#     msg = "populate_agent<"\
-#         "tempf_storage_loc<"\
-#             "uid<tempf_storage>"\
-#             "locations<"\
-#                 "hole_location<"\
-#                     "uid<tf_st_3_2>"\
-#                     "max_obstacle_height<40.0>"\
-#                     "diam<5.0>"\
-#                     "stack_thickness_tag<10.0>"\
-#                     "pose<"\
-#                         "pose_p_x<104.5>"\
-#                         "pose_p_y<421.0>"\
-#                         "pose_p_z<38.0>"\
-#                         "pose_o_x<71.0>"\
-#                         "pose_o_y<180.0>"\
-#                         "pose_o_z<0.0>"\
-#                     ">"\
-#                 ">"\
-#                 "hole_location<"\
-#                     "uid<tf_st_3_3>"\
-#                     "max_obstacle_height<40.0>"\
-#                     "diam<5.0>"\
-#                     "stack_thickness_tag<10.0>"\
-#                     "pose<"\
-#                         "pose_p_x<140.5>"\
-#                         "pose_p_y<421.0>"\
-#                         "pose_p_z<38.0>"\
-#                         "pose_o_x<71.0>"\
-#                         "pose_o_y<180.0>"\
-#                         "pose_o_z<0.0>"\
-#                     ">"\
-#                 ">"\
-#                 "hole_location<"\
-#                     "uid<tf_st_3_4>"\
-#                     "max_obstacle_height<40.0>"\
-#                     "diam<5.0>"\
-#                     "stack_thickness_tag<10.0>"\
-#                     "pose<"\
-#                         "pose_p_x<177.0>"\
-#                         "pose_p_y<421.0>"\
-#                         "pose_p_z<38.0>"\
-#                         "pose_o_x<71.0>"\
-#                         "pose_o_y<180.0>"\
-#                         "pose_o_z<0.0>"\
-#                     ">"\
-#                 ">"\
-#             ">"\
-#         ">"\
-#     ">"
+    msg = "populate_agent<"\
+        "tempf_storage_loc<"\
+            "uid<tempf_storage>"\
+            "locations<"\
+                "hole_location<"\
+                    "uid<tf_st_3_2>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<10.0>"\
+                    "pose<"\
+                        "pose_p_x<104.5>"\
+                        "pose_p_y<421.0>"\
+                        "pose_p_z<38.0>"\
+                        "pose_o_x<71.0>"\
+                        "pose_o_y<180.0>"\
+                        "pose_o_z<0.0>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<tf_st_3_3>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<10.0>"\
+                    "pose<"\
+                        "pose_p_x<140.5>"\
+                        "pose_p_y<421.0>"\
+                        "pose_p_z<38.0>"\
+                        "pose_o_x<71.0>"\
+                        "pose_o_y<180.0>"\
+                        "pose_o_z<0.0>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<tf_st_3_4>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<10.0>"\
+                    "pose<"\
+                        "pose_p_x<177.0>"\
+                        "pose_p_y<421.0>"\
+                        "pose_p_z<38.0>"\
+                        "pose_o_x<71.0>"\
+                        "pose_o_y<180.0>"\
+                        "pose_o_z<0.0>"\
+                    ">"\
+                ">"\
+            ">"\
+        ">"\
+    ">"
 
-#     safe_send_message(tf_cobot_uid, msg, "add_tempf_storage_locations")
+    safe_send_message(tf_cobot_uid, msg, "add_tempf_storage_locations")
 
 # add hole locations, stack thickness and diameter in the permanent fastener storage list
 def add_permf_storage_locations():
-    #1-4 oude storage
+    1-4 oude storage
     msg = "populate_agent<"\
         "permf_storage_loc<"\
             "uid<permf_storage>"\
@@ -452,6 +452,72 @@ def add_permf_storage_locations():
     ">"
 
     safe_send_message(pf_cobot_uid, msg, "add_permf_storage_locations")
+    #1-4 nieuwe storage
+    msg = "populate_agent<"\
+        "permf_storage_loc<"\
+            "uid<permf_storage>"\
+            "locations<"\
+                "hole_location<"\
+                    "uid<pf_st_02_01>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.055>"\
+                    "stack_thickness_tag<5.0>"\
+                    "pose<"\
+                        "pose_p_x<-284.04>"\
+                        "pose_p_y<250.81>"\
+                        "pose_p_z<41.050>"\
+                        "pose_o_x<28.12>"\
+                        "pose_o_y<179.09>"\
+                        "pose_o_z<-19.82>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<pf_st_02_02>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.055>"\
+                    "stack_thickness_tag<5.0>"\
+                    "pose<"\
+                        "pose_p_x<-308.41>"\
+                        "pose_p_y<248.96>"\
+                        "pose_p_z<40.740>"\
+                        "pose_o_x<179.71>"\
+                        "pose_o_y<-178.71>"\
+                        "pose_o_z<140.43>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<pf_st_02_03>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.055>"\
+                    "stack_thickness_tag<5.0>"\
+                    "pose<"\
+                        "pose_p_x<-333.45>"\
+                        "pose_p_y<246.81>"\
+                        "pose_p_z<40.850>"\
+                        "pose_o_x<133.42>"\
+                        "pose_o_y<-179.08>"\
+                        "pose_o_z<105.48>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<pf_st_02_04>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.055>"\
+                    "stack_thickness_tag<5.0>"\
+                    "pose<"\
+                        "pose_p_x<-383.25>"\
+                        "pose_p_y<244.10>"\
+                        "pose_p_z<41.510>"\
+                        "pose_o_x<12.36>"\
+                        "pose_o_y<179.27>"\
+                        "pose_o_z<-28.54>"\
+                    ">"\
+                ">"\
+            ">"\
+        ">"\
+    ">"
+    
+    safe_send_message(pf_cobot_uid, msg, "add_permf_storage_locations")
 
 # add hole locations, stack thickness and diameter in the permf product list
 def add_permf_product_locations():
@@ -589,7 +655,7 @@ def add_permf_product_locations():
 
     safe_send_message(pf_cobot_uid, msg, "add_permf_product_locations")
 
-    #L-profiel R3 9
+    #L-profiel R3 9 R1 1
     msg = "populate_agent<"\
         "product<"\
             "uid<product>"\
@@ -600,12 +666,26 @@ def add_permf_product_locations():
                     "diam<5.055>"\
                     "stack_thickness_tag<5.0>"\
                     "pose<"\
-                        "pose_p_x<109.71>"\
+                        "pose_p_x<16.1>"\
                         "pose_p_y<634.20>"\
                         "pose_p_z<1102.36>"\
                         "pose_o_x<92.18>"\
                         "pose_o_y<75.8>"\
                         "pose_o_z<97.94>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                 "uid<pf_pr_r01_01>"\
+                 "max_obstacle_height<40.0>"\
+                 "diam<5.055>"\
+                 "stack_thickness_tag<5.0>"\
+                    "pose<"\
+                        "pose_p_x<-113.310>"\
+                        "pose_p_y<1039.84>"\
+                        "pose_p_z<299.63>"\
+                        "pose_o_x<90.62>"\
+                        "pose_o_y<47.52>"\
+                        "pose_o_z<-85.64>"\
                     ">"\
                 ">"\
             ">"\
@@ -615,162 +695,162 @@ def add_permf_product_locations():
     safe_send_message(pf_cobot_uid, msg, "add_permf_product_locations")    
 
 # add hole locations, stack thickness and diameter in the tempf product list
-# def add_tempf_product_locations():
-#     msg = "populate_agent<"\
-#         "product<"\
-#             "uid<product>"\
-#             "locations<"\
-#                 "hole_location<"\
-#                     "uid<tf_left_drill_jig_01>"\
-#                     "max_obstacle_height<40.0>"\
-#                     "diam<5.0>"\
-#                     "stack_thickness_tag<9.0>"\
-#                     "pose<"\
-#                         "pose_p_x<11.0>"\
-#                         "pose_p_y<838.0>"\
-#                         "pose_p_z<1114.5>"\
-#                         "pose_o_x<90.0>"\
-#                         "pose_o_y<75.0>"\
-#                         "pose_o_z<0.0>"\
-#                     ">"\
-#                 ">"\
-#                 "hole_location<"\
-#                     "uid<tf_left_drill_jig_08>"\
-#                     "max_obstacle_height<40.0>"\
-#                     "diam<5.0>"\
-#                     "stack_thickness_tag<9.0>"\
-#                     "pose<"\
-#                         "pose_p_x<13.0>"\
-#                         "pose_p_y<902.0>"\
-#                         "pose_p_z<905.0>"\
-#                         "pose_o_x<90.0>"\
-#                         "pose_o_y<69.0>"\
-#                         "pose_o_z<0.0>"\
-#                     ">"\
-#                 ">"\
-#                 "hole_location<"\
-#                     "uid<tf_left_drill_jig_15>"\
-#                     "max_obstacle_height<40.0>"\
-#                     "diam<5.0>"\
-#                     "stack_thickness_tag<9.0>"\
-#                     "pose<"\
-#                         "pose_p_x<16.5>"\
-#                         "pose_p_y<991.0>"\
-#                         "pose_p_z<705.5>"\
-#                         "pose_o_x<90.0>"\
-#                         "pose_o_y<63.0>"\
-#                         "pose_o_z<0.0>"\
-#                     ">"\
-#                 ">"\
-#             ">"\
-#         ">"\
-#     ">"
+def add_tempf_product_locations():
+    msg = "populate_agent<"\
+        "product<"\
+            "uid<product>"\
+            "locations<"\
+                "hole_location<"\
+                    "uid<tf_left_drill_jig_01>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<9.0>"\
+                    "pose<"\
+                        "pose_p_x<11.0>"\
+                        "pose_p_y<838.0>"\
+                        "pose_p_z<1114.5>"\
+                        "pose_o_x<90.0>"\
+                        "pose_o_y<75.0>"\
+                        "pose_o_z<0.0>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<tf_left_drill_jig_08>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<9.0>"\
+                    "pose<"\
+                        "pose_p_x<13.0>"\
+                        "pose_p_y<902.0>"\
+                        "pose_p_z<905.0>"\
+                        "pose_o_x<90.0>"\
+                        "pose_o_y<69.0>"\
+                        "pose_o_z<0.0>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<tf_left_drill_jig_15>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<9.0>"\
+                    "pose<"\
+                        "pose_p_x<16.5>"\
+                        "pose_p_y<991.0>"\
+                        "pose_p_z<705.5>"\
+                        "pose_o_x<90.0>"\
+                        "pose_o_y<63.0>"\
+                        "pose_o_z<0.0>"\
+                    ">"\
+                ">"\
+            ">"\
+        ">"\
+    ">"
     
-#     safe_send_message(tf_cobot_uid, msg, "add_tempf_product_locations")
+    safe_send_message(tf_cobot_uid, msg, "add_tempf_product_locations")
 
-#     msg = "populate_agent<"\
-#         "product<"\
-#             "uid<product>"\
-#             "locations<"\
-#                 "hole_location<"\
-#                     "uid<tf_inner_vert_jig_01_01>"\
-#                     "max_obstacle_height<40.0>"\
-#                     "diam<5.0>"\
-#                     "stack_thickness_tag<9.0>"\
-#                     "pose<"\
-#                         "pose_p_x<222.0>"\
-#                         "pose_p_y<865.0>"\
-#                         "pose_p_z<1018.2>"\
-#                         "pose_o_x<90.0>"\
-#                         "pose_o_y<72.0>"\
-#                         "pose_o_z<10.0>"\
-#                     ">"\
-#                 ">"\
-#                 "hole_location<"\
-#                     "uid<tf_inner_vert_jig_01_08>"\
-#                     "max_obstacle_height<40.0>"\
-#                     "diam<5.0>"\
-#                     "stack_thickness_tag<9.0>"\
-#                     "pose<"\
-#                         "pose_p_x<226.0>"\
-#                         "pose_p_y<938.0>"\
-#                         "pose_p_z<812.0>"\
-#                         "pose_o_x<90.0>"\
-#                         "pose_o_y<66.0>"\
-#                         "pose_o_z<10.0>"\
-#                     ">"\
-#                 ">"\
-#                 "hole_location<"\
-#                     "uid<tf_inner_vert_jig_02_01>"\
-#                     "max_obstacle_height<40.0>"\
-#                     "diam<5.0>"\
-#                     "stack_thickness_tag<9.0>"\
-#                     "pose<"\
-#                         "pose_p_x<451.5>"\
-#                         "pose_p_y<863.0>"\
-#                         "pose_p_z<1015.5>"\
-#                         "pose_o_x<90.0>"\
-#                         "pose_o_y<72.0>"\
-#                         "pose_o_z<25.0>"\
-#                     ">"\
-#                 ">"\
-#             ">"\
-#         ">"\
-#     ">"
+    msg = "populate_agent<"\
+        "product<"\
+            "uid<product>"\
+            "locations<"\
+                "hole_location<"\
+                    "uid<tf_inner_vert_jig_01_01>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<9.0>"\
+                    "pose<"\
+                        "pose_p_x<222.0>"\
+                        "pose_p_y<865.0>"\
+                        "pose_p_z<1018.2>"\
+                        "pose_o_x<90.0>"\
+                        "pose_o_y<72.0>"\
+                        "pose_o_z<10.0>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<tf_inner_vert_jig_01_08>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<9.0>"\
+                    "pose<"\
+                        "pose_p_x<226.0>"\
+                        "pose_p_y<938.0>"\
+                        "pose_p_z<812.0>"\
+                        "pose_o_x<90.0>"\
+                        "pose_o_y<66.0>"\
+                        "pose_o_z<10.0>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<tf_inner_vert_jig_02_01>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<9.0>"\
+                    "pose<"\
+                        "pose_p_x<451.5>"\
+                        "pose_p_y<863.0>"\
+                        "pose_p_z<1015.5>"\
+                        "pose_o_x<90.0>"\
+                        "pose_o_y<72.0>"\
+                        "pose_o_z<25.0>"\
+                    ">"\
+                ">"\
+            ">"\
+        ">"\
+    ">"
     
-#     safe_send_message(tf_cobot_uid, msg, "add_tempf_product_locations")
+    safe_send_message(tf_cobot_uid, msg, "add_tempf_product_locations")
 
-#     msg = "populate_agent<"\
-#         "product<"\
-#             "uid<product>"\
-#             "locations<"\
-#                 "hole_location<"\
-#                     "uid<tf_inner_vert_jig_02_08>"\
-#                     "max_obstacle_height<40.0>"\
-#                     "diam<5.0>"\
-#                     "stack_thickness_tag<9.0>"\
-#                     "pose<"\
-#                         "pose_p_x<453.5>"\
-#                         "pose_p_y<939.0>"\
-#                         "pose_p_z<810.0>"\
-#                         "pose_o_x<90.0>"\
-#                         "pose_o_y<66.0>"\
-#                         "pose_o_z<25.0>"\
-#                     ">"\
-#                 ">"\
-#                 "hole_location<"\
-#                     "uid<tf_inner_vert_jig_03_01>"\
-#                     "max_obstacle_height<40.0>"\
-#                     "diam<5.0>"\
-#                     "stack_thickness_tag<9.0>"\
-#                     "pose<"\
-#                         "pose_p_x<622.0>"\
-#                         "pose_p_y<864.0>"\
-#                         "pose_p_z<1020.0>"\
-#                         "pose_o_x<90.0>"\
-#                         "pose_o_y<72.0>"\
-#                         "pose_o_z<30.0>"\
-#                     ">"\
-#                 ">"\
-#                 "hole_location<"\
-#                     "uid<tf_inner_vert_jig_03_08>"\
-#                     "max_obstacle_height<40.0>"\
-#                     "diam<5.0>"\
-#                     "stack_thickness_tag<9.0>"\
-#                     "pose<"\
-#                         "pose_p_x<623.0>"\
-#                         "pose_p_y<938.0>"\
-#                         "pose_p_z<814.5>"\
-#                         "pose_o_x<90.0>"\
-#                         "pose_o_y<66.0>"\
-#                         "pose_o_z<30.0>"\
-#                     ">"\
-#                 ">"\
-#             ">"\
-#         ">"\
-#     ">"
+    msg = "populate_agent<"\
+        "product<"\
+            "uid<product>"\
+            "locations<"\
+                "hole_location<"\
+                    "uid<tf_inner_vert_jig_02_08>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<9.0>"\
+                    "pose<"\
+                        "pose_p_x<453.5>"\
+                        "pose_p_y<939.0>"\
+                        "pose_p_z<810.0>"\
+                        "pose_o_x<90.0>"\
+                        "pose_o_y<66.0>"\
+                        "pose_o_z<25.0>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<tf_inner_vert_jig_03_01>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<9.0>"\
+                    "pose<"\
+                        "pose_p_x<622.0>"\
+                        "pose_p_y<864.0>"\
+                        "pose_p_z<1020.0>"\
+                        "pose_o_x<90.0>"\
+                        "pose_o_y<72.0>"\
+                        "pose_o_z<30.0>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<tf_inner_vert_jig_03_08>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.0>"\
+                    "stack_thickness_tag<9.0>"\
+                    "pose<"\
+                        "pose_p_x<623.0>"\
+                        "pose_p_y<938.0>"\
+                        "pose_p_z<814.5>"\
+                        "pose_o_x<90.0>"\
+                        "pose_o_y<66.0>"\
+                        "pose_o_z<30.0>"\
+                    ">"\
+                ">"\
+            ">"\
+        ">"\
+    ">"
     
-#     safe_send_message(tf_cobot_uid, msg, "add_tempf_product_locations")
+    safe_send_message(tf_cobot_uid, msg, "add_tempf_product_locations")
 
 # add permanent fasteners in storage
 def add_permf_in_storage():
@@ -778,7 +858,7 @@ def add_permf_in_storage():
         "fasteners<"\
             "fastener<"\
                 "uid<permf_01>"\
-                "loc_uid<pf_st_01_01>"\
+                "loc_uid<pf_st_02_01>"\
                 "fastener_state<1>"\
                 "diam<5.055>"\
                 "shaft_height<23.37>"\
@@ -789,7 +869,7 @@ def add_permf_in_storage():
             ">"\
             "fastener<"\
                 "uid<permf_02>"\
-                "loc_uid<pf_st_01_02>"\
+                "loc_uid<pf_st_02_02>"\
                 "fastener_state<1>"\
                 "diam<5.055>"\
                 "shaft_height<23.37>"\
@@ -800,7 +880,7 @@ def add_permf_in_storage():
             ">"\
             "fastener<"\
                 "uid<permf_03>"\
-                "loc_uid<pf_st_01_03>"\
+                "loc_uid<pf_st_02_03>"\
                 "fastener_state<1>"\
                 "diam<5.055>"\
                 "shaft_height<23.37>"\
@@ -811,7 +891,7 @@ def add_permf_in_storage():
             ">"\
             "fastener<"\
                 "uid<permf_04>"\
-                "loc_uid<pf_st_01_04>"\
+                "loc_uid<pf_st_02_04>"\
                 "fastener_state<1>"\
                 "diam<5.055>"\
                 "shaft_height<23.37>"\
@@ -960,126 +1040,126 @@ def add_permf_in_storage():
 # add 9 temporary fasteners in storage  
 # fastener in stroage: state 1
 # fastener in product: state 3
-# def add_tempf_in_storage():
-#     msg = "populate_agent<"\
-#         "tempfs<"\
-#             "tempf<"\
-#                 "uid<tempf_02>"\
-#                 "loc_uid<tf_st_1_2>"\
-#                 "fastener_state<1>"\
-#                 "diam<5.0>"\
-#                 "shaft_height<60.0>"\
-#                 "min_stack_thickness<3.0>"\
-#                 "max_stack_thickness<17.0>"\
-#                 "tcp_tip_dist<25.0>"\
-#                 "tcp_top_dist<21.0>"\
-#             ">"\
-#             "tempf<"\
-#                 "uid<tempf_03>"\
-#                 "loc_uid<tf_st_1_3>"\
-#                 "fastener_state<1>"\
-#                 "diam<5.0>"\
-#                 "shaft_height<60.0>"\
-#                 "min_stack_thickness<3.0>"\
-#                 "max_stack_thickness<17.0>"\
-#                 "tcp_tip_dist<25.0>"\
-#                 "tcp_top_dist<21.0>"\
-#             ">"\
-#             "tempf<"\
-#                 "uid<tempf_04>"\
-#                 "loc_uid<tf_st_1_4>"\
-#                 "fastener_state<1>"\
-#                 "diam<5.0>"\
-#                 "shaft_height<60.0>"\
-#                 "min_stack_thickness<3.0>"\
-#                 "max_stack_thickness<17.0>"\
-#                 "tcp_tip_dist<25.0>"\
-#                 "tcp_top_dist<21.0>"\
-#             ">"\
-#         ">"\
-#     ">"
+def add_tempf_in_storage():
+    msg = "populate_agent<"\
+        "tempfs<"\
+            "tempf<"\
+                "uid<tempf_02>"\
+                "loc_uid<tf_st_1_2>"\
+                "fastener_state<1>"\
+                "diam<5.0>"\
+                "shaft_height<60.0>"\
+                "min_stack_thickness<3.0>"\
+                "max_stack_thickness<17.0>"\
+                "tcp_tip_dist<25.0>"\
+                "tcp_top_dist<21.0>"\
+            ">"\
+            "tempf<"\
+                "uid<tempf_03>"\
+                "loc_uid<tf_st_1_3>"\
+                "fastener_state<1>"\
+                "diam<5.0>"\
+                "shaft_height<60.0>"\
+                "min_stack_thickness<3.0>"\
+                "max_stack_thickness<17.0>"\
+                "tcp_tip_dist<25.0>"\
+                "tcp_top_dist<21.0>"\
+            ">"\
+            "tempf<"\
+                "uid<tempf_04>"\
+                "loc_uid<tf_st_1_4>"\
+                "fastener_state<1>"\
+                "diam<5.0>"\
+                "shaft_height<60.0>"\
+                "min_stack_thickness<3.0>"\
+                "max_stack_thickness<17.0>"\
+                "tcp_tip_dist<25.0>"\
+                "tcp_top_dist<21.0>"\
+            ">"\
+        ">"\
+    ">"
 
-#     safe_send_message(tf_cobot_uid, msg, "add_tempf_in_storage")
+    safe_send_message(tf_cobot_uid, msg, "add_tempf_in_storage")
 
-#     msg = "populate_agent<"\
-#         "tempfs<"\
-#             "tempf<"\
-#                 "uid<tempf_05>"\
-#                 "loc_uid<tf_st_2_1>"\
-#                 "fastener_state<1>"\
-#                 "diam<5.0>"\
-#                 "shaft_height<60.0>"\
-#                 "min_stack_thickness<3.0>"\
-#                 "max_stack_thickness<17.0>"\
-#                 "tcp_tip_dist<25.0>"\
-#                 "tcp_top_dist<21.0>"\
-#             ">"\
-#             "tempf<"\
-#                 "uid<tempf_06>"\
-#                 "loc_uid<tf_st_2_2>"\
-#                 "fastener_state<1>"\
-#                 "diam<5.0>"\
-#                 "shaft_height<60.0>"\
-#                 "min_stack_thickness<3.0>"\
-#                 "max_stack_thickness<17.0>"\
-#                 "tcp_tip_dist<25.0>"\
-#                 "tcp_top_dist<21.0>"\
-#             ">"\
-#             "tempf<"\
-#                 "uid<tempf_07>"\
-#                 "loc_uid<tf_st_2_3>"\
-#                 "fastener_state<1>"\
-#                 "diam<5.0>"\
-#                 "shaft_height<60.0>"\
-#                 "min_stack_thickness<3.0>"\
-#                 "max_stack_thickness<17.0>"\
-#                 "tcp_tip_dist<25.0>"\
-#                 "tcp_top_dist<21.0>"\
-#             ">"\
-#         ">"\
-#     ">"
+    msg = "populate_agent<"\
+        "tempfs<"\
+            "tempf<"\
+                "uid<tempf_05>"\
+                "loc_uid<tf_st_2_1>"\
+                "fastener_state<1>"\
+                "diam<5.0>"\
+                "shaft_height<60.0>"\
+                "min_stack_thickness<3.0>"\
+                "max_stack_thickness<17.0>"\
+                "tcp_tip_dist<25.0>"\
+                "tcp_top_dist<21.0>"\
+            ">"\
+            "tempf<"\
+                "uid<tempf_06>"\
+                "loc_uid<tf_st_2_2>"\
+                "fastener_state<1>"\
+                "diam<5.0>"\
+                "shaft_height<60.0>"\
+                "min_stack_thickness<3.0>"\
+                "max_stack_thickness<17.0>"\
+                "tcp_tip_dist<25.0>"\
+                "tcp_top_dist<21.0>"\
+            ">"\
+            "tempf<"\
+                "uid<tempf_07>"\
+                "loc_uid<tf_st_2_3>"\
+                "fastener_state<1>"\
+                "diam<5.0>"\
+                "shaft_height<60.0>"\
+                "min_stack_thickness<3.0>"\
+                "max_stack_thickness<17.0>"\
+                "tcp_tip_dist<25.0>"\
+                "tcp_top_dist<21.0>"\
+            ">"\
+        ">"\
+    ">"
 
-#     safe_send_message(tf_cobot_uid, msg, "add_tempf_in_storage")
+    safe_send_message(tf_cobot_uid, msg, "add_tempf_in_storage")
 
-#     msg = "populate_agent<"\
-#         "tempfs<"\
-#             "tempf<"\
-#                 "uid<tempf_08>"\
-#                 "loc_uid<tf_st_2_4>"\
-#                 "fastener_state<1>"\
-#                 "diam<5.0>"\
-#                 "shaft_height<60.0>"\
-#                 "min_stack_thickness<3.0>"\
-#                 "max_stack_thickness<17.0>"\
-#                 "tcp_tip_dist<25.0>"\
-#                 "tcp_top_dist<21.0>"\
-#             ">"\
-#             "tempf<"\
-#                 "uid<tempf_09>"\
-#                 "loc_uid<tf_st_3_1>"\
-#                 "fastener_state<1>"\
-#                 "diam<5.0>"\
-#                 "shaft_height<60.0>"\
-#                 "min_stack_thickness<3.0>"\
-#                 "max_stack_thickness<17.0>"\
-#                 "tcp_tip_dist<25.0>"\
-#                 "tcp_top_dist<21.0>"\
-#             ">"\
-#             "tempf<"\
-#                 "uid<tempf_10>"\
-#                 "loc_uid<tf_st_3_2>"\
-#                 "fastener_state<1>"\
-#                 "diam<5.0>"\
-#                 "shaft_height<60.0>"\
-#                 "min_stack_thickness<3.0>"\
-#                 "max_stack_thickness<17.0>"\
-#                 "tcp_tip_dist<25.0>"\
-#                 "tcp_top_dist<21.0>"\
-#             ">"\
-#         ">"\
-#     ">"
+    msg = "populate_agent<"\
+        "tempfs<"\
+            "tempf<"\
+                "uid<tempf_08>"\
+                "loc_uid<tf_st_2_4>"\
+                "fastener_state<1>"\
+                "diam<5.0>"\
+                "shaft_height<60.0>"\
+                "min_stack_thickness<3.0>"\
+                "max_stack_thickness<17.0>"\
+                "tcp_tip_dist<25.0>"\
+                "tcp_top_dist<21.0>"\
+            ">"\
+            "tempf<"\
+                "uid<tempf_09>"\
+                "loc_uid<tf_st_3_1>"\
+                "fastener_state<1>"\
+                "diam<5.0>"\
+                "shaft_height<60.0>"\
+                "min_stack_thickness<3.0>"\
+                "max_stack_thickness<17.0>"\
+                "tcp_tip_dist<25.0>"\
+                "tcp_top_dist<21.0>"\
+            ">"\
+            "tempf<"\
+                "uid<tempf_10>"\
+                "loc_uid<tf_st_3_2>"\
+                "fastener_state<1>"\
+                "diam<5.0>"\
+                "shaft_height<60.0>"\
+                "min_stack_thickness<3.0>"\
+                "max_stack_thickness<17.0>"\
+                "tcp_tip_dist<25.0>"\
+                "tcp_top_dist<21.0>"\
+            ">"\
+        ">"\
+    ">"
 
-#     safe_send_message(tf_cobot_uid, msg, "add_tempf_in_storage")
+    safe_send_message(tf_cobot_uid, msg, "add_tempf_in_storage")
 
 # Add the permanent fastener actions to the agent
 # Defined actions will be executed later
@@ -1089,7 +1169,7 @@ def add_permf_actions():
             "action<"\
                 "uid<pf_A01>"\
                 "action_type<install_permf>"\
-                "loc_uid<pf_pr_r3_01>"\
+                "loc_uid<pf_pr_r01_01>"\
                 "action_state<1>"\
                 "speed<100>"\
             ">"\
@@ -1164,88 +1244,88 @@ def add_permf_actions():
 # tf_i_A07: install tempf from tf_inner_vert_jig_02_08
 # tf_i_A08: install tempf from tf_inner_vert_jig_03_01
 # tf_i_A09: install tempf from tf_inner_vert_jig_03_08
-# def add_tempf_install_actions():
+def add_tempf_install_actions():
 
-#     # "action_type<remove_fastener>" is for remove
-#     # "action_type<install_tempf>" is for install
+    # "action_type<remove_fastener>" is for remove
+    # "action_type<install_tempf>" is for install
 
-#     msg = "populate_agent<"\
-#         "actions<"\
-#             "action<"\
-#                 "uid<tf_i_A01>"\
-#                 "action_type<install_tempf>"\
-#                 "loc_uid<tf_left_drill_jig_01>"\
-#                 "action_state<1>"\
-#                 "speed<100>"\
-#             ">"\
-#             "action<"\
-#                 "uid<tf_i_A02>"\
-#                 "action_type<install_tempf>"\
-#                 "loc_uid<tf_left_drill_jig_08>"\
-#                 "action_state<1>"\
-#                 "speed<100>"\
-#             ">"\
-#             "action<"\
-#                 "uid<tf_i_A03>"\
-#                 "action_type<install_tempf>"\
-#                 "loc_uid<tf_left_drill_jig_15>"\
-#                 "action_state<1>"\
-#                 "speed<100>"\
-#             ">"\
-#             "action<"\
-#                 "uid<tf_i_A04>"\
-#                 "action_type<install_tempf>"\
-#                 "loc_uid<tf_inner_vert_jig_01_01>"\
-#                 "action_state<1>"\
-#                 "speed<100>"\
-#             ">"\
-#             "action<"\
-#                 "uid<tf_i_A05>"\
-#                 "action_type<install_tempf>"\
-#                 "loc_uid<tf_inner_vert_jig_01_08>"\
-#                 "action_state<1>"\
-#                 "speed<100>"\
-#             ">"\
-#         ">"\
-#     ">"
+    msg = "populate_agent<"\
+        "actions<"\
+            "action<"\
+                "uid<tf_i_A01>"\
+                "action_type<install_tempf>"\
+                "loc_uid<tf_left_drill_jig_01>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<tf_i_A02>"\
+                "action_type<install_tempf>"\
+                "loc_uid<tf_left_drill_jig_08>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<tf_i_A03>"\
+                "action_type<install_tempf>"\
+                "loc_uid<tf_left_drill_jig_15>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<tf_i_A04>"\
+                "action_type<install_tempf>"\
+                "loc_uid<tf_inner_vert_jig_01_01>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<tf_i_A05>"\
+                "action_type<install_tempf>"\
+                "loc_uid<tf_inner_vert_jig_01_08>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+        ">"\
+    ">"
 
-#     safe_send_message(tf_cobot_uid, msg, "add_tempf_install_actions")
+    safe_send_message(tf_cobot_uid, msg, "add_tempf_install_actions")
 
     
-#     msg = "populate_agent<"\
-#         "actions<"\
-#             "action<"\
-#                 "uid<tf_i_A06>"\
-#                 "action_type<install_tempf>"\
-#                 "loc_uid<tf_inner_vert_jig_02_01>"\
-#                 "action_state<1>"\
-#                 "speed<100>"\
-#             ">"\
-#             "action<"\
-#                 "uid<tf_i_A07>"\
-#                 "action_type<install_tempf>"\
-#                 "loc_uid<tf_inner_vert_jig_02_08>"\
-#                 "action_state<1>"\
-#                 "speed<100>"\
-#             ">"\
-#             "action<"\
-#                 "uid<tf_i_A08>"\
-#                 "action_type<install_tempf>"\
-#                 "loc_uid<tf_inner_vert_jig_03_01>"\
-#                 "action_state<1>"\
-#                 "speed<100>"\
-#             ">"\
-#             "action<"\
-#                 "uid<tf_i_A09>"\
-#                 "action_type<install_tempf>"\
-#                 "loc_uid<tf_inner_vert_jig_03_08>"\
-#                 "action_state<1>"\
-#                 "speed<100>"\
-#             ">"\
-#         ">"\
-#     ">"
+    msg = "populate_agent<"\
+        "actions<"\
+            "action<"\
+                "uid<tf_i_A06>"\
+                "action_type<install_tempf>"\
+                "loc_uid<tf_inner_vert_jig_02_01>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<tf_i_A07>"\
+                "action_type<install_tempf>"\
+                "loc_uid<tf_inner_vert_jig_02_08>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<tf_i_A08>"\
+                "action_type<install_tempf>"\
+                "loc_uid<tf_inner_vert_jig_03_01>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<tf_i_A09>"\
+                "action_type<install_tempf>"\
+                "loc_uid<tf_inner_vert_jig_03_08>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+        ">"\
+    ">"
 
-#     safe_send_message(tf_cobot_uid, msg, "add_tempf_install_actions")
+    safe_send_message(tf_cobot_uid, msg, "add_tempf_install_actions")
 
 # add nine actions....not yet execute them
 # tf_u_A01: uninstall tempf from tf_left_drill_jig_01
@@ -1257,87 +1337,87 @@ def add_permf_actions():
 # tf_u_A07: uninstall tempf from tf_inner_vert_jig_02_08
 # tf_u_A08: uninstall tempf from tf_inner_vert_jig_03_01
 # tf_u_A09: uninstall tempf from tf_inner_vert_jig_03_08
-# def add_tempf_uninstall_actions():
+def add_tempf_uninstall_actions():
 
-#     # "action_type<remove_fastener>" is for remove
-#     # "action_type<install_tempf>" is for install
+    # "action_type<remove_fastener>" is for remove
+    # "action_type<install_tempf>" is for install
 
-#     msg = "populate_agent<"\
-#         "actions<"\
-#             "action<"\
-#                 "uid<tf_u_A01>"\
-#                 "action_type<remove_fastener>"\
-#                 "loc_uid<tf_left_drill_jig_01>"\
-#                 "action_state<1>"\
-#                 "speed<100>"\
-#             ">"\
-#             "action<"\
-#                 "uid<tf_u_A02>"\
-#                 "action_type<remove_fastener>"\
-#                 "loc_uid<tf_left_drill_jig_08>"\
-#                 "action_state<1>"\
-#                 "speed<100>"\
-#             ">"\
-#             "action<"\
-#                 "uid<tf_u_A03>"\
-#                 "action_type<remove_fastener>"\
-#                 "loc_uid<tf_left_drill_jig_15>"\
-#                 "action_state<1>"\
-#                 "speed<100>"\
-#             ">"\
-#             "action<"\
-#                 "uid<tf_u_A04>"\
-#                 "action_type<remove_fastener>"\
-#                 "loc_uid<tf_inner_vert_jig_01_01>"\
-#                 "action_state<1>"\
-#                 "speed<100>"\
-#             ">"\
-#             "action<"\
-#                 "uid<tf_u_A05>"\
-#                 "action_type<remove_fastener>"\
-#                 "loc_uid<tf_inner_vert_jig_01_08>"\
-#                 "action_state<1>"\
-#                 "speed<100>"\
-#             ">"\
-#         ">"\
-#     ">"
+    msg = "populate_agent<"\
+        "actions<"\
+            "action<"\
+                "uid<tf_u_A01>"\
+                "action_type<remove_fastener>"\
+                "loc_uid<tf_left_drill_jig_01>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<tf_u_A02>"\
+                "action_type<remove_fastener>"\
+                "loc_uid<tf_left_drill_jig_08>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<tf_u_A03>"\
+                "action_type<remove_fastener>"\
+                "loc_uid<tf_left_drill_jig_15>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<tf_u_A04>"\
+                "action_type<remove_fastener>"\
+                "loc_uid<tf_inner_vert_jig_01_01>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<tf_u_A05>"\
+                "action_type<remove_fastener>"\
+                "loc_uid<tf_inner_vert_jig_01_08>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+        ">"\
+    ">"
 
-#     safe_send_message(tf_cobot_uid, msg, "add_tempf_install_actions")
+    safe_send_message(tf_cobot_uid, msg, "add_tempf_install_actions")
 
-#     msg = "populate_agent<"\
-#         "actions<"\
-#             "action<"\
-#                 "uid<tf_u_A06>"\
-#                 "action_type<remove_fastener>"\
-#                 "loc_uid<tf_inner_vert_jig_02_01>"\
-#                 "action_state<1>"\
-#                 "speed<100>"\
-#             ">"\
-#             "action<"\
-#                 "uid<tf_u_A07>"\
-#                 "action_type<remove_fastener>"\
-#                 "loc_uid<tf_inner_vert_jig_02_08>"\
-#                 "action_state<1>"\
-#                 "speed<100>"\
-#             ">"\
-#             "action<"\
-#                 "uid<tf_u_A08>"\
-#                 "action_type<remove_fastener>"\
-#                 "loc_uid<tf_inner_vert_jig_03_01>"\
-#                 "action_state<1>"\
-#                 "speed<100>"\
-#             ">"\
-#             "action<"\
-#                 "uid<tf_u_A09>"\
-#                 "action_type<remove_fastener>"\
-#                 "loc_uid<tf_inner_vert_jig_03_08>"\
-#                 "action_state<1>"\
-#                 "speed<100>"\
-#             ">"\
-#         ">"\
-#     ">"
+    msg = "populate_agent<"\
+        "actions<"\
+            "action<"\
+                "uid<tf_u_A06>"\
+                "action_type<remove_fastener>"\
+                "loc_uid<tf_inner_vert_jig_02_01>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<tf_u_A07>"\
+                "action_type<remove_fastener>"\
+                "loc_uid<tf_inner_vert_jig_02_08>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<tf_u_A08>"\
+                "action_type<remove_fastener>"\
+                "loc_uid<tf_inner_vert_jig_03_01>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<tf_u_A09>"\
+                "action_type<remove_fastener>"\
+                "loc_uid<tf_inner_vert_jig_03_08>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+        ">"\
+    ">"
 
-#     safe_send_message(tf_cobot_uid, msg, "add_tempf_install_actions")
+    safe_send_message(tf_cobot_uid, msg, "add_tempf_install_actions")
 
 # execute action with uid on cobot with uid
 def execute_action(cobot_uid_in, action_uid_in):
@@ -1351,34 +1431,34 @@ def execute_action(cobot_uid_in, action_uid_in):
 ##################################################################################################
 
 # Set up a TCPIP client of each cobot
-# tf_ip_address = "10.237.20.101"
-# tf_port = 20002
-# tf_cobot_uid = f"{tf_ip_address}/{tf_port}"
-# tf_tcp_client_thread = threading.Thread(target=run_tcp_client, args=(tf_ip_address, tf_port))
-# tf_tcp_client_thread.start()
+tf_ip_address = "10.237.20.101"
+tf_port = 20002
+tf_cobot_uid = f"{tf_ip_address}/{tf_port}"
+tf_tcp_client_thread = threading.Thread(target=run_tcp_client, args=(tf_ip_address, tf_port))
+tf_tcp_client_thread.start()
 
-pf_ip_address = "10.237.20.103"
-pf_port = 20002
-pf_cobot_uid = f"{pf_ip_address}/{pf_port}"
-pf_tcp_client_thread = threading.Thread(target=run_tcp_client, args=(pf_ip_address, pf_port))
-pf_tcp_client_thread.start()
+# pf_ip_address = "10.237.20.103"
+# pf_port = 20002
+# pf_cobot_uid = f"{pf_ip_address}/{pf_port}"
+# pf_tcp_client_thread = threading.Thread(target=run_tcp_client, args=(pf_ip_address, pf_port))
+# pf_tcp_client_thread.start()
 
-# cobot_goto_home(tf_cobot_uid)
-cobot_goto_home(pf_cobot_uid)
+cobot_goto_home(tf_cobot_uid)
+# cobot_goto_home(pf_cobot_uid)
 
-# add_tempf_storage_locations()
-# add_tempf_product_locations()
-# add_tempf_in_storage()
-# add_tempf_install_actions()
-# add_tempf_uninstall_actions()
+add_tempf_storage_locations()
+add_tempf_product_locations()
+add_tempf_in_storage()
+add_tempf_install_actions()
+add_tempf_uninstall_actions()
 
-add_permf_storage_locations()
-add_permf_product_locations()
-add_permf_in_storage()
-add_permf_actions()
+# add_permf_storage_locations()
+# add_permf_product_locations()
+# add_permf_in_storage()
+# add_permf_actions()
 
 # install the temporary fasteners
-# execute_action(tf_cobot_uid, "tf_i_A01")
+execute_action(tf_cobot_uid, "tf_i_A01")
 # execute_action(tf_cobot_uid, "tf_i_A02")
 # execute_action(tf_cobot_uid, "tf_i_A03")
 # execute_action(tf_cobot_uid, "tf_i_A04")
@@ -1390,8 +1470,8 @@ add_permf_actions()
 # cobot_goto_home(tf_cobot_uid)
 
 # install the permanent fasteners
-execute_action(pf_cobot_uid, "pf_A01")
-cobot_goto_home(pf_cobot_uid)
+# execute_action(pf_cobot_uid, "pf_A01")
+# cobot_goto_home(pf_cobot_uid)
 
 # uninstall the temporary fasteners
 # execute_action(tf_cobot_uid, "tf_u_A01")
