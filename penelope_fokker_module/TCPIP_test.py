@@ -216,7 +216,7 @@ def add_tempf_storage_locations():
 
 # add hole locations, stack thickness and diameter in the permanent fastener storage list
 def add_permf_storage_locations():
-    1-4 oude storage
+    # 1-4 oude storage
     msg = "populate_agent<"\
         "permf_storage_loc<"\
             "uid<permf_storage>"\
@@ -734,9 +734,9 @@ def add_tempf_product_locations():
                     "diam<5.0>"\
                     "stack_thickness_tag<9.0>"\
                     "pose<"\
-                        "pose_p_x<16.5>"\
+                        "pose_p_x<16.0>"\
                         "pose_p_y<991.0>"\
-                        "pose_p_z<705.5>"\
+                        "pose_p_z<706.0>"\
                         "pose_o_x<90.0>"\
                         "pose_o_y<63.0>"\
                         "pose_o_z<0.0>"\
@@ -1459,31 +1459,31 @@ add_tempf_uninstall_actions()
 
 # install the temporary fasteners
 execute_action(tf_cobot_uid, "tf_i_A01")
-# execute_action(tf_cobot_uid, "tf_i_A02")
-# execute_action(tf_cobot_uid, "tf_i_A03")
-# execute_action(tf_cobot_uid, "tf_i_A04")
-# execute_action(tf_cobot_uid, "tf_i_A05")
-# execute_action(tf_cobot_uid, "tf_i_A06")
-# execute_action(tf_cobot_uid, "tf_i_A07")
-# execute_action(tf_cobot_uid, "tf_i_A08")
-# execute_action(tf_cobot_uid, "tf_i_A09")
-# cobot_goto_home(tf_cobot_uid)
+execute_action(tf_cobot_uid, "tf_i_A02")
+execute_action(tf_cobot_uid, "tf_i_A03")
+execute_action(tf_cobot_uid, "tf_i_A04")
+execute_action(tf_cobot_uid, "tf_i_A05")
+execute_action(tf_cobot_uid, "tf_i_A06")
+execute_action(tf_cobot_uid, "tf_i_A07")
+execute_action(tf_cobot_uid, "tf_i_A08")
+execute_action(tf_cobot_uid, "tf_i_A09")
+cobot_goto_home(tf_cobot_uid)
 
 # install the permanent fasteners
 # execute_action(pf_cobot_uid, "pf_A01")
 # cobot_goto_home(pf_cobot_uid)
 
 # uninstall the temporary fasteners
-# execute_action(tf_cobot_uid, "tf_u_A01")
-# execute_action(tf_cobot_uid, "tf_u_A02")
-# execute_action(tf_cobot_uid, "tf_u_A03")
-# execute_action(tf_cobot_uid, "tf_u_A04")
-# execute_action(tf_cobot_uid, "tf_u_A05")
-# execute_action(tf_cobot_uid, "tf_u_A06")
-# execute_action(tf_cobot_uid, "tf_u_A07")
-# execute_action(tf_cobot_uid, "tf_u_A08")
-# execute_action(tf_cobot_uid, "tf_u_A09")
-# cobot_goto_home(tf_cobot_uid)
+execute_action(tf_cobot_uid, "tf_u_A01")
+execute_action(tf_cobot_uid, "tf_u_A02")
+execute_action(tf_cobot_uid, "tf_u_A03")
+execute_action(tf_cobot_uid, "tf_u_A04")
+execute_action(tf_cobot_uid, "tf_u_A05")
+execute_action(tf_cobot_uid, "tf_u_A06")
+execute_action(tf_cobot_uid, "tf_u_A07")
+execute_action(tf_cobot_uid, "tf_u_A08")
+execute_action(tf_cobot_uid, "tf_u_A09")
+cobot_goto_home(tf_cobot_uid)
 
 ##################################################################################################
 ##################################################################################################
