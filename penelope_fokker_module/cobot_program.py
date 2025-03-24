@@ -6012,7 +6012,7 @@ class cl_agent():
             return False
            
     
-    def remove_tempf(self, fastener_uid = "", passing_wp = [], speed = 100):
+    def remove_tempf(self, loc_uid = "", passing_wp = [], speed = 100):
         """
         Function to remove a fastener from the product.
        
@@ -6024,19 +6024,26 @@ class cl_agent():
         5) insert the fastener
         6) retract the end effector away from the product
        
-        :param fastener_uid: str, the uid of the fastener to be removed from the product
+        :param loc_uid: str, the uid of the location in the product where the fastener needs to be removed
         :param speed: float, the speed as percentage of the maximum speed
         :param passing_wp: list[str] The waypoints to pass between pick up and install
           
         :return: bool, returns True if successful
         """
-        prod_lst_id = self.product.get_loc_lst_id_by_uid(fastener_uid)
+        prod_lst_id = self.product.get_loc_lst_id_by_uid(loc_uid)
        
+        # if the location does not exist
         if prod_lst_id < 0:
+            send_message("remove_tempf: No location with uid {} could be found in the product.".format(loc_uid))
             return False
        
         # get the fastener object that needs to be removed
         tempf = self.product.holes_and_fast_lst[prod_lst_id].fast
+
+        # if there is no tempf in the location
+        if tempf is None:
+            send_message("remove_tempf: There was no temporary fastener in location {}.".format(loc_uid))
+            return False
 
         # find an empty spot with the correct diameter in the storage location
         storage_loc_id = self.tempf_storage.find_empty_spot_of_diam(tempf.diam())
