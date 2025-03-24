@@ -840,7 +840,7 @@ def add_tempf_product_locations():
                     "pose<"\
                         "pose_p_x<623.0>"\
                         "pose_p_y<938.0>"\
-                        "pose_p_z<814.5>"\
+                        "pose_p_z<813.5>"\
                         "pose_o_x<90.0>"\
                         "pose_o_y<66.0>"\
                         "pose_o_z<30.0>"\
