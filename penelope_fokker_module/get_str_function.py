@@ -348,7 +348,7 @@ def _get_hole_location_container_to_cobot_str(cont_in):
 
     for ahl in cont_in.locations:
         # list of hole locations
-        str_ = str_ + LOCATIONS_TAG
+        str_ = LOCATIONS_TAG
 
         # uid of the container
         str_ = UID_TAG + cont_in.uid + CLOSE_TAG
