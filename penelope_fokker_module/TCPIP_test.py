@@ -216,242 +216,7 @@ def add_tempf_storage_locations():
 
 # add hole locations, stack thickness and diameter in the permanent fastener storage list
 def add_permf_storage_locations():
-    # 1-4 oude storage
-    msg = "populate_agent<"\
-        "permf_storage_loc<"\
-            "uid<permf_storage>"\
-            "locations<"\
-                "hole_location<"\
-                    "uid<pf_st_01_01>"\
-                    "max_obstacle_height<40.0>"\
-                    "diam<5.055>"\
-                    "stack_thickness_tag<5.0>"\
-                    "pose<"\
-                        "pose_p_x<-91.82>"\
-                        "pose_p_y<307.27>"\
-                        "pose_p_z<35.46>"\
-                        "pose_o_x<50.11>"\
-                        "pose_o_y<178.79>"\
-                        "pose_o_z<30.39>"\
-                    ">"\
-                ">"\
-                "hole_location<"\
-                    "uid<pf_st_01_02>"\
-                    "max_obstacle_height<40.0>"\
-                    "diam<5.055>"\
-                    "stack_thickness_tag<5.0>"\
-                    "pose<"\
-                        "pose_p_x<-92.95>"\
-                        "pose_p_y<330.78>"\
-                        "pose_p_z<35.310>"\
-                        "pose_o_x<100.1>"\
-                        "pose_o_y<-179.1>"\
-                        "pose_o_z<89.0>"\
-                    ">"\
-                ">"\
-                "hole_location<"\
-                    "uid<pf_st_01_03>"\
-                    "max_obstacle_height<40.0>"\
-                    "diam<5.055>"\
-                    "stack_thickness_tag<5.0>"\
-                    "pose<"\
-                        "pose_p_x<-117.08>"\
-                        "pose_p_y<306.12>"\
-                        "pose_p_z<35.13>"\
-                        "pose_o_x<153.13>"\
-                        "pose_o_y<-179.72>"\
-                        "pose_o_z<128.87>"\
-                    ">"\
-                ">"\
-                "hole_location<"\
-                    "uid<pf_st_01_04>"\
-                    "max_obstacle_height<40.0>"\
-                    "diam<5.055>"\
-                    "stack_thickness_tag<5.0>"\
-                    "pose<"\
-                        "pose_p_x<-117.4>"\
-                        "pose_p_y<331.62>"\
-                        "pose_p_z<35.23>"\
-                        "pose_o_x<44.76>"\
-                        "pose_o_y<179.76>"\
-                        "pose_o_z<23.75>"\
-                    ">"\
-                ">"\
-            ">"\
-        ">"\
-    ">"    
-    
-    safe_send_message(pf_cobot_uid, msg, "add_permf_storage_locations")
-    #5-8 oude storage            
-    msg = "populate_agent<"\
-        "permf_storage_loc<"\
-            "uid<permf_storage>"\
-            "locations<"\
-                "hole_location<"\
-                    "uid<pf_st_01_05>"\
-                    "max_obstacle_height<40.0>"\
-                    "diam<5.055>"\
-                    "stack_thickness_tag<5.0>"\
-                    "pose<"\
-                        "pose_p_x<-142.3>"\
-                        "pose_p_y<306.01>"\
-                        "pose_p_z<35.14>"\
-                        "pose_o_x<94.83>"\
-                        "pose_o_y<179.42>"\
-                        "pose_o_z<74.38>"\
-                    ">"\
-                ">"\
-                "hole_location<"\
-                    "uid<pf_st_01_06>"\
-                    "max_obstacle_height<40.0>"\
-                    "diam<5.055>"\
-                    "stack_thickness_tag<5.0>"\
-                    "pose<"\
-                        "pose_p_x<-142.85>"\
-                        "pose_p_y<330.23>"\
-                        "pose_p_z<35.35>"\
-                        "pose_o_x<76.47>"\
-                        "pose_o_y<-179.05>"\
-                        "pose_o_z<55.94>"\
-                    ">"\
-                ">"\
-                "hole_location<"\
-                    "uid<pf_st_01_07>"\
-                    "max_obstacle_height<40.0>"\
-                    "diam<5.055>"\
-                    "stack_thickness_tag<5.0>"\
-                    "pose<"\
-                        "pose_p_x<-167.04>"\
-                        "pose_p_y<306.16>"\
-                        "pose_p_z<35.19>"\
-                        "pose_o_x<36.58>"\
-                        "pose_o_y<179.2>"\
-                        "pose_o_z<3.74>"\
-                    ">"\
-                ">"\
-                "hole_location<"\
-                    "uid<pf_st_01_08>"\
-                    "max_obstacle_height<40.0>"\
-                    "diam<5.055>"\
-                    "stack_thickness_tag<5.0>"\
-                    "pose<"\
-                        "pose_p_x<-167.67>"\
-                        "pose_p_y<330.93>"\
-                        "pose_p_z<35.31>"\
-                        "pose_o_x<9.27>"\
-                        "pose_o_y<179.52>"\
-                        "pose_o_z<-16.26>"\
-                    ">"\
-                ">"\
-            ">"\
-        ">"\
-    ">"
 
-    safe_send_message(pf_cobot_uid, msg, "add_permf_storage_locations")
-    #9-12 oude storage
-    msg = "populate_agent<"\
-        "permf_storage_loc<"\
-            "uid<permf_storage>"\
-            "locations<"\
-                "hole_location<"\
-                    "uid<pf_st_01_09>"\
-                    "max_obstacle_height<40.0>"\
-                    "diam<5.055>"\
-                    "stack_thickness_tag<5.0>"\
-                    "pose<"\
-                        "pose_p_x<-192.09>"\
-                        "pose_p_y<304.93>"\
-                        "pose_p_z<35.37>"\
-                        "pose_o_x<136.23>"\
-                        "pose_o_y<-178.74>"\
-                        "pose_o_z<106.02>"\
-                    ">"\
-                ">"\
-                "hole_location<"\
-                    "uid<pf_st_01_10>"\
-                    "max_obstacle_height<40.0>"\
-                    "diam<5.055>"\
-                    "stack_thickness_tag<5.0>"\
-                    "pose<"\
-                        "pose_p_x<-192.36>"\
-                        "pose_p_y<329.79>"\
-                        "pose_p_z<35.48>"\
-                        "pose_o_x<163.76>"\
-                        "pose_o_y<-178.77>"\
-                        "pose_o_z<136.94>"\
-                    ">"\
-                ">"\
-                "hole_location<"\
-                    "uid<pf_st_01_11>"\
-                    "max_obstacle_height<40.0>"\
-                    "diam<5.055>"\
-                    "stack_thickness_tag<5.0>"\
-                    "pose<"\
-                        "pose_p_x<-216.47>"\
-                        "pose_p_y<304.11>"\
-                        "pose_p_z<35.9>"\
-                        "pose_o_x<121.83>"\
-                        "pose_o_y<-178.14>"\
-                        "pose_o_z<101.79>"\
-                    ">"\
-                ">"\
-                "hole_location<"\
-                    "uid<pf_st_01_12>"\
-                    "max_obstacle_height<40.0>"\
-                    "diam<5.055>"\
-                    "stack_thickness_tag<5.0>"\
-                    "pose<"\
-                        "pose_p_x<-217.87>"\
-                        "pose_p_y<329.26>"\
-                        "pose_p_z<39.53>"\
-                        "pose_o_x<86.5>"\
-                        "pose_o_y<-178.7>"\
-                        "pose_o_z<61.99>"\
-                    ">"\
-                ">"\
-            ">"\
-        ">"\
-    ">"
-    
-    safe_send_message(pf_cobot_uid, msg, "add_permf_storage_locations")
-    #13-14 oude storage
-    msg = "populate_agent<"\
-        "permf_storage_loc<"\
-            "uid<permf_storage>"\
-            "locations<"\
-                "hole_location<"\
-                    "uid<pf_st_01_13>"\
-                    "max_obstacle_height<40.0>"\
-                    "diam<5.055>"\
-                    "stack_thickness_tag<5.0>"\
-                    "pose<"\
-                        "pose_p_x<-241.51>"\
-                        "pose_p_y<303.99>"\
-                        "pose_p_z<35.51>"\
-                        "pose_o_x<163.82>"\
-                        "pose_o_y<-178.42>"\
-                        "pose_o_z<135.21>"\
-                    ">"\
-                ">"\
-                "hole_location<"\
-                    "uid<pf_st_01_14>"\
-                    "max_obstacle_height<40.0>"\
-                    "diam<5.055>"\
-                    "stack_thickness_tag<5.0>"\
-                    "pose<"\
-                        "pose_p_x<-242.91>"\
-                        "pose_p_y<329.1>"\
-                        "pose_p_z<35.48>"\
-                        "pose_o_x<78.96>"\
-                        "pose_o_y<-179.05>"\
-                        "pose_o_z<57.88>"\
-                    ">"\
-                ">"\
-            ">"\
-        ">"\
-    ">"
-
-    safe_send_message(pf_cobot_uid, msg, "add_permf_storage_locations")
     #1-4 nieuwe storage
     msg = "populate_agent<"\
         "permf_storage_loc<"\
@@ -463,12 +228,12 @@ def add_permf_storage_locations():
                     "diam<5.055>"\
                     "stack_thickness_tag<5.0>"\
                     "pose<"\
-                        "pose_p_x<-284.04>"\
-                        "pose_p_y<250.81>"\
-                        "pose_p_z<41.050>"\
-                        "pose_o_x<28.12>"\
-                        "pose_o_y<179.09>"\
-                        "pose_o_z<-19.82>"\
+                        "pose_p_x<-289.29>"\
+                        "pose_p_y<323.09>"\
+                        "pose_p_z<38.17>"\
+                        "pose_o_x<38.29>"\
+                        "pose_o_y<-179.13>"\
+                        "pose_o_z<82.44>"\
                     ">"\
                 ">"\
                 "hole_location<"\
@@ -477,41 +242,108 @@ def add_permf_storage_locations():
                     "diam<5.055>"\
                     "stack_thickness_tag<5.0>"\
                     "pose<"\
-                        "pose_p_x<-308.41>"\
-                        "pose_p_y<248.96>"\
-                        "pose_p_z<40.740>"\
-                        "pose_o_x<179.71>"\
-                        "pose_o_y<-178.71>"\
-                        "pose_o_z<140.43>"\
+                        "pose_p_x<-313.48>"\
+                        "pose_p_y<322.56>"\
+                        "pose_p_z<38.66>"\
+                        "pose_o_x<160.73>"\
+                        "pose_o_y<179.46>"\
+                        "pose_o_z<-162.19>"\
                     ">"\
                 ">"\
                 "hole_location<"\
-                    "uid<pf_st_02_03>"\
-                    "max_obstacle_height<40.0>"\
-                    "diam<5.055>"\
-                    "stack_thickness_tag<5.0>"\
-                    "pose<"\
-                        "pose_p_x<-333.45>"\
-                        "pose_p_y<246.81>"\
-                        "pose_p_z<40.850>"\
-                        "pose_o_x<133.42>"\
-                        "pose_o_y<-179.08>"\
-                        "pose_o_z<105.48>"\
-                    ">"\
-                ">"\
-                "hole_location<"\
-                    "uid<pf_st_02_04>"\
-                    "max_obstacle_height<40.0>"\
-                    "diam<5.055>"\
-                    "stack_thickness_tag<5.0>"\
-                    "pose<"\
-                        "pose_p_x<-383.25>"\
-                        "pose_p_y<244.10>"\
-                        "pose_p_z<41.510>"\
-                        "pose_o_x<12.36>"\
-                        "pose_o_y<179.27>"\
-                        "pose_o_z<-28.54>"\
-                    ">"\
+                     "uid<pf_st_02_03>"\
+                     "max_obstacle_height<40.0>"\
+                     "diam<5.055>"\
+                     "stack_thickness_tag<5.0>"\
+                     "pose<"\
+                         "pose_p_x<-333.45>"\
+                         "pose_p_y<246.81>"\
+                         "pose_p_z<40.850>"\
+                         "pose_o_x<133.42>"\
+                         "pose_o_y<-179.08>"\
+                         "pose_o_z<105.48>"\
+                     ">"\
+                 ">"\
+                 "hole_location<"\
+                     "uid<pf_st_02_04>"\
+                     "max_obstacle_height<40.0>"\
+                     "diam<5.055>"\
+                     "stack_thickness_tag<5.0>"\
+                     "pose<"\
+                         "pose_p_x<-383.25>"\
+                         "pose_p_y<244.10>"\
+                         "pose_p_z<41.510>"\
+                         "pose_o_x<12.36>"\
+                         "pose_o_y<179.27>"\
+                         "pose_o_z<-28.54>"\
+                     ">"\
+                 ">"\
+            ">"\
+        ">"\
+    ">"     
+    
+    safe_send_message(pf_cobot_uid, msg, "add_permf_storage_locations")
+    
+    #Nieuwe storage 5-8
+    msg = "populate_agent<"\
+        "permf_storage_loc<"\
+            "uid<permf_storage>"\
+            "locations<"\
+                 "hole_location<"\
+                     "uid<pf_st_02_05>"\
+                     "max_obstacle_height<40.0>"\
+                     "diam<5.055>"\
+                     "stack_thickness_tag<5.0>"\
+                     "pose<"\
+                         "pose_p_x<-408.68>"\
+                         "pose_p_y<242.47>"\
+                         "pose_p_z<40.7>"\
+                         "pose_o_x<138.31>"\
+                         "pose_o_y<-179.38>"\
+                         "pose_o_z<100.95>"\
+                     ">"\
+                 ">"\
+                 "hole_location<"\
+                     "uid<pf_st_02_06>"\
+                     "max_obstacle_height<40.0>"\
+                     "diam<5.055>"\
+                     "stack_thickness_tag<5.0>"\
+                     "pose<"\
+                         "pose_p_x<-431.03>"\
+                         "pose_p_y<239.71>"\
+                         "pose_p_z<40.860>"\
+                         "pose_o_x<134.53>"\
+                         "pose_o_y<-178.91>"\
+                         "pose_o_z<100.75>"\
+                     ">"\
+                 ">"\
+                 "hole_location<"\
+                     "uid<pf_st_02_07>"\
+                     "max_obstacle_height<40.0>"\
+                     "diam<5.055>"\
+                     "stack_thickness_tag<5.0>"\
+                     "pose<"\
+                         "pose_p_x<-434.47>"\
+                         "pose_p_y<265.57>"\
+                         "pose_p_z<40.70>"\
+                         "pose_o_x<156.38>"\
+                         "pose_o_y<-178.73>"\
+                         "pose_o_z<130.34>"\
+                     ">"\
+                 ">"\
+                 "hole_location<"\
+                     "uid<pf_st_02_08>"\
+                     "max_obstacle_height<40.0>"\
+                     "diam<5.055>"\
+                     "stack_thickness_tag<5.0>"\
+                     "pose<"\
+                         "pose_p_x<-409.52>"\
+                         "pose_p_y<267.11>"\
+                         "pose_p_z<41.650>"\
+                         "pose_o_x<125.46>"\
+                         "pose_o_y<-179.15>"\
+                         "pose_o_z<102.13>"\
+                     ">"\
                 ">"\
             ">"\
         ">"\
@@ -519,67 +351,255 @@ def add_permf_storage_locations():
     
     safe_send_message(pf_cobot_uid, msg, "add_permf_storage_locations")
 
+#Nieuwe storage 9-12
+    msg = "populate_agent<"\
+        "permf_storage_loc<"\
+            "uid<permf_storage>"\
+            "locations<"\
+                "hole_location<"\
+                     "uid<pf_st_02_09>"\
+                     "max_obstacle_height<40.0>"\
+                     "diam<5.055>"\
+                     "stack_thickness_tag<5.0>"\
+                     "pose<"\
+                         "pose_p_x<-384.91>"\
+                         "pose_p_y<268.93>"\
+                         "pose_p_z<41.22>"\
+                         "pose_o_x<161.66>"\
+                         "pose_o_y<-179.03>"\
+                         "pose_o_z<135.08>"\
+                     ">"\
+                 ">"\
+                 "hole_location<"\
+                     "uid<pf_st_02_10>"\
+                     "max_obstacle_height<40.0>"\
+                     "diam<5.055>"\
+                     "stack_thickness_tag<5.0>"\
+                     "pose<"\
+                         "pose_p_x<-360.31>"\
+                         "pose_p_y<270.34>"\
+                         "pose_p_z<41.73>"\
+                         "pose_o_x<93.22>"\
+                         "pose_o_y<-179.58>"\
+                         "pose_o_z<68.4>"\
+                     ">"\
+                 ">"\
+                 "hole_location<"\
+                     "uid<pf_st_02_11>"\
+                     "max_obstacle_height<40.0>"\
+                     "diam<5.055>"\
+                     "stack_thickness_tag<5.0>"\
+                     "pose<"\
+                         "pose_p_x<-334.89>"\
+                         "pose_p_y<271.85>"\
+                         "pose_p_z<41.32>"\
+                         "pose_o_x<138.47>"\
+                         "pose_o_y<-178.93>"\
+                         "pose_o_z<111.65>"\
+                     ">"\
+                 ">"\
+                 "hole_location<"\
+                     "uid<pf_st_02_12>"\
+                     "max_obstacle_height<40.0>"\
+                     "diam<5.055>"\
+                     "stack_thickness_tag<5.0>"\
+                     "pose<"\
+                         "pose_p_x<-309.72>"\
+                         "pose_p_y<273.26>"\
+                         "pose_p_z<41.65>"\
+                         "pose_o_x<155.49>"\
+                         "pose_o_y<-178.9>"\
+                         "pose_o_z<126.36>"\
+                     ">"\
+                 ">"\
+            ">"\
+        ">"\
+    ">"
+    
+    safe_send_message(pf_cobot_uid, msg, "add_permf_storage_locations")
+
+#Nieuwe storage 13-16
+    msg = "populate_agent<"\
+        "permf_storage_loc<"\
+            "uid<permf_storage>"\
+            "locations<"\
+                "hole_location<"\
+                     "uid<pf_st_02_13>"\
+                     "max_obstacle_height<40.0>"\
+                     "diam<5.055>"\
+                     "stack_thickness_tag<5.0>"\
+                     "pose<"\
+                         "pose_p_x<-284.91>"\
+                         "pose_p_y<274.72>"\
+                         "pose_p_z<41.060>"\
+                         "pose_o_x<97.96>"\
+                         "pose_o_y<-179.43>"\
+                         "pose_o_z<76.22>"\
+                     ">"\
+                 ">"\
+                 "hole_location<"\
+                     "uid<pf_st_02_14>"\
+                     "max_obstacle_height<40.0>"\
+                     "diam<5.055>"\
+                     "stack_thickness_tag<5.0>"\
+                     "pose<"\
+                         "pose_p_x<-286.78>"\
+                         "pose_p_y<302.28>"\
+                         "pose_p_z<41.07>"\
+                         "pose_o_x<65.76>"\
+                         "pose_o_y<-179.76>"\
+                         "pose_o_z<39.85>"\
+                     ">"\
+                 ">"\
+                 "hole_location<"\
+                     "uid<pf_st_02_15>"\
+                     "max_obstacle_height<40.0>"\
+                     "diam<5.055>"\
+                     "stack_thickness_tag<5.0>"\
+                     "pose<"\
+                         "pose_p_x<-311.91>"\
+                         "pose_p_y<300.83>"\
+                         "pose_p_z<41.0>"\
+                         "pose_o_x<102.81>"\
+                         "pose_o_y<-178.64>"\
+                         "pose_o_z<76.38>"\
+                     ">"\
+                 ">"\
+                 "hole_location<"\
+                     "uid<pf_st_02_16>"\
+                     "max_obstacle_height<40.0>"\
+                     "diam<5.055>"\
+                     "stack_thickness_tag<5.0>"\
+                     "pose<"\
+                         "pose_p_x<-336.6>"\
+                         "pose_p_y<299.41>"\
+                         "pose_p_z<41.720>"\
+                         "pose_o_x<117.21>"\
+                         "pose_o_y<-179.27>"\
+                         "pose_o_z<92.73>"\
+                     ">"\
+                 ">"\
+            ">"\
+        ">"\
+    ">"
+    
+    safe_send_message(pf_cobot_uid, msg, "add_permf_storage_locations")
+
+#Nieuwe storage 17-19
+    msg = "populate_agent<"\
+        "permf_storage_loc<"\
+            "uid<permf_storage>"\
+            "locations<"\
+                "hole_location<"\
+                     "uid<pf_st_02_17>"\
+                     "max_obstacle_height<40.0>"\
+                     "diam<5.055>"\
+                     "stack_thickness_tag<5.0>"\
+                     "pose<"\
+                         "pose_p_x<-361.11>"\
+                         "pose_p_y<297.63>"\
+                         "pose_p_z<40.510>"\
+                         "pose_o_x<130.06>"\
+                         "pose_o_y<-178.58>"\
+                         "pose_o_z<107.11>"\
+                     ">"\
+                 ">"\
+                 "hole_location<"\
+                     "uid<pf_st_02_18>"\
+                     "max_obstacle_height<40.0>"\
+                     "diam<5.055>"\
+                     "stack_thickness_tag<5.0>"\
+                     "pose<"\
+                         "pose_p_x<-386.34>"\
+                         "pose_p_y<296.12>"\
+                         "pose_p_z<40.73>"\
+                         "pose_o_x<130.06>"\
+                         "pose_o_y<-178.58>"\
+                         "pose_o_z<107.11>"\
+                     ">"\
+                 ">"\
+                 "hole_location<"\
+                     "uid<pf_st_02_19>"\
+                     "max_obstacle_height<40.0>"\
+                     "diam<5.055>"\
+                     "stack_thickness_tag<5.0>"\
+                     "pose<"\
+                         "pose_p_x<-411.27>"\
+                         "pose_p_y<294.7>"\
+                         "pose_p_z<40.57>"\
+                         "pose_o_x<165.45>"\
+                         "pose_o_y<-178.98>"\
+                         "pose_o_z<143.62>"\
+                     ">"\
+                 ">"\
+            ">"\
+        ">"\
+    ">"
+    
+    safe_send_message(pf_cobot_uid, msg, "add_permf_storage_locations")
+    
 # add hole locations, stack thickness and diameter in the permf product list
 def add_permf_product_locations():
-    #L-profiel R3 1-4
+
+    #pr 02 1-4
     msg = "populate_agent<"\
         "product<"\
             "uid<product>"\
             "locations<"\
                 "hole_location<"\
-                    "uid<pf_pr_r3_01>"\
+                    "uid<pf_pr_r2_01>"\
                     "max_obstacle_height<40.0>"\
                     "diam<5.055>"\
                     "stack_thickness_tag<5.0>"\
                     "pose<"\
-                        "pose_p_x<-144.21>"\
-                        "pose_p_y<633.460>"\
-                        "pose_p_z<1101.92>"\
-                        "pose_o_x<92.33>"\
-                        "pose_o_y<74.92>"\
-                        "pose_o_z<94.72>"\
-                    ">"\
-                ">"\
-                    "hole_location<"\
-                    "uid<pf_pr_r3_02>"\
-                    "max_obstacle_height<40.0>"\
-                    "diam<5.055>"\
-                    "stack_thickness_tag<5.0>"\
-                    "pose<"\
-                        "pose_p_x<-111.51>"\
-                        "pose_p_y<632.79>"\
-                        "pose_p_z<1102.18>"\
-                        "pose_o_x<90.57>"\
-                        "pose_o_y<75.3>"\
-                        "pose_o_z<89.2>"\
+                        "pose_p_x<-143.37>"\
+                        "pose_p_y<790.92>"\
+                        "pose_p_z<679.73>"\
+                        "pose_o_x<91.50>"\
+                        "pose_o_y<60.63>"\
+                        "pose_o_z<-88.52>"\
                     ">"\
                 ">"\
                 "hole_location<"\
-                    "uid<pf_pr_r3_03>"\
+                    "uid<pf_pr_r2_02>"\
                     "max_obstacle_height<40.0>"\
                     "diam<5.055>"\
                     "stack_thickness_tag<5.0>"\
                     "pose<"\
-                        "pose_p_x<-81.15>"\
-                        "pose_p_y<633.44>"\
-                        "pose_p_z<1101.91>"\
+                        "pose_p_x<-115.64>"\
+                        "pose_p_y<791.490>"\
+                        "pose_p_z<679.91>"\
+                        "pose_o_x<91.76>"\
+                        "pose_o_y<60.59>"\
+                        "pose_o_z<-87.27>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<pf_pr_r2_03>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.055>"\
+                    "stack_thickness_tag<5.0>"\
+                    "pose<"\
+                        "pose_p_x<-84.42>"\
+                        "pose_p_y<790.580>"\
+                        "pose_p_z<679.96>"\
                         "pose_o_x<92.29>"\
-                        "pose_o_y<74.55>"\
-                        "pose_o_z<92.8>"\
+                        "pose_o_y<60.73>"\
+                        "pose_o_z<-87.56>"\
                     ">"\
                 ">"\
                 "hole_location<"\
-                    "uid<pf_pr_r3_04>"\
+                    "uid<pf_pr_r2_04>"\
                     "max_obstacle_height<40.0>"\
                     "diam<5.055>"\
                     "stack_thickness_tag<5.0>"\
                     "pose<"\
-                        "pose_p_x<-49.76>"\
-                        "pose_p_y<634.36>"\
-                        "pose_p_z<1102.71>"\
-                        "pose_o_x<91.51>"\
-                        "pose_o_y<74.17>"\
-                        "pose_o_z<93.91>"\
+                        "pose_p_x<-21.23>"\
+                        "pose_p_y<791.710>"\
+                        "pose_p_z<679.71>"\
+                        "pose_o_x<90.81>"\
+                        "pose_o_y<62.47>"\
+                        "pose_o_z<-90.61>"\
                     ">"\
                 ">"\
             ">"\
@@ -588,65 +608,104 @@ def add_permf_product_locations():
 
     safe_send_message(pf_cobot_uid, msg, "add_permf_product_locations")
     
-    #L-profiel R3 5-8
+    #pr 02 5-8
     msg = "populate_agent<"\
         "product<"\
             "uid<product>"\
             "locations<"\
                 "hole_location<"\
-                    "uid<pf_pr_r3_05>"\
+                    "uid<pf_pr_r2_05>"\
                     "max_obstacle_height<40.0>"\
                     "diam<5.055>"\
                     "stack_thickness_tag<5.0>"\
                     "pose<"\
-                        "pose_p_x<-16.62>"\
-                        "pose_p_y<629.93>"\
-                        "pose_p_z<1102.57>"\
-                        "pose_o_x<90.26>"\
-                        "pose_o_y<71.49>"\
-                        "pose_o_z<90.54>"\
+                        "pose_p_x<41.76>"\
+                        "pose_p_y<791.78>"\
+                        "pose_p_z<679.91>"\
+                        "pose_o_x<93.01>"\
+                        "pose_o_y<62.4>"\
+                        "pose_o_z<-90.03>"\
                     ">"\
                 ">"\
                 "hole_location<"\
-                    "uid<pf_pr_r3_06>"\
+                    "uid<pf_pr_r2_06>"\
                     "max_obstacle_height<40.0>"\
                     "diam<5.055>"\
                     "stack_thickness_tag<5.0>"\
                     "pose<"\
-                        "pose_p_x<14.57>"\
-                        "pose_p_y<632.59>"\
-                        "pose_p_z<1103.37>"\
-                        "pose_o_x<90.26>"\
-                        "pose_o_y<71.49>"\
-                        "pose_o_z<90.54>"\
-                    ">"\
-                ">"\
-                "hole_location<"\
-                    "uid<pf_pr_r3_07>"\
-                    "max_obstacle_height<40.0>"\
-                    "diam<5.055>"\
-                    "stack_thickness_tag<5.0>"\
-                    "pose<"\
-                        "pose_p_x<46.24>"\
-                        "pose_p_y<632.17>"\
-                        "pose_p_z<1103.7>"\
-                        "pose_o_x<90.66>"\
-                        "pose_o_y<71.3>"\
-                        "pose_o_z<90.74>"\
-                    ">"\
-                ">"\
-                "hole_location<"\
-                    "uid<pf_pr_r3_08>"\
-                    "max_obstacle_height<40.0>"\
-                    "diam<5.055>"\
-                    "stack_thickness_tag<5.0>"\
-                    "pose<"\
-                        "pose_p_x<77.2>"\
-                        "pose_p_y<633.17>"\
-                        "pose_p_z<1104.55>"\
+                        "pose_p_x<73.13>"\
+                        "pose_p_y<789.04>"\
+                        "pose_p_z<679.57>"\
                         "pose_o_x<93.1>"\
-                        "pose_o_y<71.16>"\
-                        "pose_o_z<88.81>"\
+                        "pose_o_y<60.26>"\
+                        "pose_o_z<-90.71>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<pf_pr_r2_07>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.055>"\
+                    "stack_thickness_tag<5.0>"\
+                    "pose<"\
+                        "pose_p_x<105.03>"\
+                        "pose_p_y<788.64>"\
+                        "pose_p_z<679.8>"\
+                        "pose_o_x<91.65>"\
+                        "pose_o_y<59.39>"\
+                        "pose_o_z<-91.05>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<pf_pr_r2_08>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.055>"\
+                    "stack_thickness_tag<5.0>"\
+                    "pose<"\
+                        "pose_p_x<168.63>"\
+                        "pose_p_y<790.48>"\
+                        "pose_p_z<679.73>"\
+                        "pose_o_x<92.09>"\
+                        "pose_o_y<61.33>"\
+                        "pose_o_z<-91.86>"\
+                    ">"\
+                ">"\
+            ">"\
+        ">"\
+    ">"
+    
+    safe_send_message(pf_cobot_uid, msg, "add_permf_product_locations")
+    
+    #pr 02 9-10
+    msg = "populate_agent<"\
+        "product<"\
+            "uid<product>"\
+            "locations<"\
+                "hole_location<"\
+                    "uid<pf_pr_r2_09>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.055>"\
+                    "stack_thickness_tag<5.0>"\
+                    "pose<"\
+                        "pose_p_x<199.69>"\
+                        "pose_p_y<789.95>"\
+                        "pose_p_z<679.75>"\
+                        "pose_o_x<93.5>"\
+                        "pose_o_y<61.01>"\
+                        "pose_o_z<-91.61>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<pf_pr_r2_10>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.055>"\
+                    "stack_thickness_tag<5.0>"\
+                    "pose<"\
+                        "pose_p_x<231.28>"\
+                        "pose_p_y<790.7>"\
+                        "pose_p_z<680.03>"\
+                        "pose_o_x<92.86>"\
+                        "pose_o_y<60.61>"\
+                        "pose_o_z<-93.3>"\
                     ">"\
                 ">"\
             ">"\
@@ -655,45 +714,165 @@ def add_permf_product_locations():
 
     safe_send_message(pf_cobot_uid, msg, "add_permf_product_locations")
 
-    #L-profiel R3 9 R1 1
+    #pr 01 1-4
     msg = "populate_agent<"\
         "product<"\
             "uid<product>"\
             "locations<"\
                 "hole_location<"\
-                    "uid<pf_pr_r3_09>"\
+                    "uid<pf_pr_r1_01>"\
                     "max_obstacle_height<40.0>"\
                     "diam<5.055>"\
                     "stack_thickness_tag<5.0>"\
                     "pose<"\
-                        "pose_p_x<16.1>"\
-                        "pose_p_y<634.20>"\
-                        "pose_p_z<1102.36>"\
-                        "pose_o_x<92.18>"\
-                        "pose_o_y<75.8>"\
-                        "pose_o_z<97.94>"\
+                        "pose_p_x<230.72>"\
+                        "pose_p_y<624.9>"\
+                        "pose_p_z<1104.2>"\
+                        "pose_o_x<92.35>"\
+                        "pose_o_y<72.28>"\
+                        "pose_o_z<-91.88>"\
                     ">"\
                 ">"\
                 "hole_location<"\
-                 "uid<pf_pr_r01_01>"\
-                 "max_obstacle_height<40.0>"\
-                 "diam<5.055>"\
-                 "stack_thickness_tag<5.0>"\
+                    "uid<pf_pr_r1_02>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.055>"\
+                    "stack_thickness_tag<5.0>"\
                     "pose<"\
-                        "pose_p_x<-113.310>"\
-                        "pose_p_y<1039.84>"\
-                        "pose_p_z<299.63>"\
-                        "pose_o_x<90.62>"\
-                        "pose_o_y<47.52>"\
-                        "pose_o_z<-85.64>"\
+                        "pose_p_x<199.25>"\
+                        "pose_p_y<631.19>"\
+                        "pose_p_z<1105.08>"\
+                        "pose_o_x<91.09>"\
+                        "pose_o_y<75.20>"\
+                        "pose_o_z<-89.31>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<pf_pr_r1_03>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.055>"\
+                    "stack_thickness_tag<5.0>"\
+                    "pose<"\
+                        "pose_p_x<167.01>"\
+                        "pose_p_y<627.9>"\
+                        "pose_p_z<1104.53>"\
+                        "pose_o_x<92.39>"\
+                        "pose_o_y<72.39>"\
+                        "pose_o_z<-86.71>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<pf_pr_r1_04>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.055>"\
+                    "stack_thickness_tag<5.0>"\
+                    "pose<"\
+                        "pose_p_x<135.37>"\
+                        "pose_p_y<628.27>"\
+                        "pose_p_z<1102.88>"\
+                        "pose_o_x<90.57>"\
+                        "pose_o_y<76.53>"\
+                        "pose_o_z<-93.36>"\
                     ">"\
                 ">"\
             ">"\
         ">"\
     ">"
+    
+    safe_send_message(pf_cobot_uid, msg, "add_permf_product_locations")
 
-    safe_send_message(pf_cobot_uid, msg, "add_permf_product_locations")    
-
+    #pr 01 5-8
+    msg = "populate_agent<"\
+        "product<"\
+            "uid<product>"\
+            "locations<"\
+                "hole_location<"\
+                    "uid<pf_pr_r1_05>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.055>"\
+                    "stack_thickness_tag<5.0>"\
+                    "pose<"\
+                        "pose_p_x<104.27>"\
+                        "pose_p_y<629.0>"\
+                        "pose_p_z<1103.41>"\
+                        "pose_o_x<90.68>"\
+                        "pose_o_y<77.4>"\
+                        "pose_o_z<-92.03>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<pf_pr_r1_06>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.055>"\
+                    "stack_thickness_tag<5.0>"\
+                    "pose<"\
+                        "pose_p_x<72.71>"\
+                        "pose_p_y<624.07>"\
+                        "pose_p_z<1103.55>"\
+                        "pose_o_x<88.88>"\
+                        "pose_o_y<71.69>"\
+                        "pose_o_z<-88.94>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<pf_pr_r1_07>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.055>"\
+                    "stack_thickness_tag<5.0>"\
+                    "pose<"\
+                        "pose_p_x<41.46>"\
+                        "pose_p_y<628.94>"\
+                        "pose_p_z<1104.27>"\
+                        "pose_o_x<89.24>"\
+                        "pose_o_y<73.46>"\
+                        "pose_o_z<-89.00>"\
+                    ">"\
+                ">"\
+                "hole_location<"\
+                    "uid<pf_pr_r1_08>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.055>"\
+                    "stack_thickness_tag<5.0>"\
+                    "pose<"\
+                        "pose_p_x<9.27>"\
+                        "pose_p_y<629.7>"\
+                        "pose_p_z<1104.46>"\
+                        "pose_o_x<90.54>"\
+                        "pose_o_y<73.64>"\
+                        "pose_o_z<-89.09>"\
+                    ">"\
+                ">"\
+            ">"\
+        ">"\
+    ">"
+    
+    safe_send_message(pf_cobot_uid, msg, "add_permf_product_locations")
+    
+    #pr 01 9
+    msg = "populate_agent<"\
+        "product<"\
+            "uid<product>"\
+            "locations<"\
+                "hole_location<"\
+                    "uid<pf_pr_r1_09>"\
+                    "max_obstacle_height<40.0>"\
+                    "diam<5.055>"\
+                    "stack_thickness_tag<5.0>"\
+                    "pose<"\
+                        "pose_p_x<-20.89>"\
+                        "pose_p_y<631.25>"\
+                        "pose_p_z<1104.42>"\
+                        "pose_o_x<89.84>"\
+                        "pose_o_y<73.64>"\
+                        "pose_o_z<-87.88>"\
+                    ">"\
+                ">"\
+            ">"\
+        ">"\
+    ">"
+    
+    safe_send_message(pf_cobot_uid, msg, "add_permf_product_locations")
+    
 # add hole locations, stack thickness and diameter in the tempf product list
 def add_tempf_product_locations():
     msg = "populate_agent<"\
@@ -900,17 +1079,16 @@ def add_permf_in_storage():
                 "tcp_tip_dist<14.81>"\
                 "tcp_top_dist<4.45>"\
             ">"\
-       ">"\
+        ">"\
     ">"
-
-    safe_send_message(pf_cobot_uid, msg, "add_permf_in_storage")
-
-
+    
+    safe_send_message(pf_cobot_uid, msg, "add_permf_in_storage")        
+            
     msg = "populate_agent<"\
         "fasteners<"\
             "fastener<"\
                 "uid<permf_05>"\
-                "loc_uid<pf_st_01_05>"\
+                "loc_uid<pf_st_02_05>"\
                 "fastener_state<1>"\
                 "diam<5.055>"\
                 "shaft_height<23.37>"\
@@ -921,7 +1099,7 @@ def add_permf_in_storage():
             ">"\
             "fastener<"\
                 "uid<permf_06>"\
-                "loc_uid<pf_st_01_06>"\
+                "loc_uid<pf_st_02_06>"\
                 "fastener_state<1>"\
                 "diam<5.055>"\
                 "shaft_height<23.37>"\
@@ -932,7 +1110,7 @@ def add_permf_in_storage():
             ">"\
             "fastener<"\
                 "uid<permf_07>"\
-                "loc_uid<pf_st_01_07>"\
+                "loc_uid<pf_st_02_07>"\
                 "fastener_state<1>"\
                 "diam<5.055>"\
                 "shaft_height<23.37>"\
@@ -941,9 +1119,9 @@ def add_permf_in_storage():
                 "tcp_tip_dist<14.81>"\
                 "tcp_top_dist<4.45>"\
             ">"\
-                "fastener<"\
+            "fastener<"\
                 "uid<permf_08>"\
-                "loc_uid<pf_st_01_08>"\
+                "loc_uid<pf_st_02_08>"\
                 "fastener_state<1>"\
                 "diam<5.055>"\
                 "shaft_height<23.37>"\
@@ -956,12 +1134,12 @@ def add_permf_in_storage():
     ">"
 
     safe_send_message(pf_cobot_uid, msg, "add_permf_in_storage")
-
+    
     msg = "populate_agent<"\
         "fasteners<"\
-                "fastener<"\
+            "fastener<"\
                 "uid<permf_09>"\
-                "loc_uid<pf_st_01_09>"\
+                "loc_uid<pf_st_02_09>"\
                 "fastener_state<1>"\
                 "diam<5.055>"\
                 "shaft_height<23.37>"\
@@ -970,9 +1148,9 @@ def add_permf_in_storage():
                 "tcp_tip_dist<14.81>"\
                 "tcp_top_dist<4.45>"\
             ">"\
-                "fastener<"\
+            "fastener<"\
                 "uid<permf_10>"\
-                "loc_uid<pf_st_01_10>"\
+                "loc_uid<pf_st_02_10>"\
                 "fastener_state<1>"\
                 "diam<5.055>"\
                 "shaft_height<23.37>"\
@@ -983,7 +1161,7 @@ def add_permf_in_storage():
             ">"\
             "fastener<"\
                 "uid<permf_11>"\
-                "loc_uid<pf_st_01_11>"\
+                "loc_uid<pf_st_02_11>"\
                 "fastener_state<1>"\
                 "diam<5.055>"\
                 "shaft_height<23.37>"\
@@ -992,9 +1170,60 @@ def add_permf_in_storage():
                 "tcp_tip_dist<14.81>"\
                 "tcp_top_dist<4.45>"\
             ">"\
-                "fastener<"\
+            "fastener<"\
                 "uid<permf_12>"\
-                "loc_uid<pf_st_01_12>"\
+                "loc_uid<pf_st_02_12>"\
+                "fastener_state<1>"\
+                "diam<5.055>"\
+                "shaft_height<23.37>"\
+                "min_stack_thickness<3.96>"\
+                "max_stack_thickness<5.59>"\
+                "tcp_tip_dist<14.81>"\
+                "tcp_top_dist<4.45>"\
+            ">"\
+        ">"\
+    ">"
+    
+    safe_send_message(pf_cobot_uid, msg, "add_permf_in_storage")        
+            
+    msg = "populate_agent<"\
+        "fasteners<"\
+            "fastener<"\
+                "uid<permf_13>"\
+                "loc_uid<pf_st_02_13>"\
+                "fastener_state<1>"\
+                "diam<5.055>"\
+                "shaft_height<23.37>"\
+                "min_stack_thickness<3.96>"\
+                "max_stack_thickness<5.59>"\
+                "tcp_tip_dist<14.81>"\
+                "tcp_top_dist<4.45>"\
+            ">"\
+            "fastener<"\
+                "uid<permf_14>"\
+                "loc_uid<pf_st_02_14>"\
+                "fastener_state<1>"\
+                "diam<5.055>"\
+                "shaft_height<23.37>"\
+                "min_stack_thickness<3.96>"\
+                "max_stack_thickness<5.59>"\
+                "tcp_tip_dist<14.81>"\
+                "tcp_top_dist<4.45>"\
+            ">"\
+            "fastener<"\
+                "uid<permf_15>"\
+                "loc_uid<pf_st_02_15>"\
+                "fastener_state<1>"\
+                "diam<5.055>"\
+                "shaft_height<23.37>"\
+                "min_stack_thickness<3.96>"\
+                "max_stack_thickness<5.59>"\
+                "tcp_tip_dist<14.81>"\
+                "tcp_top_dist<4.45>"\
+            ">"\
+            "fastener<"\
+                "uid<permf_16>"\
+                "loc_uid<pf_st_02_16>"\
                 "fastener_state<1>"\
                 "diam<5.055>"\
                 "shaft_height<23.37>"\
@@ -1006,13 +1235,13 @@ def add_permf_in_storage():
        ">"\
     ">"
 
-    safe_send_message(pf_cobot_uid, msg, "add_permf_in_storage")   
+    safe_send_message(pf_cobot_uid, msg, "add_permf_in_storage")
 
     msg = "populate_agent<"\
         "fasteners<"\
-                "fastener<"\
-                "uid<permf_13>"\
-                "loc_uid<pf_st_01_13>"\
+            "fastener<"\
+                "uid<permf_17>"\
+                "loc_uid<pf_st_02_17>"\
                 "fastener_state<1>"\
                 "diam<5.055>"\
                 "shaft_height<23.37>"\
@@ -1021,9 +1250,9 @@ def add_permf_in_storage():
                 "tcp_tip_dist<14.81>"\
                 "tcp_top_dist<4.45>"\
             ">"\
-                "fastener<"\
-                "uid<permf_14>"\
-                "loc_uid<pf_st_01_14>"\
+            "fastener<"\
+                "uid<permf_18>"\
+                "loc_uid<pf_st_02_18>"\
                 "fastener_state<1>"\
                 "diam<5.055>"\
                 "shaft_height<23.37>"\
@@ -1032,11 +1261,22 @@ def add_permf_in_storage():
                 "tcp_tip_dist<14.81>"\
                 "tcp_top_dist<4.45>"\
             ">"\
-        ">"\
+            "fastener<"\
+                "uid<permf_19>"\
+                "loc_uid<pf_st_02_19>"\
+                "fastener_state<1>"\
+                "diam<5.055>"\
+                "shaft_height<23.37>"\
+                "min_stack_thickness<3.96>"\
+                "max_stack_thickness<5.59>"\
+                "tcp_tip_dist<14.81>"\
+                "tcp_top_dist<4.45>"\
+            ">"\
+       ">"\
     ">"
 
     safe_send_message(pf_cobot_uid, msg, "add_permf_in_storage")
-
+    
 # add 9 temporary fasteners in storage  
 # fastener in stroage: state 1
 # fastener in product: state 3
@@ -1167,65 +1407,37 @@ def add_permf_actions():
     msg = "populate_agent<"\
         "actions<"\
             "action<"\
-                "uid<pf_A01>"\
+                "uid<pf_A02>"\
                 "action_type<install_permf>"\
-                "loc_uid<pf_pr_r01_01>"\
-                "action_state<1>"\
-                "speed<100>"\
-            ">"\
-            "action<"\
-                "uid<pf_A01>"\
-                "action_type<install_permf>"\
-                "loc_uid<pf_pr_r3_02>"\
+                "loc_uid<pf_pr_r2_02>"\
                 "action_state<1>"\
                 "speed<100>"\
             ">"\
             "action<"\
                 "uid<pf_A03>"\
                 "action_type<install_permf>"\
-                "loc_uid<pf_pr_r3_03>"\
+                "loc_uid<pf_pr_r2_03>"\
                 "action_state<1>"\
                 "speed<100>"\
             ">"\
             "action<"\
                 "uid<pf_A04>"\
                 "action_type<install_permf>"\
-                "loc_uid<pf_pr_r3_04>"\
+                "loc_uid<pf_pr_r2_04>"\
                 "action_state<1>"\
                 "speed<100>"\
             ">"\
             "action<"\
                 "uid<pf_A05>"\
                 "action_type<install_permf>"\
-                "loc_uid<pf_pr_r3_05>"\
+                "loc_uid<pf_pr_r2_05>"\
                 "action_state<1>"\
                 "speed<100>"\
             ">"\
             "action<"\
-                "uid<pf_A06>"\
+                "uid<pf_A08>"\
                 "action_type<install_permf>"\
-                "loc_uid<pf_pr_r3_06>"\
-                "action_state<1>"\
-                "speed<100>"\
-            ">"\
-            "action<"\
-                "uid<pf_A06>"\
-                "action_type<install_permf>"\
-                "loc_uid<pf_pr_r3_07>"\
-                "action_state<1>"\
-                "speed<100>"\
-            ">"\
-            "action<"\
-                "uid<pf_A06>"\
-                "action_type<install_permf>"\
-                "loc_uid<pf_pr_r3_08>"\
-                "action_state<1>"\
-                "speed<100>"\
-            ">"\
-                "action<"\
-                "uid<pf_A06>"\
-                "action_type<install_permf>"\
-                "loc_uid<pf_pr_r3_09>"\
+                "loc_uid<pf_pr_r2_08>"\
                 "action_state<1>"\
                 "speed<100>"\
             ">"\
@@ -1234,6 +1446,74 @@ def add_permf_actions():
 
     safe_send_message(pf_cobot_uid, msg, "add_permf_actions")
 
+    msg = "populate_agent<"\
+        "actions<"\
+            "action<"\
+                "uid<pf_A09>"\
+                "action_type<install_permf>"\
+                "loc_uid<pf_pr_r2_10>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<pf_A11>"\
+                "action_type<install_permf>"\
+                "loc_uid<pf_pr_r1_02>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<pf_A12>"\
+                "action_type<install_permf>"\
+                "loc_uid<pf_pr_r1_03>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<pf_A13>"\
+                "action_type<install_permf>"\
+                "loc_uid<pf_pr_r1_04>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<pf_A14>"\
+                "action_type<install_permf>"\
+                "loc_uid<pf_pr_r1_05>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<pf_A16>"\
+                "action_type<install_permf>"\
+                "loc_uid<pf_pr_r1_07>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+        ">"\
+    ">"
+
+    safe_send_message(pf_cobot_uid, msg, "add_permf_actions")
+    msg = "populate_agent<"\
+        "actions<"\
+            "action<"\
+                "uid<pf_A17>"\
+                "action_type<install_permf>"\
+                "loc_uid<pf_pr_r1_08>"\
+                "action_state<1>"\
+                "speed<100>"\
+            ">"\
+            "action<"\
+                "uid<pf_A18>"\
+                "action_type<install_permf>"\
+                "loc_uid<pf_pr_r1_09>"\
+                "action_state<1>"\
+                "speed<100>"\
+        ">"\
+    ">"
+
+    safe_send_message(pf_cobot_uid, msg, "add_permf_actions")
+    
 # add nine actions....not yet execute them
 # tf_i_A01: install tempf from tf_left_drill_jig_01
 # tf_i_A02: install tempf from tf_left_drill_jig_08
@@ -1437,14 +1717,14 @@ tf_cobot_uid = f"{tf_ip_address}/{tf_port}"
 tf_tcp_client_thread = threading.Thread(target=run_tcp_client, args=(tf_ip_address, tf_port))
 tf_tcp_client_thread.start()
 
-# pf_ip_address = "10.237.20.103"
-# pf_port = 20002
-# pf_cobot_uid = f"{pf_ip_address}/{pf_port}"
-# pf_tcp_client_thread = threading.Thread(target=run_tcp_client, args=(pf_ip_address, pf_port))
-# pf_tcp_client_thread.start()
+pf_ip_address = "10.237.20.103"
+pf_port = 20002
+pf_cobot_uid = f"{pf_ip_address}/{pf_port}"
+pf_tcp_client_thread = threading.Thread(target=run_tcp_client, args=(pf_ip_address, pf_port))
+pf_tcp_client_thread.start()
 
 cobot_goto_home(tf_cobot_uid)
-# cobot_goto_home(pf_cobot_uid)
+cobot_goto_home(pf_cobot_uid)
 
 add_tempf_storage_locations()
 add_tempf_product_locations()
@@ -1452,10 +1732,10 @@ add_tempf_in_storage()
 add_tempf_install_actions()
 add_tempf_uninstall_actions()
 
-# add_permf_storage_locations()
-# add_permf_product_locations()
-# add_permf_in_storage()
-# add_permf_actions()
+add_permf_storage_locations()
+add_permf_product_locations()
+add_permf_in_storage()
+add_permf_actions()
 
 # install the temporary fasteners
 execute_action(tf_cobot_uid, "tf_i_A01")
@@ -1470,8 +1750,32 @@ execute_action(tf_cobot_uid, "tf_i_A03")
 cobot_goto_home(tf_cobot_uid)
 
 # install the permanent fasteners
-# execute_action(pf_cobot_uid, "pf_A01")
-# cobot_goto_home(pf_cobot_uid)
+execute_action(pf_cobot_uid, "pf_A02")
+cobot_goto_home(pf_cobot_uid)
+execute_action(pf_cobot_uid, "pf_A03")
+cobot_goto_home(pf_cobot_uid)
+execute_action(pf_cobot_uid, "pf_A04")
+cobot_goto_home(pf_cobot_uid)
+execute_action(pf_cobot_uid, "pf_A05")
+cobot_goto_home(pf_cobot_uid)
+execute_action(pf_cobot_uid, "pf_A08")
+cobot_goto_home(pf_cobot_uid)
+execute_action(pf_cobot_uid, "pf_A09")
+cobot_goto_home(pf_cobot_uid)
+execute_action(pf_cobot_uid, "pf_A11")
+cobot_goto_home(pf_cobot_uid)
+execute_action(pf_cobot_uid, "pf_A12")
+cobot_goto_home(pf_cobot_uid)
+execute_action(pf_cobot_uid, "pf_A13")
+cobot_goto_home(pf_cobot_uid)
+execute_action(pf_cobot_uid, "pf_A14")
+cobot_goto_home(pf_cobot_uid)
+execute_action(pf_cobot_uid, "pf_A16")
+cobot_goto_home(pf_cobot_uid)
+execute_action(pf_cobot_uid, "pf_A17")
+cobot_goto_home(pf_cobot_uid)
+execute_action(pf_cobot_uid, "pf_A18")
+cobot_goto_home(pf_cobot_uid)
 
 # uninstall the temporary fasteners
 execute_action(tf_cobot_uid, "tf_u_A01")
