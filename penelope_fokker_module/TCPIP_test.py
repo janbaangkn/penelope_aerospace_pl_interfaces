@@ -736,7 +736,7 @@ def add_tempf_product_locations():
                     "pose<"\
                         "pose_p_x<16.0>"\
                         "pose_p_y<991.0>"\
-                        "pose_p_z<705.0>"\
+                        "pose_p_z<704.0>"\
                         "pose_o_x<90.0>"\
                         "pose_o_y<63.0>"\
                         "pose_o_z<0.0>"\
@@ -772,7 +772,7 @@ def add_tempf_product_locations():
                     "diam<5.0>"\
                     "stack_thickness_tag<9.0>"\
                     "pose<"\
-                        "pose_p_x<226.0>"\
+                        "pose_p_x<226.5>"\
                         "pose_p_y<938.0>"\
                         "pose_p_z<811.0>"\
                         "pose_o_x<90.0>"\
@@ -838,9 +838,9 @@ def add_tempf_product_locations():
                     "diam<5.0>"\
                     "stack_thickness_tag<9.0>"\
                     "pose<"\
-                        "pose_p_x<623.0>"\
+                        "pose_p_x<625>"\
                         "pose_p_y<938.0>"\
-                        "pose_p_z<813.5>"\
+                        "pose_p_z<812.5>"\
                         "pose_o_x<90.0>"\
                         "pose_o_y<66.0>"\
                         "pose_o_z<30.0>"\
@@ -1458,14 +1458,14 @@ add_tempf_uninstall_actions()
 # add_permf_actions()
 
 # install the temporary fasteners
-# execute_action(tf_cobot_uid, "tf_i_A01")
-# execute_action(tf_cobot_uid, "tf_i_A02")
+execute_action(tf_cobot_uid, "tf_i_A01")
+execute_action(tf_cobot_uid, "tf_i_A02")
 execute_action(tf_cobot_uid, "tf_i_A03")
-# execute_action(tf_cobot_uid, "tf_i_A04")
+execute_action(tf_cobot_uid, "tf_i_A04")
 execute_action(tf_cobot_uid, "tf_i_A05")
-# execute_action(tf_cobot_uid, "tf_i_A06")
-# execute_action(tf_cobot_uid, "tf_i_A07")
-# execute_action(tf_cobot_uid, "tf_i_A08")
+execute_action(tf_cobot_uid, "tf_i_A06")
+execute_action(tf_cobot_uid, "tf_i_A07")
+execute_action(tf_cobot_uid, "tf_i_A08")
 execute_action(tf_cobot_uid, "tf_i_A09")
 cobot_goto_home(tf_cobot_uid)
 
@@ -1474,14 +1474,14 @@ cobot_goto_home(tf_cobot_uid)
 # cobot_goto_home(pf_cobot_uid)
 
 # uninstall the temporary fasteners
-# execute_action(tf_cobot_uid, "tf_u_A01")
-# execute_action(tf_cobot_uid, "tf_u_A02")
+execute_action(tf_cobot_uid, "tf_u_A01")
+execute_action(tf_cobot_uid, "tf_u_A02")
 execute_action(tf_cobot_uid, "tf_u_A03")
-# execute_action(tf_cobot_uid, "tf_u_A04")
+execute_action(tf_cobot_uid, "tf_u_A04")
 execute_action(tf_cobot_uid, "tf_u_A05")
-# execute_action(tf_cobot_uid, "tf_u_A06")
-# execute_action(tf_cobot_uid, "tf_u_A07")
-# execute_action(tf_cobot_uid, "tf_u_A08")
+execute_action(tf_cobot_uid, "tf_u_A06")
+execute_action(tf_cobot_uid, "tf_u_A07")
+execute_action(tf_cobot_uid, "tf_u_A08")
 execute_action(tf_cobot_uid, "tf_u_A09")
 cobot_goto_home(tf_cobot_uid)
 
