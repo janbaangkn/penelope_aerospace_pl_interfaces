@@ -529,7 +529,7 @@ def _get_drill_task_to_cobot_str(drill_task_in):
 def _get_fastener_to_cobot_str(fastener_in):
     
     #string uid                              # uid of the fastener
-    str_ = str_ + UID_TAG + fastener_in.uid + CLOSE_TAG
+    str_ = UID_TAG + fastener_in.uid + CLOSE_TAG
 
     #string loc_uid                          # uid of the location of the fastener in one of the containers
     str_ = str_ + LOC_UID_TAG + fastener_in.loc_uid + CLOSE_TAG
