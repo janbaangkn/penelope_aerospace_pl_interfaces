@@ -162,20 +162,20 @@ class FokkerActionServer(Node):
         
         # storage location container
         msg_out_lst = tempf_storage_str_to_cobot(goal_handle_in.request.tempf_storage)
-        if msg_out:
+        if msg_out_lst:
             for msg_out in msg_out_lst:
                 self.process_feedback(send_message(uid=self.tf_cobot_uid, message=msg_out, feedback=True))       
 
         # product container with holes
         msg_out_lst = product_str_to_cobot(goal_handle_in.request.product)
-        if msg_out:
+        if msg_out_lst:
             for msg_out in msg_out_lst:
                 uid_out = self.get_uid(msg_out)
                 self.process_feedback(send_message(uid=uid_out, message=msg_out, feedback=True))     
 
         # list of defined waypoints
         msg_out = waypoints_str_to_cobot(goal_handle_in.request.waypoints)
-        if msg_out:
+        if msg_out_lst:
             uid_out = self.get_uid(msg_out)
             self.process_feedback(send_message(uid=uid_out, message=msg_out, feedback=True))  
         

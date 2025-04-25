@@ -21,11 +21,11 @@ def safe_send_message(cobot_uid, msg, parent_function):
         print(f"No feedback in {parent_function}")
         return
 
-# go to home for cobot with uid_in
+#1 go to home for cobot with uid_in
 def cobot_goto_home(uid_in):
     safe_send_message(uid_in, "goto_home", "cobot_goto_home")
 
-# add hole locations, stack thickness and diameter in the temp fastener storage list 
+#3->4 add hole locations, stack thickness and diameter in the temp fastener storage list 
 def add_tempf_storage_locations():
 
     # storage location 1-1 not used because it is broken and
@@ -214,7 +214,7 @@ def add_tempf_storage_locations():
 
     safe_send_message(tf_cobot_uid, msg, "add_tempf_storage_locations")
 
-# add hole locations, stack thickness and diameter in the permanent fastener storage list
+#5->10 add hole locations, stack thickness and diameter in the permanent fastener storage list
 def add_permf_storage_locations():
 
     #1-4 nieuwe storage
@@ -351,7 +351,7 @@ def add_permf_storage_locations():
     
     safe_send_message(pf_cobot_uid, msg, "add_permf_storage_locations")
 
-#Nieuwe storage 9-12
+    #Nieuwe storage 9-12
     msg = "populate_agent<"\
         "permf_storage_loc<"\
             "uid<permf_storage>"\
@@ -418,7 +418,7 @@ def add_permf_storage_locations():
     
     safe_send_message(pf_cobot_uid, msg, "add_permf_storage_locations")
 
-#Nieuwe storage 13-16
+    #Nieuwe storage 13-16
     msg = "populate_agent<"\
         "permf_storage_loc<"\
             "uid<permf_storage>"\
@@ -485,7 +485,7 @@ def add_permf_storage_locations():
     
     safe_send_message(pf_cobot_uid, msg, "add_permf_storage_locations")
 
-#Nieuwe storage 17-19
+    #Nieuwe storage 17-19
     msg = "populate_agent<"\
         "permf_storage_loc<"\
             "uid<permf_storage>"\
@@ -538,7 +538,7 @@ def add_permf_storage_locations():
     
     safe_send_message(pf_cobot_uid, msg, "add_permf_storage_locations")
     
-# add hole locations, stack thickness and diameter in the permf product list
+#6->16 add hole locations, stack thickness and diameter in the permf product list
 def add_permf_product_locations():
 
     #pr 02 1-4
@@ -873,7 +873,7 @@ def add_permf_product_locations():
     
     safe_send_message(pf_cobot_uid, msg, "add_permf_product_locations")
     
-# add hole locations, stack thickness and diameter in the tempf product list
+#3->19 add hole locations, stack thickness and diameter in the tempf product list
 def add_tempf_product_locations():
     msg = "populate_agent<"\
         "product<"\
@@ -1031,7 +1031,7 @@ def add_tempf_product_locations():
     
     safe_send_message(tf_cobot_uid, msg, "add_tempf_product_locations")
 
-# add permanent fasteners in storage
+#5->24 add permanent fasteners in storage
 def add_permf_in_storage():
     msg = "populate_agent<"\
         "fasteners<"\
@@ -1277,7 +1277,7 @@ def add_permf_in_storage():
 
     safe_send_message(pf_cobot_uid, msg, "add_permf_in_storage")
     
-# add 9 temporary fasteners in storage  
+#3->27 add 9 temporary fasteners in storage  
 # fastener in stroage: state 1
 # fastener in product: state 3
 def add_tempf_in_storage():
@@ -1401,7 +1401,7 @@ def add_tempf_in_storage():
 
     safe_send_message(tf_cobot_uid, msg, "add_tempf_in_storage")
 
-# Add the permanent fastener actions to the agent
+#3->30 Add the permanent fastener actions to the agent
 # Defined actions will be executed later
 def add_permf_actions():
     msg = "populate_agent<"\
@@ -1514,7 +1514,7 @@ def add_permf_actions():
 
     safe_send_message(pf_cobot_uid, msg, "add_permf_actions")
     
-# add nine actions....not yet execute them
+#2->32 add nine actions....not yet execute them
 # tf_i_A01: install tempf from tf_left_drill_jig_01
 # tf_i_A02: install tempf from tf_left_drill_jig_08
 # tf_i_A03: install tempf from tf_left_drill_jig_15
@@ -1607,7 +1607,7 @@ def add_tempf_install_actions():
 
     safe_send_message(tf_cobot_uid, msg, "add_tempf_install_actions")
 
-# add nine actions....not yet execute them
+#2->34 add nine actions....not yet execute them
 # tf_u_A01: uninstall tempf from tf_left_drill_jig_01
 # tf_u_A02: uninstall tempf from tf_left_drill_jig_08
 # tf_u_A03: uninstall tempf from tf_left_drill_jig_15
@@ -1699,7 +1699,7 @@ def add_tempf_uninstall_actions():
 
     safe_send_message(tf_cobot_uid, msg, "add_tempf_install_actions")
 
-# execute action with uid on cobot with uid
+#1->35 execute action with uid on cobot with uid
 def execute_action(cobot_uid_in, action_uid_in):
     msg = "execute_single_operation<" + action_uid_in + ">"
 
@@ -1757,8 +1757,6 @@ cobot_goto_home(pf_cobot_uid)
 execute_action(pf_cobot_uid, "pf_A04")
 cobot_goto_home(pf_cobot_uid)
 execute_action(pf_cobot_uid, "pf_A05")
-cobot_goto_home(pf_cobot_uid)
-execute_action(pf_cobot_uid, "pf_A08")
 cobot_goto_home(pf_cobot_uid)
 execute_action(pf_cobot_uid, "pf_A09")
 cobot_goto_home(pf_cobot_uid)
